@@ -38,12 +38,15 @@ jobs:
       - name: Detect trigger type
         id: trigger
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          EVENT_NAME="${{ github.event_name }}"
+          echo "📋 GitHub Event: $EVENT_NAME"
+          
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             echo "is_manual=true" >> $GITHUB_OUTPUT
             echo "🔧 Manual trigger detected - bypassing schedule checks"
           else
             echo "is_manual=false" >> $GITHUB_OUTPUT
-            echo "⏰ Automatic trigger - following schedule"
+            echo "⏰ Automatic trigger ($EVENT_NAME) - following schedule"
           fi
       
       - name: Check failure circuit breaker
@@ -432,6 +435,9 @@ jobs:
             --exclude='*.glb' \
             --exclude='*.exe' \
             --exclude='GodotProject/objects/**/*.tscn' \
+            --exclude='code/gdconverter/tests/' \
+            --exclude='**/test/' \
+            --exclude='**/tests/' \
             /tmp/sdk-new/ ./
           
           echo "✅ SDK updated (only changed files written, large assets excluded)"
@@ -469,13 +475,19 @@ jobs:
           # Stage all changes for git to track
           git add -A
           
-          # Use git to get accurate change statistics
+          # Use git to get accurate change statistics (with defaults)
           ADDED_COUNT=$(git diff --cached --name-status | grep -c '^A' || echo 0)
           MODIFIED_COUNT=$(git diff --cached --name-status | grep -c '^M' || echo 0)
           DELETED_COUNT=$(git diff --cached --name-status | grep -c '^D' || echo 0)
           
           # Get current file count
           NEW_COUNT=$(find . -type f -not -path './.git/*' -not -path './.github/*' | wc -l)
+          
+          # Ensure variables have valid values for JSON
+          ADDED_COUNT=${ADDED_COUNT:-0}
+          MODIFIED_COUNT=${MODIFIED_COUNT:-0}
+          DELETED_COUNT=${DELETED_COUNT:-0}
+          NEW_COUNT=${NEW_COUNT:-0}
           
           cat > .github/cache/comparison.json << EOF
           {
@@ -487,7 +499,7 @@ jobs:
               "added_count": $ADDED_COUNT,
               "deleted_count": $DELETED_COUNT,
               "modified_count": $MODIFIED_COUNT,
-              "note": "Excludes .gd, .glb files and GodotProject runtime folders"
+              "note": "Excludes .gd, .glb files, test folders, and GodotProject runtime folders"
             }
           }
           EOF
@@ -631,14 +643,32 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Create and checkout new branch
-          git checkout -b "$BRANCH_NAME"
+          # Fetch remote branches to see if our branch exists
+          git fetch origin
+          
+          # Check if branch exists remotely
+          if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null 2>&1; then
+            echo "📌 Branch $BRANCH_NAME exists remotely - checking out and pulling latest"
+            
+            # Checkout existing branch
+            git checkout "$BRANCH_NAME" 2>/dev/null || git checkout -b "$BRANCH_NAME" --track "origin/$BRANCH_NAME"
+            
+            # Pull latest changes from remote (rebase to avoid merge commits)
+            git pull --rebase origin "$BRANCH_NAME" || {
+              echo "⚠️  Rebase conflict detected - using ours strategy"
+              git rebase --abort 2>/dev/null || true
+              git reset --hard "origin/$BRANCH_NAME"
+            }
+          else
+            echo "🆕 Creating new branch $BRANCH_NAME"
+            git checkout -b "$BRANCH_NAME"
+          fi
           
           # Commit all changes
           git add -A
-          git commit -m "Update Portal SDK to v${NEW_VERSION}" || true
+          git commit -m "Update Portal SDK to v${NEW_VERSION}" || echo "No changes to commit"
           
-          # Push branch
+          # Push branch (normal push, no force)
           git push -u origin "$BRANCH_NAME"
           
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT

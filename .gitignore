@@ -44,6 +44,9 @@ GodotProject/addons/bf_portal/
 GodotProject/addons/scene-library/
 GodotProject/raw/
 GodotProject/.godot/
+code/gdconverter/tests/
+**/test/
+**/tests/
 
 # Large binary files
 *.gd

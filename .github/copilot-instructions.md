@@ -107,7 +107,13 @@ This repository is an **automated mirror** of the Battlefield Portal SDK from EA
 ### .github/ Directory - ALL AUTOMATION
 Everything automation-related lives here (NOT in separate automation/ folder):
 - `config.json` - Configuration for schedules, URLs, and target repositories
-- `cache/` - Generated comparison data and temporary files (in .gitignore)
+- `cache/` - Temporary workflow data and state tracking:
+  * `comparison.json` - File comparison statistics (generated, ignored)
+  * `comparison-raw.json` - Raw comparison data (generated, ignored)
+  * `versions.json` - Cached remote versions.json (generated, ignored)
+  * `game-update-tracker.json` - Game update tracking for boost mode (generated, ignored)
+  * `failure-tracker.json` - Workflow failure tracking for circuit breaker (**committed**, NOT ignored)
+  * `.gitkeep` - Preserves cache folder in git
 - `workflows/sdk-check-updates.yml` - **CRITICAL**: Main automation workflow (NEVER DELETE)
 - `copilot-instructions.md` - This file
 
@@ -286,15 +292,18 @@ The workflow uses a **smart adaptive schedule** with tiered boost modes:
    - Target repo configured in `.github/config.json`
 
 10. **Create Branch and Pull Request**
-   - Creates new branch: `sdk-update-v{version}`
+   - Fetches remote branches to check if update branch already exists
+   - **If branch exists remotely**: Checks out and pulls latest with rebase (never force push)
+   - **If branch is new**: Creates new branch `sdk-update-v{version}`
    - Commits all changes with message: "Update Portal SDK to v{version}"
-   - Pushes branch to origin
+   - Pushes branch to origin (normal push, no force)
    - Creates Pull Request to main branch with:
      * Version comparison
      * File statistics
      * Full changelog
      * Links to releases
    - Keeps git history clean and allows review before merging
+   - **NEVER uses force push** - always respects remote state
    - Workflow completes (merge is manual or via auto-merge)
 
 ## Configuration
@@ -434,6 +443,14 @@ jobs:
 - NEVER delete or attempt to remove the workflow file
 - It orchestrates everything
 - Without it, nothing works
+
+### 10. Git Safety - Never Force Push
+- ALWAYS respect remote branch state
+- If branch exists remotely: checkout and pull with rebase
+- NEVER use `git push -f` or `--force` flags
+- Handle conflicts gracefully with rebase or merge
+- Preserves git history integrity
+- Allows safe collaboration and recovery
 
 ## Common Use Cases
 
@@ -595,6 +612,9 @@ SDK-specific exclusions (performance optimization):
 - `*.glb` - Binary 3D models (very large)
 - `*.exe` - Godot executable (tracked via .version file instead)
 - `GodotProject/.objects/**/*.tscn` - Object scene files in .objects folder
+- `code/gdconverter/tests/` - Test files for gdconverter
+- `**/test/` - Any folder named "test" (recursive)
+- `**/tests/` - Any folder named "tests" (recursive)
 
 Special handling:
 - `Godot*.exe` - Excluded from commits but version tracked

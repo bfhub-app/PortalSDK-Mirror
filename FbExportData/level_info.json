@@ -1,0 +1,110 @@
+{
+    "MP_Abbasid": {
+        "theater": "Cairo",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Aftermath": {
+        "theater": "Brooklyn",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Badlands": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Battery": {
+        "theater": "Gibraltar",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Capstone": {
+        "theater": "Tajikistan",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Dumbo": {
+        "theater": "Brooklyn",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Eastwood": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_FireStorm": {
+        "theater": "Turkmenistan",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Limestone": {
+        "theater": "Gibraltar",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Outskirts": {
+        "theater": "Cairo",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Tungsten": {
+        "theater": "Tajikistan",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Granite_ClubHouse_Portal": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Granite_MainStreet_Portal": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Granite_Marina_Portal": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Granite_MilitaryRnD_Portal": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Granite_MilitaryStorage_Portal": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Granite_TechCampus_Portal": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Portal_Sand": {
+        "theater": "SouthernCalifornia",
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    }
+}

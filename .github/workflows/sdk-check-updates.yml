@@ -339,8 +339,9 @@ jobs:
             echo "ℹ️  No content to release"
           fi
       
-      - name: Download and extract SDK
+      - name: Download SDK
         if: steps.check.outputs.update_needed == 'true'
+        id: download
         run: |
           echo "📥 Downloading Portal SDK..."
           
@@ -360,7 +361,10 @@ jobs:
           echo "zip_size_mb=$ZIP_SIZE_MB" >> $GITHUB_OUTPUT
           
           echo "✅ Downloaded: ${ZIP_SIZE_MB} MB"
-          
+      
+      - name: Extract SDK
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
           echo "📂 Creating backup for comparison..."
           mkdir -p /tmp/sdk-old
           rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-old/ || true

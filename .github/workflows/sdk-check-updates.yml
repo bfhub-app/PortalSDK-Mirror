@@ -35,7 +35,19 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Detect trigger type
+        id: trigger
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "is_manual=true" >> $GITHUB_OUTPUT
+            echo "🔧 Manual trigger detected - bypassing schedule checks"
+          else
+            echo "is_manual=false" >> $GITHUB_OUTPUT
+            echo "⏰ Automatic trigger - following schedule"
+          fi
+      
       - name: Check for recent game updates (Tiered)
+        if: steps.trigger.outputs.is_manual == 'false'
         id: game_update
         run: |
           echo "🎮 Checking for recent Battlefield game updates (Tiered Detection)..."
@@ -91,20 +103,17 @@ jobs:
               BOOST_MODE="active"
               BOOST_LEVEL="aggressive"
               BOOST_REASON="SteamDB game update $HOURS_SINCE_STEAMDB hours ago (v$GAME_VERSION)"
-              echo "   ⚡ AGGRESSIVE BOOST ACTIVE (SteamDB)"
             fi
           fi
           
           # Try to fetch SteamDB (may be blocked - 403)
           STEAMDB_HTML=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" "$STEAMDB_URL" 2>/dev/null || echo "")
           if [ -n "$STEAMDB_HTML" ] && ! echo "$STEAMDB_HTML" | grep -qi "403\|forbidden\|access denied"; then
-            echo "   ✓ SteamDB page accessible - checking for updates..."
             # Look for recent version updates (basic pattern matching)
             TODAY=$(date -u +%Y-%m-%d)
             YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d 2>/dev/null)
             
             if echo "$STEAMDB_HTML" | grep -E "$TODAY|$YESTERDAY" | grep -qi "version\|build\|update"; then
-              echo "   📰 New update detected on SteamDB!"
               BOOST_MODE="active"
               BOOST_LEVEL="aggressive"
               BOOST_REASON="New SteamDB update detected"
@@ -143,8 +152,7 @@ jobs:
                 YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d 2>/dev/null)
                 
                 if echo "$EA_HTML" | grep -qi "$TODAY\|$YESTERDAY"; then
-                  echo "   📰 New EA blog post detected mentioning Portal/SDK!"
-                  BOOST_MODE="active"
+
                   BOOST_LEVEL="normal"
                   BOOST_REASON="New EA blog update detected"
                   
@@ -153,11 +161,6 @@ jobs:
                 fi
               fi
             fi
-          fi
-          
-          # === TIER 3: Normal Operation ===
-          if [ "$BOOST_MODE" = "none" ]; then
-            echo "✅ Tier 3: Normal operation mode"
           fi
           
           # Update last check time
@@ -177,13 +180,31 @@ jobs:
           echo "🎮 Game Version: $GAME_VERSION"
           echo "=========================================="
       
+      - name: Set default game update outputs (manual trigger)
+        if: steps.trigger.outputs.is_manual == 'true'
+        id: game_update_defaults
+        run: |
+          echo "boost_mode=none" >> $GITHUB_OUTPUT
+          echo "boost_level=none" >> $GITHUB_OUTPUT
+          echo "boost_reason=Manual trigger" >> $GITHUB_OUTPUT
+          echo "game_version=unknown" >> $GITHUB_OUTPUT
+      
       - name: Check work hours (Mon/Tue only)
         id: work_hours
         run: |
+          IS_MANUAL="${{ steps.trigger.outputs.is_manual }}"
+          
+          # Manual trigger: Always run immediately
+          if [ "$IS_MANUAL" = "true" ]; then
+            echo "🔧 Manual trigger - bypassing all schedule checks"
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
           HOUR=$(date -u +%H | sed 's/^0//')
           DAY=$(date -u +%u)
-          BOOST_MODE="${{ steps.game_update.outputs.boost_mode }}"
-          BOOST_LEVEL="${{ steps.game_update.outputs.boost_level }}"
+          BOOST_MODE="${{ steps.game_update.outputs.boost_mode || 'none' }}"
+          BOOST_LEVEL="${{ steps.game_update.outputs.boost_level || 'none' }}"
           
           echo "Current hour (UTC): $HOUR"
           echo "Day of week: $DAY (1=Mon, 7=Sun)"
@@ -214,8 +235,12 @@ jobs:
         if: steps.work_hours.outputs.should_run == 'true'
         id: check
         run: |
-          echo "Portal SDK Update Check"
-          echo "=================================================="
+          IS_MANUAL="${{ steps.trigger.outputs.is_manual }}"
+          
+          if [ "$IS_MANUAL" = "true" ]; then
+            echo "Portal SDK Update Check"
+            echo "=================================================="
+          fi
           
           # Fetch remote versions.json
           VERSIONS_URL=$(jq -r '.urls.versions' .github/config.json)
@@ -233,8 +258,10 @@ jobs:
             LOCAL_SIZE="0"
           fi
           
-          echo "Local version: $LOCAL_VER ($LOCAL_SIZE bytes)"
-          echo "Remote version: $REMOTE_VER ($REMOTE_SIZE bytes)"
+          if [ "$IS_MANUAL" = "true" ]; then
+            echo "Local version: $LOCAL_VER ($LOCAL_SIZE bytes)"
+            echo "Remote version: $REMOTE_VER ($REMOTE_SIZE bytes)"
+          fi
           
           # Compare
           UPDATE_NEEDED="false"
@@ -254,8 +281,10 @@ jobs:
             fi
           fi
           
-          echo "Update needed: $UPDATE_NEEDED"
-          echo "Update reason: $UPDATE_REASON"
+          if [ "$IS_MANUAL" = "true" ]; then
+            echo "Update needed: $UPDATE_NEEDED"
+            echo "Update reason: $UPDATE_REASON"
+          fi
           
           # Cache remote data
           mkdir -p .github/cache
@@ -269,8 +298,10 @@ jobs:
           echo "new_filesize=$REMOTE_SIZE" >> $GITHUB_OUTPUT
           echo "update_reason=$UPDATE_REASON" >> $GITHUB_OUTPUT
           
-          echo "=================================================="
-          echo "$UPDATE_NEEDED: $UPDATE_REASON"
+          if [ "$IS_MANUAL" = "true" ]; then
+            echo "=================================================="
+            echo "$UPDATE_NEEDED: $UPDATE_REASON"
+          fi
       
       - name: Create release of current state
         if: steps.check.outputs.update_needed == 'true' && steps.check.outputs.old_version != '0'
@@ -497,7 +528,7 @@ jobs:
         run: |
           CACHE_FILE=".github/cache/game-update-tracker.json"
           NEW_VERSION="${{ steps.check.outputs.new_version }}"
-          GAME_VERSION="${{ steps.game_update.outputs.game_version }}"
+          GAME_VERSION="${{ steps.game_update.outputs.game_version || 'unknown' }}"
           
           if [ -f "$CACHE_FILE" ]; then
             echo "📝 Updating game-SDK version mapping..."

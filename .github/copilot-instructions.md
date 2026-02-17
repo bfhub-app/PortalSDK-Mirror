@@ -145,6 +145,16 @@ The workflow uses a **smart adaptive schedule** with tiered boost modes:
 - No recent game updates detected
 - Follows normal schedule (Mon/Tue hourly 8-20, Wed-Fri every 4h, Sat-Sun every 6h)
 
+**Manual Trigger** (workflow_dispatch):
+- **Priority**: Highest - bypasses ALL schedule checks
+- **Behavior**: Immediately checks SDK version regardless of:
+  - Work hours (Mon/Tue 8-20 restriction)
+  - Boost mode status
+  - Game update detection
+  - Day of week
+- **Use case**: When you know an update is available and want immediate check
+- **Trigger**: GitHub Actions UI → "Run workflow" button
+
 **Cache & Version Tracking**:
 - Stores game update info in `.github/cache/game-update-tracker.json`
 - Links game versions with SDK versions

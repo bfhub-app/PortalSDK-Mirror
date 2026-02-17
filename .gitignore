@@ -35,3 +35,4 @@ yarn-error.log*
 .github/cache/*.zip
 .github/cache/comparison*.json
 .github/cache/versions.json
+.github/cache/game-update-tracker.json

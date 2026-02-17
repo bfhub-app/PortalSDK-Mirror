@@ -11,10 +11,14 @@ on:
     - cron: '0 8-20 * * 1'
     # Tuesday: Every hour 8-20 UTC
     - cron: '0 8-20 * * 2'
-    # Wednesday-Friday: Every 4 hours
+    # Wednesday-Friday: Every 4 hours (boost mode will override)
     - cron: '0 */4 * * 3-5'
     # Saturday-Sunday: Every 6 hours
     - cron: '0 */6 * * 0,6'
+    # Normal boost check: Every hour on weekdays
+    - cron: '0 * * * 1-5'
+    # Aggressive boost check: Every 30 minutes on weekdays
+    - cron: '*/30 * * * 1-5'
 
 permissions:
   contents: write
@@ -31,22 +35,176 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Check for recent game updates (Tiered)
+        id: game_update
+        run: |
+          echo "🎮 Checking for recent Battlefield game updates (Tiered Detection)..."
+          
+          mkdir -p .github/cache
+          CACHE_FILE=".github/cache/game-update-tracker.json"
+          STEAMDB_URL="https://steamdb.info/app/2807960/history/"
+          EA_NEWS_URL="https://www.ea.com/games/battlefield/battlefield-6/news?page=1&type=game-updates"
+          
+          BOOST_MODE="none"
+          BOOST_LEVEL="none"
+          BOOST_REASON="No recent game update detected"
+          CURRENT_TIME=$(date -u +%s)
+          
+          # Initialize cache if not exists
+          if [ ! -f "$CACHE_FILE" ]; then
+            cat > "$CACHE_FILE" << 'EOF'
+          {
+            "steamdb": {
+              "last_update_date": "2000-01-01T00:00:00Z",
+              "game_version": "unknown",
+              "build_id": "unknown",
+              "manual_trigger": false
+            },
+            "ea_blog": {
+              "last_update_date": "2000-01-01T00:00:00Z",
+              "title": "unknown"
+            },
+            "sdk": {
+              "last_update_date": "2000-01-01T00:00:00Z",
+              "version": "unknown",
+              "matched_game_version": "unknown"
+            },
+            "last_check_date": "2000-01-01T00:00:00Z"
+          }
+          EOF
+          fi
+          
+          # Load cached data
+          STEAMDB_LAST=$(jq -r '.steamdb.last_update_date // "2000-01-01T00:00:00Z"' "$CACHE_FILE")
+          EA_LAST=$(jq -r '.ea_blog.last_update_date // "2000-01-01T00:00:00Z"' "$CACHE_FILE")
+          GAME_VERSION=$(jq -r '.steamdb.game_version // "unknown"' "$CACHE_FILE")
+          
+          # === TIER 1: SteamDB Check (Aggressive Boost - 8 hours) ===
+          echo "🔍 Tier 1: Checking SteamDB update timestamp..."
+          STEAMDB_TIME=$(date -d "$STEAMDB_LAST" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$STEAMDB_LAST" +%s 2>/dev/null || echo "0")
+          
+          if [ "$STEAMDB_TIME" != "0" ]; then
+            HOURS_SINCE_STEAMDB=$((($CURRENT_TIME - $STEAMDB_TIME) / 3600))
+            echo "   Hours since SteamDB update: $HOURS_SINCE_STEAMDB"
+            
+            if [ "$HOURS_SINCE_STEAMDB" -lt 8 ]; then
+              BOOST_MODE="active"
+              BOOST_LEVEL="aggressive"
+              BOOST_REASON="SteamDB game update $HOURS_SINCE_STEAMDB hours ago (v$GAME_VERSION)"
+              echo "   ⚡ AGGRESSIVE BOOST ACTIVE (SteamDB)"
+            fi
+          fi
+          
+          # Try to fetch SteamDB (may be blocked - 403)
+          STEAMDB_HTML=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" "$STEAMDB_URL" 2>/dev/null || echo "")
+          if [ -n "$STEAMDB_HTML" ] && ! echo "$STEAMDB_HTML" | grep -qi "403\|forbidden\|access denied"; then
+            echo "   ✓ SteamDB page accessible - checking for updates..."
+            # Look for recent version updates (basic pattern matching)
+            TODAY=$(date -u +%Y-%m-%d)
+            YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d 2>/dev/null)
+            
+            if echo "$STEAMDB_HTML" | grep -E "$TODAY|$YESTERDAY" | grep -qi "version\|build\|update"; then
+              echo "   📰 New update detected on SteamDB!"
+              BOOST_MODE="active"
+              BOOST_LEVEL="aggressive"
+              BOOST_REASON="New SteamDB update detected"
+              
+              # Update cache with new detection
+              jq ".steamdb.last_update_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" | .steamdb.manual_trigger = false" "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
+            fi
+          else
+            echo "   ⚠️  SteamDB blocked or inaccessible (using cached data)"
+          fi
+          
+          # === TIER 2: EA Blog Check (Normal Boost - 72 hours) ===
+          if [ "$BOOST_LEVEL" != "aggressive" ]; then
+            echo "🔍 Tier 2: Checking EA blog update timestamp..."
+            EA_TIME=$(date -d "$EA_LAST" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$EA_LAST" +%s 2>/dev/null || echo "0")
+            
+            if [ "$EA_TIME" != "0" ]; then
+              HOURS_SINCE_EA=$((($CURRENT_TIME - $EA_TIME) / 3600))
+              echo "   Hours since EA blog update: $HOURS_SINCE_EA"
+              
+              if [ "$HOURS_SINCE_EA" -lt 72 ]; then
+                BOOST_MODE="active"
+                BOOST_LEVEL="normal"
+                BOOST_REASON="EA blog update $HOURS_SINCE_EA hours ago"
+                echo "   🔔 NORMAL BOOST ACTIVE (EA Blog)"
+              fi
+            fi
+            
+            # Try to fetch EA news page
+            EA_HTML=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" "$EA_NEWS_URL" 2>/dev/null || echo "")
+            
+            if [ -n "$EA_HTML" ]; then
+              # Look for portal/sdk mentions with recent dates
+              if echo "$EA_HTML" | grep -qi "portal\|sdk"; then
+                TODAY=$(date -u +%Y-%m-%d)
+                YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d 2>/dev/null)
+                
+                if echo "$EA_HTML" | grep -qi "$TODAY\|$YESTERDAY"; then
+                  echo "   📰 New EA blog post detected mentioning Portal/SDK!"
+                  BOOST_MODE="active"
+                  BOOST_LEVEL="normal"
+                  BOOST_REASON="New EA blog update detected"
+                  
+                  # Update cache
+                  jq ".ea_blog.last_update_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"" "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
+                fi
+              fi
+            fi
+          fi
+          
+          # === TIER 3: Normal Operation ===
+          if [ "$BOOST_MODE" = "none" ]; then
+            echo "✅ Tier 3: Normal operation mode"
+          fi
+          
+          # Update last check time
+          jq ".last_check_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"" "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
+          
+          # Output results
+          echo "boost_mode=$BOOST_MODE" >> $GITHUB_OUTPUT
+          echo "boost_level=$BOOST_LEVEL" >> $GITHUB_OUTPUT
+          echo "boost_reason=$BOOST_REASON" >> $GITHUB_OUTPUT
+          echo "game_version=$GAME_VERSION" >> $GITHUB_OUTPUT
+          
+          echo ""
+          echo "=========================================="
+          echo "🚀 Boost Status: $BOOST_MODE"
+          echo "📊 Boost Level: $BOOST_LEVEL"
+          echo "💡 Reason: $BOOST_REASON"
+          echo "🎮 Game Version: $GAME_VERSION"
+          echo "=========================================="
+      
       - name: Check work hours (Mon/Tue only)
         id: work_hours
         run: |
           HOUR=$(date -u +%H | sed 's/^0//')
           DAY=$(date -u +%u)
+          BOOST_MODE="${{ steps.game_update.outputs.boost_mode }}"
+          BOOST_LEVEL="${{ steps.game_update.outputs.boost_level }}"
           
           echo "Current hour (UTC): $HOUR"
-          echo "Day of week: $DAY"
+          echo "Day of week: $DAY (1=Mon, 7=Sun)"
+          echo "Boost mode: $BOOST_MODE"
+          echo "Boost level: $BOOST_LEVEL"
           
           SHOULD_RUN="true"
           
-          # Check Mon/Tue work hours (8-20)
-          if [ "$DAY" = "1" ] || [ "$DAY" = "2" ]; then
+          # Aggressive boost: Always run on weekdays (SteamDB update within 8h)
+          if [ "$BOOST_LEVEL" = "aggressive" ] && [ "$DAY" -ge 1 ] && [ "$DAY" -le 5 ]; then
+            echo "⚡ Aggressive boost active - running regardless of time"
+            SHOULD_RUN="true"
+          # Normal boost: Run hourly on weekdays (EA blog update within 72h)
+          elif [ "$BOOST_LEVEL" = "normal" ] && [ "$DAY" -ge 1 ] && [ "$DAY" -le 5 ]; then
+            echo "🔔 Normal boost active - running hourly on weekday"
+            SHOULD_RUN="true"
+          # Regular schedule: Check Mon/Tue work hours (8-20)
+          elif [ "$DAY" = "1" ] || [ "$DAY" = "2" ]; then
             if [ "$HOUR" -lt 8 ] || [ "$HOUR" -gt 20 ]; then
               SHOULD_RUN="false"
-              echo "Outside work hours"
+              echo "⏰ Outside work hours (8-20 UTC)"
             fi
           fi
           
@@ -333,6 +491,24 @@ jobs:
               core.setOutput('changelog', createBasicChangelog());
               console.log('Gemini request failed, using basic changelog:', error.message);
             }
+      
+      - name: Update game-SDK version tracker
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          CACHE_FILE=".github/cache/game-update-tracker.json"
+          NEW_VERSION="${{ steps.check.outputs.new_version }}"
+          GAME_VERSION="${{ steps.game_update.outputs.game_version }}"
+          
+          if [ -f "$CACHE_FILE" ]; then
+            echo "📝 Updating game-SDK version mapping..."
+            
+            jq ".sdk.last_update_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" | \
+                .sdk.version = \"$NEW_VERSION\" | \
+                .sdk.matched_game_version = \"$GAME_VERSION\"" \
+                "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
+            
+            echo "✅ Linked SDK v$NEW_VERSION with game v$GAME_VERSION"
+          fi
       
       - name: Commit and push changes
         if: steps.check.outputs.update_needed == 'true'

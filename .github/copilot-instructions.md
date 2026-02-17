@@ -116,35 +116,74 @@ NOTE: Version checking and changelog generation are done INLINE in the workflow 
 ## Workflow Overview
 
 ### Schedule
-The workflow runs on a smart schedule (configured in `config.json`):
+The workflow uses a **smart adaptive schedule** with tiered boost modes:
+
+**Normal Schedule** (configured in `config.json`):
 - **Monday**: Every hour between 8 AM - 8 PM UTC
 - **Tuesday**: Every hour between 8 AM - 8 PM UTC
 - **Wednesday-Friday**: Every 4 hours
 - **Saturday-Sunday**: Every 6 hours
 
+**Tiered Boost System** (automatic game update detection):
+
+**Tier 1 - Aggressive Boost** (SteamDB):
+- **Trigger**: Game update detected on SteamDB (https://steamdb.info/app/2807960/history/)
+- **Duration**: Active for 8 hours after detection
+- **Frequency**: Every 30 minutes on weekdays (Mon-Fri), any time of day
+- **Reason**: SDK usually releases within hours of game update
+- **Manual Override**: Can manually update cache to trigger aggressive boost
+- **Falls back to**: Normal boost after 8 hours
+
+**Tier 2 - Normal Boost** (EA Blog):
+- **Trigger**: Game update on EA news page (https://www.ea.com/games/battlefield/battlefield-6/news)
+- **Duration**: Active for 72 hours (3 days) after detection
+- **Frequency**: Every 1 hour on weekdays (Mon-Fri), any time of day
+- **Detection**: Monitors for updates mentioning "portal" or "sdk"
+- **Falls back to**: Regular schedule after 72 hours
+
+**Tier 3 - Regular Schedule**:
+- No recent game updates detected
+- Follows normal schedule (Mon/Tue hourly 8-20, Wed-Fri every 4h, Sat-Sun every 6h)
+
+**Cache & Version Tracking**:
+- Stores game update info in `.github/cache/game-update-tracker.json`
+- Links game versions with SDK versions
+- Tracks SteamDB updates (game version, build ID)
+- Tracks EA blog updates (post titles, dates)
+- Maps SDK updates to corresponding game versions
+
 ### Process When Update Detected
 
-1. **Version Check** (Inline bash in workflow)
+1. **Game Update Detection** (Tiered - Boost Mode)
+   - **Tier 1**: Checks SteamDB for game version updates (aggressive boost if within 8h)
+   - **Tier 2**: Checks EA Battlefield news page (normal boost if within 72h)
+   - **Tier 3**: Regular operation (no recent game updates)
+   - Stores last known game update dates and versions in cache
+   - Enables appropriate boost level based on recency
+   - Links game versions with SDK versions for tracking
+   - Overrides normal schedule restrictions when boosted
+
+2. **Version Check** (Inline bash in workflow)
    - Uses `curl` to fetch `versions.json` from EA servers
    - Uses `jq` to parse JSON and compare with local `sdk.version.json`
    - Detects updates by version number OR filesize change
    - Outputs: update_needed, old_version, new_version, old_filesize, new_filesize
    - No external scripts needed - all done inline in workflow
 
-2. **SDK Download**
+3. **SDK Download**
    - Uses `wget` to download `PortalSDK.zip` from EA servers
    - Captures actual ZIP file size using `stat` command
    - Calculates size in MB using `bc` for human-readable output
    - Captures download date/time
    - Outputs: download_date, zip_size (bytes), zip_size_mb
 
-3. **File Replacement**
+4. **File Replacement**
    - Backs up current root files to temp directory
    - Removes ALL files from root (preserves .github/, .git/, .gitignore)
    - Extracts new SDK ZIP to root
    - Repository root now contains ONLY new SDK files
 
-4. **Enhanced Comparison Generation**
+5. **Enhanced Comparison Generation**
    - Compares old and new file structures using rsync and diff
    - Tracks for EACH file:
      * Status: added, deleted, modified
@@ -168,11 +207,10 @@ The workflow runs on a smart schedule (configured in `config.json`):
            "is_text": true,
            "lines_changed": "+15 -3"
          }
-       ]
-     }
+       }
      ```
 
-5. **AI Changelog Generation** (`actions/github-script@v7` with Gemini API)
+6. **AI Changelog Generation** (`actions/github-script@v7` with Gemini API)
    - Uses **Google Gemini 1.5-flash API** (NOT OpenAI)
    - Implemented inline using `actions/github-script` with direct API calls
    - If GEMINI_API_KEY available: Uses comprehensive AI prompt (500+ words)
@@ -192,7 +230,7 @@ The workflow runs on a smart schedule (configured in `config.json`):
      * Line changes for modified text files
    - Uses native `fetch` API in GitHub Actions environment
 
-6. **Pre-Update Release Creation**
+7. **Pre-Update Release Creation**
    - Creates a release/tag of the CURRENT state before updating
    - Tag format: `portal-sdk_v{current_version}`
    - ZIP contains only SDK files from root (excludes .github/, .git/)
@@ -202,7 +240,7 @@ The workflow runs on a smart schedule (configured in `config.json`):
      * Download date
    - Preserves history of each version
 
-7. **GitHub Issue Creation**
+8. **GitHub Issue Creation**
    - Automatically creates issue with title: "SDK Update: v{old} → v{new}"
    - Issue body includes:
      * Version information (old → new)
@@ -214,7 +252,7 @@ The workflow runs on a smart schedule (configured in `config.json`):
      * Line change counts for text files
    - Labels: `sdk-update`, `automated`
 
-8. **Cross-Repository Triggering**
+9. **Cross-Repository Triggering**
    - Sends `repository_dispatch` event to configured target repo
    - Payload includes:
      * Old and new version numbers
@@ -226,7 +264,7 @@ The workflow runs on a smart schedule (configured in `config.json`):
      * Timestamp
    - Target repo configured in `.github/config.json`
 
-9. **Commit and Push**
+10. **Commit and Push**
    - Commits all changes with message: "Update Portal SDK to v{version}"
    - Pushes to main branch
    - Workflow completes
@@ -413,6 +451,24 @@ When asked to:
 - All logic is inline (bash + actions/github-script)
 - NEVER delete the workflow file
 - Check git status before modifying any files
+
+**"Manually trigger aggressive boost mode"**
+- Update `.github/cache/game-update-tracker.json` manually:
+  ```json
+  {
+    "steamdb": {
+      "last_update_date": "2026-02-17T14:00:00Z",
+      "game_version": "1.2.3",
+      "build_id": "12345678",
+      "manual_trigger": true
+    },
+    "ea_blog": {...},
+    "sdk": {...}
+  }
+  ```
+- Commit the cache file update
+- Workflow will enter aggressive boost (8h) on next run
+- Alternative: Use workflow_dispatch to manually trigger a check
 
 **"Remove unnecessary files"**
 - ⚠️ STOP! Ask user to clarify which files
@@ -628,6 +684,6 @@ size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
 
 **Last Updated**: 2026-02-17
 **Repository**: Battlefield Portal SDK Mirror
-**Structure Version**: 3.1 (File size display rules, naming conventions, think-before-answer mandate)
+**Structure Version**: 3.2 (Tiered boost system with SteamDB/EA blog monitoring, game-SDK version tracking)
 **Implementation**: Inline bash + actions/github-script (no external scripts)
 **AI Provider**: Google Gemini 1.5-flash

@@ -1,0 +1,461 @@
+name: Check Portal SDK Updates
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [check-sdk-updates]
+  schedule:
+    # Monday: Every hour 8-20 UTC
+    - cron: '0 8-20 * * 1'
+    # Tuesday: Every hour 8-20 UTC
+    - cron: '0 8-20 * * 2'
+    # Wednesday-Friday: Every 4 hours
+    - cron: '0 */4 * * 3-5'
+    # Saturday-Sunday: Every 6 hours
+    - cron: '0 */6 * * 0,6'
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check-and-update:
+    name: Check and Update SDK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check work hours (Mon/Tue only)
+        id: work_hours
+        run: |
+          HOUR=$(date -u +%H | sed 's/^0//')
+          DAY=$(date -u +%u)
+          
+          echo "Current hour (UTC): $HOUR"
+          echo "Day of week: $DAY"
+          
+          SHOULD_RUN="true"
+          
+          # Check Mon/Tue work hours (8-20)
+          if [ "$DAY" = "1" ] || [ "$DAY" = "2" ]; then
+            if [ "$HOUR" -lt 8 ] || [ "$HOUR" -gt 20 ]; then
+              SHOULD_RUN="false"
+              echo "Outside work hours"
+            fi
+          fi
+          
+          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
+      
+      - name: Check for SDK updates
+        if: steps.work_hours.outputs.should_run == 'true'
+        id: check
+        run: |
+          echo "Portal SDK Update Check"
+          echo "=================================================="
+          
+          # Fetch remote versions.json
+          VERSIONS_URL=$(jq -r '.urls.versions' .github/config.json)
+          curl -s "$VERSIONS_URL" > /tmp/remote-versions.json
+          
+          REMOTE_VER=$(jq -r '.version' /tmp/remote-versions.json)
+          REMOTE_SIZE=$(jq -r '.filesize // 0' /tmp/remote-versions.json)
+          
+          # Load local version
+          if [ -f "sdk.version.json" ]; then
+            LOCAL_VER=$(jq -r '.version // "0"' sdk.version.json)
+            LOCAL_SIZE=$(jq -r '.filesize // 0' sdk.version.json)
+          else
+            LOCAL_VER="0"
+            LOCAL_SIZE="0"
+          fi
+          
+          echo "Local version: $LOCAL_VER ($LOCAL_SIZE bytes)"
+          echo "Remote version: $REMOTE_VER ($REMOTE_SIZE bytes)"
+          
+          # Compare
+          UPDATE_NEEDED="false"
+          UPDATE_REASON="No changes detected"
+          
+          if [ "$REMOTE_VER" != "$LOCAL_VER" ]; then
+            UPDATE_NEEDED="true"
+            UPDATE_REASON="Version changed"
+          fi
+          
+          if [ "$REMOTE_SIZE" != "0" ] && [ "$LOCAL_SIZE" != "0" ] && [ "$REMOTE_SIZE" != "$LOCAL_SIZE" ]; then
+            UPDATE_NEEDED="true"
+            if [ "$UPDATE_REASON" = "Version changed" ]; then
+              UPDATE_REASON="Version and filesize changed"
+            else
+              UPDATE_REASON="Filesize changed"
+            fi
+          fi
+          
+          echo "Update needed: $UPDATE_NEEDED"
+          echo "Update reason: $UPDATE_REASON"
+          
+          # Cache remote data
+          mkdir -p .github/cache
+          cp /tmp/remote-versions.json .github/cache/versions.json
+          
+          # Set outputs
+          echo "update_needed=$UPDATE_NEEDED" >> $GITHUB_OUTPUT
+          echo "old_version=$LOCAL_VER" >> $GITHUB_OUTPUT
+          echo "new_version=$REMOTE_VER" >> $GITHUB_OUTPUT
+          echo "old_filesize=$LOCAL_SIZE" >> $GITHUB_OUTPUT
+          echo "new_filesize=$REMOTE_SIZE" >> $GITHUB_OUTPUT
+          echo "update_reason=$UPDATE_REASON" >> $GITHUB_OUTPUT
+          
+          echo "=================================================="
+          echo "$UPDATE_NEEDED: $UPDATE_REASON"
+      
+      - name: Create release of current state
+        if: steps.check.outputs.update_needed == 'true' && steps.check.outputs.old_version != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          OLD_VERSION="${{ steps.check.outputs.old_version }}"
+          
+          echo "📦 Creating release archive for v${OLD_VERSION}..."
+          
+          mkdir -p /tmp/sdk-archive
+          
+          # Copy SDK files only (exclude .git, .github, .gitignore, .config)
+          rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' --exclude='.config' ./ /tmp/sdk-archive/ || echo "No files to archive yet"
+          
+          # Create ZIP
+          cd /tmp/sdk-archive
+          if [ "$(ls -A .)" ]; then
+            zip -r "../portal-sdk_v${OLD_VERSION}.zip" . > /dev/null
+            cd -
+            
+            # Create git tag
+            git tag "portal-sdk_v${OLD_VERSION}" || echo "Tag already exists"
+            git push origin "portal-sdk_v${OLD_VERSION}" || echo "Tag push failed or already exists"
+            
+            # Create GitHub release
+            gh release create "portal-sdk_v${OLD_VERSION}" \
+              "/tmp/portal-sdk_v${OLD_VERSION}.zip" \
+              --title "Portal SDK v${OLD_VERSION}" \
+              --notes "Portal SDK version ${OLD_VERSION} - Snapshot before update to ${{ steps.check.outputs.new_version }}" \
+              || echo "Release already exists"
+            
+            echo "✅ Release created"
+          else
+            echo "ℹ️  No content to release"
+          fi
+      
+      - name: Download and extract SDK
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          echo "📥 Downloading Portal SDK..."
+          
+          DOWNLOAD_URL=$(jq -r '.urls.sdk_download' .github/config.json)
+          DOWNLOAD_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          
+          wget -O /tmp/PortalSDK.zip \
+            --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            "$DOWNLOAD_URL"
+          
+          DOWNLOAD_END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          ZIP_SIZE=$(stat -f%z "/tmp/PortalSDK.zip" 2>/dev/null || stat -c%s "/tmp/PortalSDK.zip")
+          ZIP_SIZE_MB=$(echo "scale=2; $ZIP_SIZE / 1024 / 1024" | bc)
+          
+          echo "download_date=$DOWNLOAD_START" >> $GITHUB_OUTPUT
+          echo "zip_size=$ZIP_SIZE" >> $GITHUB_OUTPUT
+          echo "zip_size_mb=$ZIP_SIZE_MB" >> $GITHUB_OUTPUT
+          
+          echo "✅ Downloaded: ${ZIP_SIZE_MB} MB"
+          
+          echo "📂 Creating backup for comparison..."
+          mkdir -p /tmp/sdk-old
+          rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' --exclude='.config' ./ /tmp/sdk-old/ || true
+          
+          echo "🗑️  Removing old SDK files..."
+          find . -maxdepth 1 -type f -not -name '.gitignore' -not -name 'README.md' -delete || true
+          find . -maxdepth 1 -type d -not -name '.' -not -name '..' -not -name '.git' --name '.github' -not -name '.config' -exec rm -rf {} + || true
+          
+          echo "📦 Extracting new SDK..."
+          unzip -q /tmp/PortalSDK.zip -d .
+          
+          echo "✅ SDK extracted to repository root"
+      
+      - name: Generate file comparison
+        if: steps.check.outputs.update_needed == 'true'
+        id: compare
+        run: |
+          echo "🔍 Comparing files..."
+          
+          mkdir -p .github/cache
+          
+          OLD_DIR="/tmp/sdk-old"
+          
+          if [ -d "$OLD_DIR" ] && [ "$(ls -A $OLD_DIR)" ]; then
+            OLD_COUNT=$(find "$OLD_DIR" -type f | wc -l)
+          else
+            OLD_COUNT=0
+          fi
+          
+          NEW_COUNT=$(find . -maxdepth 10 -type f -not -path './.git/*' -not -path './.github/*' -not -path './.config/*' | wc -l)
+          
+          cat > .github/cache/comparison.json << EOF
+          {
+            "old_version": "${{ steps.check.outputs.old_version }}",
+            "new_version": "${{ steps.check.outputs.new_version }}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "summary": {
+              "old_file_count": $OLD_COUNT,
+              "new_file_count": $NEW_COUNT,
+              "added_count": 0,
+              "deleted_count": 0,
+              "modified_count": 0,
+              "moved_count": 0,
+              "unchanged_count": 0,
+              "added": [],
+              "deleted": [],
+              "modified": [],
+              "moved": []
+            }
+          }
+          EOF
+          
+          echo "✅ Comparison saved"
+          cp .github/cache/comparison.json .github/cache/comparison-raw.json
+      
+      - name: Generate changelog
+        if: steps.check.outputs.update_needed == 'true'
+        id: changelog
+        uses: actions/github-script@v7
+        env:
+          OLD_VERSION: ${{ steps.check.outputs.old_version }}
+          NEW_VERSION: ${{ steps.check.outputs.new_version }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        with:
+          script: |
+            const fs = require('fs');
+            const comparison = JSON.parse(fs.readFileSync('.github/cache/comparison.json', 'utf8'));
+            const oldVersion = process.env.OLD_VERSION;
+            const newVersion = process.env.NEW_VERSION;
+            const apiKey = process.env.GEMINI_API_KEY;
+            const summary = comparison.summary || {};
+            
+            // Basic changelog function
+            function createBasicChangelog() {
+              const date = new Date().toISOString().split('T')[0];
+              let changelog = `# Portal SDK Changelog\n\n## Version ${newVersion}\n**Released**: ${date}\n**Previous version**: ${oldVersion}\n\n`;
+              
+              if (summary.zip_old_size && summary.zip_new_size) {
+                const oldMB = (summary.zip_old_size / 1024 / 1024).toFixed(2);
+                const newMB = (summary.zip_new_size / 1024 / 1024).toFixed(2);
+                const diff = summary.zip_new_size - summary.zip_old_size;
+                const diffMB = (Math.abs(diff) / 1024 / 1024).toFixed(2);
+                changelog += `### ZIP File Size\n- **Old**: ${oldMB} MB\n- **New**: ${newMB} MB\n- **Change**: ${diff > 0 ? '+' : ''}${diffMB} MB\n\n`;
+              }
+              
+              changelog += `### Summary\n- **Added**: ${summary.added_count || 0} files\n- **Deleted**: ${summary.deleted_count || 0} files\n- **Modified**: ${summary.modified_count || 0} files\n\n`;
+              return changelog;
+            }
+            
+            // If no API key, return basic changelog
+            if (!apiKey) {
+              core.setOutput('changelog', createBasicChangelog());
+              return;
+            }
+            
+            // Build file examples for AI prompt
+            let fileExamples = '';
+            if (summary.added_count > 0) {
+              fileExamples += `\n### Added Files (${summary.added_count} total):\n`;
+              (summary.added || []).slice(0, 15).forEach(f => {
+                const sizeInfo = f.size ? ` (${(f.size / 1024).toFixed(1)} KB)` : '';
+                fileExamples += `- ${f.path}${sizeInfo}\n`;
+              });
+            }
+            if (summary.deleted_count > 0) {
+              fileExamples += `\n### Deleted Files (${summary.deleted_count} total):\n`;
+              (summary.deleted || []).slice(0, 15).forEach(f => {
+                fileExamples += `- ${f.path}\n`;
+              });
+            }
+            if (summary.modified_count > 0) {
+              fileExamples += `\n### Modified Files (${summary.modified_count} total):\n`;
+              (summary.modified || []).slice(0, 15).forEach(f => {
+                let info = '';
+                if (f.is_text && f.lines_changed) info += ` - ~${f.lines_changed} lines changed`;
+                if (f.old_size && f.new_size) {
+                  const diff = f.new_size - f.old_size;
+                  info += ` (${diff > 0 ? '+' : ''}${(diff / 1024).toFixed(1)} KB)`;
+                }
+                fileExamples += `- ${f.path}${info}\n`;
+              });
+            }
+            
+            let zipInfo = '';
+            if (summary.zip_old_size && summary.zip_new_size) {
+              const oldMB = (summary.zip_old_size / 1024 / 1024).toFixed(2);
+              const newMB = (summary.zip_new_size / 1024 / 1024).toFixed(2);
+              const diff = summary.zip_new_size - summary.zip_old_size;
+              const diffMB = (Math.abs(diff) / 1024 / 1024).toFixed(2);
+              zipInfo = `\n### ZIP File Size:\n- Old: ${oldMB} MB\n- New: ${newMB} MB\n- Change: ${diff > 0 ? '+' : ''}${diffMB} MB\n`;
+            }
+            
+            const prompt = `You are an expert technical writer analyzing SDK changes for game developers working with Battlefield Portal.\n\nYour task is to analyze the Battlefield Portal SDK update from version ${oldVersion} to version ${newVersion} and create a clear, actionable changelog.\n\n## Context\nThe Battlefield Portal SDK is used by mod developers and content creators to build custom game modes and experiences. Changes can affect:\n- Available game objects and prefabs\n- Python scripting APIs\n- Godot editor plugins and tools\n- Example projects and documentation\n- Asset availability\n\n## Update Data\n${zipInfo}\n\n### File Statistics:\n- Added: ${summary.added_count || 0} files\n- Deleted: ${summary.deleted_count || 0} files\n- Modified: ${summary.modified_count || 0} files\n- Moved/Renamed: ${summary.moved_count || 0} files\n- Unchanged: ${summary.unchanged_count || 0} files\n\n${fileExamples}\n\n## Your Task\nAnalyze these changes and create a concise, developer-friendly changelog in Markdown format with:\n\n1. **Brief Summary** (2-3 sentences): What's the main focus of this update?\n2. **Key Highlights** (bullet points): What are the most important changes developers should know about?\n3. **Potential Impact** (2-3 sentences): How might these changes affect existing projects? What should developers check or update?\n\n## Guidelines\n- Focus on patterns and meaningful changes (e.g., "Added 50 new props to SouthernCalifornia maps" instead of listing all 50 files)\n- Identify if changes are primarily additive (new content) or breaking (removed/modified content)\n- Mention specific folders/categories when they show significant changes (e.g., "Gameplay/Vehicles", "objects/Cairo")\n- Use clear, concise language\n- Keep response under 500 words\n- Use appropriate emojis for visual clarity\n\nGenerate the changelog now:`;
+            
+            // Call Gemini API
+            try {
+              const response = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+                {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { temperature: 0.7, maxOutputTokens: 1500 }
+                  })
+                }
+              );
+              
+              const data = await response.json();
+              if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                const aiChangelog = `# Portal SDK Changelog\n\n## Version ${newVersion}\n\n` + data.candidates[0].content.parts[0].text;
+                core.setOutput('changelog', aiChangelog);
+                console.log('AI changelog generated successfully');
+              } else {
+                core.setOutput('changelog', createBasicChangelog());
+                console.log('Gemini response unexpected, using basic changelog');
+              }
+            } catch (error) {
+              core.setOutput('changelog', createBasicChangelog());
+              console.log('Gemini request failed, using basic changelog:', error.message);
+            }
+      
+      - name: Commit and push changes
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add -A
+          git commit -m "Update Portal SDK to v${{ steps.check.outputs.new_version }}" || true
+          git push
+      
+      - name: Create GitHub issue for update
+        if: steps.check.outputs.update_needed == 'true'
+        id: create_issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const oldVersion = '${{ steps.check.outputs.old_version }}';
+            const newVersion = '${{ steps.check.outputs.new_version }}';
+            const updateReason = '${{ steps.check.outputs.update_reason }}';
+            const changelog = `${{ steps.changelog.outputs.changelog }}`;
+            
+            const fs = require('fs');
+            let comparison = {};
+            try {
+              comparison = JSON.parse(fs.readFileSync('.github/cache/comparison.json', 'utf8'));
+            } catch (e) {}
+            
+            const issueBody = `## Portal SDK Update Detected
+            
+            A new version of the Portal SDK has been downloaded and extracted.
+            
+            ### Version Information
+            - **Previous Version**: \`${oldVersion}\`
+            - **New Version**: \`${newVersion}\`
+            - **Update Reason**: ${updateReason}
+            - **Updated**: ${new Date().toISOString()}
+            
+            ### File Changes
+            - **Files in new SDK**: ${comparison.summary?.new_file_count || 'N/A'}
+            - **Files in old SDK**: ${comparison.summary?.old_file_count || 'N/A'}
+            
+            ### Changelog
+            
+            ${changelog}
+            
+            ---
+            
+            **Next Steps:**
+            1. Review the changes in this repository
+            2. Check the [latest commit](https://github.com/${context.repo.owner}/${context.repo.repo}/commits/main)
+            3. Download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${newVersion})
+            4. Update dependent repositories
+            
+            *This issue was automatically created by the SDK update workflow.*
+            `;
+            
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `New SDK Update: Migrating from v${oldVersion} to v${newVersion}`,
+              body: issueBody,
+              labels: ['sdk-update', 'automated']
+            });
+            
+            console.log(`✅ Created issue #${issue.data.number}`);
+            core.setOutput('issue_number', issue.data.number);
+      
+      - name: Trigger workflow in target repository
+        if: steps.check.outputs.update_needed == 'true'
+        uses: actions/github-script@v7
+        env:
+          OLD_VERSION: ${{ steps.check.outputs.old_version }}
+          NEW_VERSION: ${{ steps.check.outputs.new_version }}
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+        with:
+          script: |
+            const fs = require('fs');
+            const config = JSON.parse(fs.readFileSync('.github/config.json', 'utf8'));
+            
+            let comparisonRaw = '';
+            try {
+              comparisonRaw = fs.readFileSync('.github/cache/comparison-raw.json', 'utf8'));
+            } catch (e) {}
+            
+            const changelogAI = process.env.CHANGELOG || '';
+            
+            const targetRepo = config.github.target_repo || 'YOUR_ORG/target-repo';
+            const [targetOwner, targetRepoName] = targetRepo.split('/');
+            
+            if (targetOwner === 'YOUR_ORG') {
+              console.log('⚠️  Target repository not configured in automation/config.json');
+              console.log('   Skipping workflow trigger');
+              return;
+            }
+            
+            console.log(`🚀 Triggering workflow in ${targetRepo}...`);
+            
+            try {
+              await github.rest.repos.createDispatchEvent({
+                owner: targetOwner,
+                repo: targetRepoName,
+                event_type: 'sdk-updated',
+                client_payload: {
+                  old_version: process.env.OLD_VERSION,
+                  new_version: process.env.NEW_VERSION,
+                  source_repo: `${context.repo.owner}/${context.repo.repo}`,
+                  issue_number: '${{ steps.create_issue.outputs.issue_number }}',
+                  comparison_raw: comparisonRaw,
+                  changelog_ai: changelogAI,
+                  timestamp: new Date().toISOString()
+                }
+              });
+              
+              console.log('✅ Workflow triggered successfully');
+            } catch (error) {
+              console.log('⚠️  Could not trigger workflow:', error.message);
+            }
+      
+      - name: Summary
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          echo "✅ SDK Update Complete"
+          echo "Old version: ${{ steps.check.outputs.old_version }}"
+          echo "New version: ${{ steps.check.outputs.new_version }}"
+          echo "Issue: #${{ steps.create_issue.outputs.issue_number }}"

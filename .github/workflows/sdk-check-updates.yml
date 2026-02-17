@@ -244,15 +244,15 @@ jobs:
           
           # Fetch remote versions.json
           VERSIONS_URL=$(jq -r '.urls.versions' .github/config.json)
-          curl -s "$VERSIONS_URL" > /tmp/remote-versions.json
+          curl -s -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:143.0) Gecko/20100101 Firefox/143.0" "$VERSIONS_URL" > /tmp/remote-versions.json
           
-          REMOTE_VER=$(jq -r '.version' /tmp/remote-versions.json)
-          REMOTE_SIZE=$(jq -r '.filesize // 0' /tmp/remote-versions.json)
+          REMOTE_VER=$(jq -r '.versions | last | .version' /tmp/remote-versions.json)
+          REMOTE_SIZE=$(jq -r '.versions | last | .fileSize // 0' /tmp/remote-versions.json)
           
           # Load local version
           if [ -f "sdk.version.json" ]; then
             LOCAL_VER=$(jq -r '.version // "0"' sdk.version.json)
-            LOCAL_SIZE=$(jq -r '.filesize // 0' sdk.version.json)
+            LOCAL_SIZE=$(jq -r '.fileSize // .filesize // 0' sdk.version.json)
           else
             LOCAL_VER="0"
             LOCAL_SIZE="0"

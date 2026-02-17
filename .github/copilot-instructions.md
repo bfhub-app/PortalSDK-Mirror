@@ -140,7 +140,7 @@ The workflow runs on a smart schedule (configured in `config.json`):
 
 3. **File Replacement**
    - Backs up current root files to temp directory
-   - Removes ALL files from root (preserves .github/, .git/, .gitignore, .config/)
+   - Removes ALL files from root (preserves .github/, .git/, .gitignore)
    - Extracts new SDK ZIP to root
    - Repository root now contains ONLY new SDK files
 
@@ -195,7 +195,7 @@ The workflow runs on a smart schedule (configured in `config.json`):
 6. **Pre-Update Release Creation**
    - Creates a release/tag of the CURRENT state before updating
    - Tag format: `portal-sdk_v{current_version}`
-   - ZIP contains only SDK files from root (excludes .github/, .git/, .config/)
+   - ZIP contains only SDK files from root (excludes .github/, .git/)
    - Release notes include:
      * Current version number
      * ZIP file size
@@ -419,7 +419,6 @@ When asked to:
 - Check git status first
 - NEVER delete .github/workflows/ files
 - NEVER delete .github/config.json
-- NEVER suggest removing .config/ folder unless user explicitly requests
 
 **"Clean up the repository"**
 - DO NOT delete committed files
@@ -500,10 +499,9 @@ When asked to:
 ## File Exclusions
 
 Files/folders ALWAYS excluded from root SDK extraction:
-- `.github/` - GitHub automation (scripts, workflows, config, cache)
+- `.github/` - GitHub automation (workflows, config, cache)
 - `.git/` - Git metadata
 - `.gitignore` - Git configuration
-- `.config/` - Configuration folder (do not remove)
 
 These are never included in:
 - Root directory SDK extraction
@@ -599,7 +597,6 @@ size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
 ❌ Add documentation files to root (README, SETUP, etc.)
 ❌ Delete the workflow file
 ❌ Delete .github/config.json
-❌ Suggest removing .config/ folder
 ❌ Delete uncommitted files
 ❌ Remove files without user confirmation
 ❌ Use OpenAI API (switched to Gemini)

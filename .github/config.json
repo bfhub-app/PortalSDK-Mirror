@@ -1,0 +1,48 @@
+{
+  "schedule": {
+    "monday": {
+      "interval_hours": 1,
+      "work_hours": {
+        "start": 8,
+        "end": 20
+      },
+      "timezone": "UTC"
+    },
+    "tuesday": {
+      "interval_hours": 1,
+      "work_hours": {
+        "start": 8,
+        "end": 20
+      },
+      "timezone": "UTC"
+    },
+    "wednesday": {
+      "interval_hours": 4
+    },
+    "thursday": {
+      "interval_hours": 4
+    },
+    "friday": {
+      "interval_hours": 4
+    },
+    "saturday": {
+      "interval_hours": 6
+    },
+    "sunday": {
+      "interval_hours": 6
+    }
+  },
+  "urls": {
+    "versions": "https://download.portal.battlefield.com/versions.json",
+    "sdk_download": "https://download.portal.battlefield.com/PortalSDK.zip"
+  },
+  "github": {
+    "issue_labels": ["sdk-update", "automated"],
+    "target_repo": "YOUR_ORG/target-repo",
+    "trigger_workflow": "sdk-updated.yml"
+  },
+  "release": {
+    "tag_prefix": "portal-sdk_v",
+    "create_github_release": true
+  }
+}

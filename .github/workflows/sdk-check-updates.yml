@@ -369,14 +369,16 @@ jobs:
           mkdir -p /tmp/sdk-old
           rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-old/ || true
           
-          echo "🗑️  Removing old SDK files..."
-          find . -maxdepth 1 -type f -not -name '.gitignore' -not -name 'README.md' -delete || true
-          find . -maxdepth 1 -type d -not -name '.' -not -name '..' -not -name '.git' -not -name '.github' -exec rm -rf {} + || true
+          echo "� Extracting new SDK to temporary location..."
+          mkdir -p /tmp/sdk-new
+          unzip -q /tmp/PortalSDK.zip -d /tmp/sdk-new
           
-          echo "📦 Extracting new SDK..."
-          unzip -q /tmp/PortalSDK.zip -d .
+          echo "🔄 Syncing only changed files..."
+          rsync -av --checksum --delete \
+            --exclude='.git' --exclude='.github' --exclude='.gitignore' \
+            /tmp/sdk-new/ ./
           
-          echo "✅ SDK extracted to repository root"
+          echo "✅ SDK updated (only changed files written)"
       
       - name: Generate file comparison
         if: steps.check.outputs.update_needed == 'true'

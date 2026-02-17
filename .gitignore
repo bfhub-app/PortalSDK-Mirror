@@ -36,3 +36,15 @@ yarn-error.log*
 .github/cache/comparison*.json
 .github/cache/versions.json
 .github/cache/game-update-tracker.json
+
+# SDK-specific exclusions (large runtime/build files)
+GodotProject/scripts/
+GodotProject/addons/bf_portal/
+GodotProject/addons/scene-library/
+GodotProject/raw/
+GodotProject/.godot/
+
+# Large binary files
+*.gd
+*.glb
+GodotProject/.objects/**/*.tscn

@@ -188,56 +188,51 @@ The workflow uses a **smart adaptive schedule** with tiered boost modes:
    - Outputs: download_date, zip_size (bytes), zip_size_mb
 
 4. **File Replacement**
-   - Backs up current root files to temp directory
-   - Removes ALL files from root (preserves .github/, .git/, .gitignore)
-   - Extracts new SDK ZIP to root
-   - Repository root now contains ONLY new SDK files
+   - Extracts new SDK ZIP to temporary location
+   - Uses `rsync --checksum --delete` to sync only changed files
+   - Excludes large build artifacts and runtime files (see File Exclusions section)
+   - Repository root contains ONLY modified SDK files
+   - Optimized: unchanged files preserve original timestamps
 
-5. **Enhanced Comparison Generation**
-   - Compares old and new file structures using rsync and diff
-   - Tracks for EACH file:
-     * Status: added, deleted, modified
-     * File size in bytes
-     * For text files (.json, .xml, .txt, .md, .gd, .py, .js, .ts, .css, .html, .yml, .yaml, .ini, .cfg, .conf):
-       - Line count changes (how many lines added/removed)
-       - Flags file as text-comparable
-     * For binary files: only size comparison
-   - ZIP filesize comparison (old vs new in bytes and MB)
+5. **File Comparison Generation (Git-based)**
+   - Uses `git diff` to efficiently detect changes
+   - Tracks file statistics:
+     * Files added (new files)
+     * Files deleted (removed files)
+     * Files modified (content changed)
+   - Excludes large build artifacts and runtime files
+   - Optimized for speed (<5 minutes vs 20+ minutes)
    - Saves to `.github/cache/comparison.json` with structure:
      ```json
      {
-       "zip_old_size": 6442450944,
-       "zip_new_size": 6442780000,
-       "file_counts": { "added": 5, "deleted": 2, "modified": 15 },
-       "files": [
-         {
-           "path": "code/example.json",
-           "status": "modified",
-           "size": 1024,
-           "is_text": true,
-           "lines_changed": "+15 -3"
-         }
+       "old_version": "1.1.3.0",
+       "new_version": "1.1.4.0",
+       "timestamp": "2026-02-17T15:00:00Z",
+       "summary": {
+         "new_file_count": 1234,
+         "added_count": 15,
+         "deleted_count": 2,
+         "modified_count": 8,
+         "note": "Excludes .gd, .glb files and GodotProject runtime folders"
        }
+     }
      ```
 
 6. **AI Changelog Generation** (`actions/github-script@v7` with Gemini API)
    - Uses **Google Gemini 1.5-flash API** (NOT OpenAI)
    - Implemented inline using `actions/github-script` with direct API calls
+   - **Non-blocking**: Uses `continue-on-error: true` for resilience
    - If GEMINI_API_KEY available: Uses comprehensive AI prompt (500+ words)
    - AI Prompt includes:
      * Context: This is Battlefield Portal SDK for game mode creators
      * Goal: Analyze what changed and what developers need to know
      * Instructions to identify patterns, not just list files
-     * File size comparisons and line change data
-     * ZIP size comparison (old vs new)
+     * File statistics from comparison
      * Emphasis on developer-relevant changes
    - If no API key: Silently falls back to basic changelog (non-breaking)
    - Basic changelog includes:
      * Version numbers and dates
-     * ZIP size comparison
      * File counts (added/deleted/modified)
-     * File list with sizes
-     * Line changes for modified text files
    - Uses native `fetch` API in GitHub Actions environment
 
 7. **Pre-Update Release Creation**
@@ -270,14 +265,22 @@ The workflow uses a **smart adaptive schedule** with tiered boost modes:
      * Download date
      * Raw comparison JSON with all file details
      * AI-generated changelog
+     * PR number and URL
      * Issue number
      * Timestamp
    - Target repo configured in `.github/config.json`
 
-10. **Commit and Push**
+10. **Create Branch and Pull Request**
+   - Creates new branch: `sdk-update-v{version}`
    - Commits all changes with message: "Update Portal SDK to v{version}"
-   - Pushes to main branch
-   - Workflow completes
+   - Pushes branch to origin
+   - Creates Pull Request to main branch with:
+     * Version comparison
+     * File statistics
+     * Full changelog
+     * Links to releases
+   - Keeps git history clean and allows review before merging
+   - Workflow completes (merge is manual or via auto-merge)
 
 ## Configuration
 
@@ -337,13 +340,11 @@ jobs:
         run: |
           echo "Old version: ${{ github.event.client_payload.old_version }}"
           echo "New version: ${{ github.event.client_payload.new_version }}"
-          echo "Old ZIP size: ${{ github.event.client_payload.old_filesize }} bytes"
-          echo "New ZIP size: ${{ github.event.client_payload.new_filesize }} bytes"
-          echo "Download date: ${{ github.event.client_payload.download_date }}"
           echo "Source repo: ${{ github.event.client_payload.source_repo }}"
+          echo "Pull Request: ${{ github.event.client_payload.pr_url }}"
           echo "Issue: ${{ github.event.client_payload.issue_number }}"
           
-          # Access comparison data with file sizes and line changes
+          # Access comparison data
           echo "${{ github.event.client_payload.comparison_raw }}" > comparison.json
           
           # Access AI changelog
@@ -569,14 +570,31 @@ Files/folders ALWAYS excluded from root SDK extraction:
 - `.git/` - Git metadata
 - `.gitignore` - Git configuration
 
+SDK-specific exclusions (performance optimization):
+- `GodotProject/scripts/` - Runtime scripts (regenerated by Godot)
+- `GodotProject/addons/bf_portal/` - Portal addon (large, rarely changes)
+- `GodotProject/addons/scene-library/` - Scene library (large, build artifact)
+- `GodotProject/raw/` - Raw assets (very large, build artifact)
+- `GodotProject/.godot/` - Godot cache/build files
+- `*.gd` - GDScript files (large, can be excluded per reference repo)
+- `*.glb` - Binary 3D models (very large)
+- `GodotProject/.objects/**/*.tscn` - Object scene files in .objects folder
+
+Rationale:
+- Reduces workflow time from 20+ minutes to <5 minutes
+- Excludes build artifacts and runtime-generated files
+- Follows pattern from battlefield-portal-community/PortalSDK
+- Files still tracked in official ZIP for download
+
 These are never included in:
 - Root directory SDK extraction
-- Release ZIP files
+- Git commits
 - Comparisons between versions
 
 Do NOT exclude from root during SDK extraction:
 - `sdk.version.json` - Part of the SDK
-- `code/`, `FbExportData/`, `GodotProject/`, `mods/`, `python/` - SDK folders
+- `code/`, `FbExportData/`, `mods/`, `python/` - SDK folders
+- `GodotProject/` (folder itself) - only subfolders excluded
 
 ## Version Format
 

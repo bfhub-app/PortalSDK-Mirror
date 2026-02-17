@@ -365,38 +365,45 @@ jobs:
       - name: Extract SDK
         if: steps.check.outputs.update_needed == 'true'
         run: |
-          echo "📂 Creating backup for comparison..."
-          mkdir -p /tmp/sdk-old
-          rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-old/ || true
-          
-          echo "� Extracting new SDK to temporary location..."
+          echo "📦 Extracting new SDK to temporary location..."
           mkdir -p /tmp/sdk-new
           unzip -q /tmp/PortalSDK.zip -d /tmp/sdk-new
           
-          echo "🔄 Syncing only changed files..."
+          echo "🔄 Syncing only changed files (with exclusions)..."
           rsync -av --checksum --delete \
-            --exclude='.git' --exclude='.github' --exclude='.gitignore' \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='GodotProject/scripts/' \
+            --exclude='GodotProject/addons/bf_portal/' \
+            --exclude='GodotProject/addons/scene-library/' \
+            --exclude='GodotProject/raw/' \
+            --exclude='GodotProject/.godot/' \
+            --exclude='*.gd' \
+            --exclude='*.glb' \
+            --exclude='GodotProject/.objects/**/*.tscn' \
             /tmp/sdk-new/ ./
           
-          echo "✅ SDK updated (only changed files written)"
+          echo "✅ SDK updated (only changed files written, large assets excluded)"
       
       - name: Generate file comparison
         if: steps.check.outputs.update_needed == 'true'
         id: compare
         run: |
-          echo "🔍 Comparing files..."
+          echo "🔍 Generating quick comparison using git..."
           
           mkdir -p .github/cache
           
-          OLD_DIR="/tmp/sdk-old"
+          # Stage all changes for git to track
+          git add -A
           
-          if [ -d "$OLD_DIR" ] && [ "$(ls -A $OLD_DIR)" ]; then
-            OLD_COUNT=$(find "$OLD_DIR" -type f | wc -l)
-          else
-            OLD_COUNT=0
-          fi
+          # Use git to get accurate change statistics
+          ADDED_COUNT=$(git diff --cached --name-status | grep -c '^A' || echo 0)
+          MODIFIED_COUNT=$(git diff --cached --name-status | grep -c '^M' || echo 0)
+          DELETED_COUNT=$(git diff --cached --name-status | grep -c '^D' || echo 0)
           
-          NEW_COUNT=$(find . -maxdepth 10 -type f -not -path './.git/*' -not -path './.github/*' | wc -l)
+          # Get current file count
+          NEW_COUNT=$(find . -type f -not -path './.git/*' -not -path './.github/*' | wc -l)
           
           cat > .github/cache/comparison.json << EOF
           {
@@ -404,26 +411,21 @@ jobs:
             "new_version": "${{ steps.check.outputs.new_version }}",
             "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "summary": {
-              "old_file_count": $OLD_COUNT,
               "new_file_count": $NEW_COUNT,
-              "added_count": 0,
-              "deleted_count": 0,
-              "modified_count": 0,
-              "moved_count": 0,
-              "unchanged_count": 0,
-              "added": [],
-              "deleted": [],
-              "modified": [],
-              "moved": []
+              "added_count": $ADDED_COUNT,
+              "deleted_count": $DELETED_COUNT,
+              "modified_count": $MODIFIED_COUNT,
+              "note": "Excludes .gd, .glb files and GodotProject runtime folders"
             }
           }
           EOF
           
-          echo "✅ Comparison saved"
+          echo "✅ Comparison saved (git-based stats)"
           cp .github/cache/comparison.json .github/cache/comparison-raw.json
       
       - name: Generate changelog
         if: steps.check.outputs.update_needed == 'true'
+        continue-on-error: true
         id: changelog
         uses: actions/github-script@v7
         env:
@@ -547,28 +549,119 @@ jobs:
             echo "✅ Linked SDK v$NEW_VERSION with game v$GAME_VERSION"
           fi
       
-      - name: Commit and push changes
+      - name: Create branch and commit changes
         if: steps.check.outputs.update_needed == 'true'
+        id: create_branch
         run: |
+          NEW_VERSION="${{ steps.check.outputs.new_version }}"
+          BRANCH_NAME="sdk-update-v${NEW_VERSION}"
+          
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
+          # Create and checkout new branch
+          git checkout -b "$BRANCH_NAME"
+          
+          # Commit all changes
           git add -A
-          git commit -m "Update Portal SDK to v${{ steps.check.outputs.new_version }}" || true
-          git push
+          git commit -m "Update Portal SDK to v${NEW_VERSION}" || true
+          
+          # Push branch
+          git push -u origin "$BRANCH_NAME"
+          
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+      
+      - name: Create Pull Request
+        if: steps.check.outputs.update_needed == 'true'
+        id: create_pr
+        uses: actions/github-script@v7
+        env:
+          OLD_VERSION: ${{ steps.check.outputs.old_version }}
+          NEW_VERSION: ${{ steps.check.outputs.new_version }}
+          BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+        with:
+          script: |
+            const fs = require('fs');
+            const oldVersion = process.env.OLD_VERSION;
+            const newVersion = process.env.NEW_VERSION;
+            const branchName = process.env.BRANCH_NAME;
+            const changelog = process.env.CHANGELOG || '';
+            
+            let comparison = {};
+            try {
+              comparison = JSON.parse(fs.readFileSync('.github/cache/comparison.json', 'utf8'));
+            } catch (e) {}
+            
+            const summary = comparison.summary || {};
+            
+            const prBody = `## Portal SDK Update: v${oldVersion} → v${newVersion}
+            
+            This PR updates the Portal SDK from version **${oldVersion}** to **${newVersion}**.
+            
+            ### 📊 Summary
+            - **Files in SDK**: ${summary.new_file_count || 'N/A'}
+            - **Added**: ${summary.added_count || 0} files
+            - **Modified**: ${summary.modified_count || 0} files
+            - **Deleted**: ${summary.deleted_count || 0} files
+            
+            ${summary.note ? `> **Note**: ${summary.note}\n` : ''}
+            
+            ### 📝 Changelog
+            
+            ${changelog}
+            
+            ---
+            
+            **Automated Actions Completed:**
+            - ✅ Downloaded and extracted SDK
+            - ✅ Created release for v${oldVersion}
+            - ✅ Generated file comparison
+            - ✅ AI changelog generated
+            - ✅ Updated game-SDK version tracker
+            
+            **Review and merge this PR to:**
+            - Update the main branch with new SDK files
+            - Trigger dependent repository workflows
+            - Create tracking issue
+            
+            *This PR was automatically created by the SDK update workflow.*
+            `;
+            
+            const pr = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `SDK Update: v${oldVersion} → v${newVersion}`,
+              head: branchName,
+              base: 'main',
+              body: prBody
+            });
+            
+            console.log(`✅ Created PR #${pr.data.number}`);
+            core.setOutput('pr_number', pr.data.number);
+            core.setOutput('pr_url', pr.data.html_url);
       
       - name: Create GitHub issue for update
         if: steps.check.outputs.update_needed == 'true'
         id: create_issue
         uses: actions/github-script@v7
+        env:
+          OLD_VERSION: ${{ steps.check.outputs.old_version }}
+          NEW_VERSION: ${{ steps.check.outputs.new_version }}
+          UPDATE_REASON: ${{ steps.check.outputs.update_reason }}
+          PR_NUMBER: ${{ steps.create_pr.outputs.pr_number }}
+          PR_URL: ${{ steps.create_pr.outputs.pr_url }}
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
         with:
           script: |
-            const oldVersion = '${{ steps.check.outputs.old_version }}';
-            const newVersion = '${{ steps.check.outputs.new_version }}';
-            const updateReason = '${{ steps.check.outputs.update_reason }}';
-            const changelog = `${{ steps.changelog.outputs.changelog }}`;
-            
             const fs = require('fs');
+            const oldVersion = process.env.OLD_VERSION;
+            const newVersion = process.env.NEW_VERSION;
+            const updateReason = process.env.UPDATE_REASON;
+            const prNumber = process.env.PR_NUMBER;
+            const prUrl = process.env.PR_URL;
+            const changelog = process.env.CHANGELOG || '';
+            
             let comparison = {};
             try {
               comparison = JSON.parse(fs.readFileSync('.github/cache/comparison.json', 'utf8'));
@@ -576,29 +669,36 @@ jobs:
             
             const issueBody = `## Portal SDK Update Detected
             
-            A new version of the Portal SDK has been downloaded and extracted.
+            A new version of the Portal SDK has been detected and downloaded.
             
-            ### Version Information
+            ### 📦 Pull Request
+            **Review and merge**: [#${prNumber}](${prUrl})
+            
+            ### 📋 Version Information
             - **Previous Version**: \`${oldVersion}\`
             - **New Version**: \`${newVersion}\`
             - **Update Reason**: ${updateReason}
-            - **Updated**: ${new Date().toISOString()}
+            - **Detected**: ${new Date().toISOString()}
             
-            ### File Changes
+            ### 📊 File Changes
             - **Files in new SDK**: ${comparison.summary?.new_file_count || 'N/A'}
-            - **Files in old SDK**: ${comparison.summary?.old_file_count || 'N/A'}
+            - **Added**: ${comparison.summary?.added_count || 0} files
+            - **Modified**: ${comparison.summary?.modified_count || 0} files
+            - **Deleted**: ${comparison.summary?.deleted_count || 0} files
             
-            ### Changelog
+            ${comparison.summary?.note ? `> **Note**: ${comparison.summary.note}\n` : ''}
+            
+            ### 📝 Changelog
             
             ${changelog}
             
             ---
             
             **Next Steps:**
-            1. Review the changes in this repository
-            2. Check the [latest commit](https://github.com/${context.repo.owner}/${context.repo.repo}/commits/main)
-            3. Download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${newVersion})
-            4. Update dependent repositories
+            1. Review the [Pull Request #${prNumber}](${prUrl})
+            2. Merge the PR to update main branch
+            3. Download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${oldVersion})
+            4. Check dependent repositories for triggered workflows
             
             *This issue was automatically created by the SDK update workflow.*
             `;
@@ -620,6 +720,9 @@ jobs:
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
+          PR_NUMBER: ${{ steps.create_pr.outputs.pr_number }}
+          PR_URL: ${{ steps.create_pr.outputs.pr_url }}
+          ISSUE_NUMBER: ${{ steps.create_issue.outputs.issue_number }}
           CHANGELOG: ${{ steps.changelog.outputs.changelog }}
         with:
           script: |
@@ -628,7 +731,7 @@ jobs:
             
             let comparisonRaw = '';
             try {
-              comparisonRaw = fs.readFileSync('.github/cache/comparison-raw.json', 'utf8'));
+              comparisonRaw = fs.readFileSync('.github/cache/comparison-raw.json', 'utf8');
             } catch (e) {}
             
             const changelogAI = process.env.CHANGELOG || '';
@@ -653,7 +756,9 @@ jobs:
                   old_version: process.env.OLD_VERSION,
                   new_version: process.env.NEW_VERSION,
                   source_repo: `${context.repo.owner}/${context.repo.repo}`,
-                  issue_number: '${{ steps.create_issue.outputs.issue_number }}',
+                  pr_number: process.env.PR_NUMBER,
+                  pr_url: process.env.PR_URL,
+                  issue_number: process.env.ISSUE_NUMBER,
                   comparison_raw: comparisonRaw,
                   changelog_ai: changelogAI,
                   timestamp: new Date().toISOString()
@@ -668,7 +773,11 @@ jobs:
       - name: Summary
         if: steps.check.outputs.update_needed == 'true'
         run: |
-          echo "✅ SDK Update Complete"
+          echo "✅ SDK Update Branch Created"
           echo "Old version: ${{ steps.check.outputs.old_version }}"
           echo "New version: ${{ steps.check.outputs.new_version }}"
+          echo "Branch: ${{ steps.create_branch.outputs.branch_name }}"
+          echo "PR: #${{ steps.create_pr.outputs.pr_number }}"
           echo "Issue: #${{ steps.create_issue.outputs.issue_number }}"
+          echo ""
+          echo "Next: Review and merge PR #${{ steps.create_pr.outputs.pr_number }}"

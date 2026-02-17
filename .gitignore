@@ -31,12 +31,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# GitHub automation cache (generated files)
+# GitHub automation cache (generated files - all stored in Actions cache, nothing committed)
 .github/cache/*.zip
 .github/cache/comparison*.json
 .github/cache/versions.json
 .github/cache/game-update-tracker.json
-# Note: failure-tracker.json is NOT ignored - it needs to be committed
+.github/cache/failure-tracker.json
 
 # SDK-specific exclusions (large runtime/build files)
 GodotProject/scripts/

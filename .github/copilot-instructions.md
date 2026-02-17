@@ -112,7 +112,7 @@ Everything automation-related lives here (NOT in separate automation/ folder):
   * `comparison-raw.json` - Raw comparison data (generated, ignored)
   * `versions.json` - Cached remote versions.json (generated, ignored)
   * `game-update-tracker.json` - Game update tracking for boost mode (generated, ignored)
-  * `failure-tracker.json` - Workflow failure tracking for circuit breaker (**committed**, NOT ignored)
+  * `failure-tracker.json` - Circuit breaker state (persisted via Actions cache, ignored)
   * `.gitkeep` - Preserves cache folder in git
 - `workflows/sdk-check-updates.yml` - **CRITICAL**: Main automation workflow (NEVER DELETE)
 - `copilot-instructions.md` - This file
@@ -173,7 +173,7 @@ The workflow uses a **smart adaptive schedule** with tiered boost modes:
 - **Trigger**: 3 failed workflow runs on the same day
 - **Behavior**: Pauses automatic checks until tomorrow
 - **Bypass**: Manual triggers always bypass circuit breaker
-- **Tracking**: Stores failure count in `.github/cache/failure-tracker.json` (committed to git)
+- **Tracking**: Stores failure count in `.github/cache/failure-tracker.json` (persisted via GitHub Actions cache)
 - **Reset**: Counter resets on successful run or when date changes
 - **Status**: Shows failure count and circuit breaker state in logs
 
@@ -587,6 +587,27 @@ When asked to:
 - Update `urls` in `.github/config.json`
 - Test with manual workflow run
 - No code changes needed
+
+### Resetting Circuit Breaker:
+Circuit breaker state is stored in GitHub Actions cache and persists between runs.
+
+**To view cache:**
+- Go to: Settings → Actions → Caches
+- Look for caches starting with `circuit-breaker-`
+
+**To reset (unblock workflow):**
+1. **Option A - Delete cache manually:**
+   - Settings → Actions → Caches
+   - Find `circuit-breaker-*` entries
+   - Delete them
+   - Next run starts fresh
+
+2. **Option B - Use manual trigger:**
+   - Actions → Check Portal SDK Updates → Run workflow
+   - Manual triggers always bypass circuit breaker
+   - Successful run resets counter automatically
+
+**Note:** Cache entries auto-expire after 7 days of inactivity
 
 ### Adding New Automation:
 - Edit `.github/workflows/sdk-check-updates.yml` (all logic is inline)

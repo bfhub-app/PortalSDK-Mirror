@@ -39,6 +39,14 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Restore circuit breaker cache
+        uses: actions/cache/restore@v3
+        with:
+          path: .github/cache/failure-tracker.json
+          key: circuit-breaker-${{ github.run_id }}
+          restore-keys: |
+            circuit-breaker-
+      
       - name: Detect trigger type
         id: trigger
         run: |
@@ -647,6 +655,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
+          # Stash any uncommitted changes (e.g., failure-tracker.json)
+          echo "💾 Stashing uncommitted changes..."
+          git stash push -u -m "Temporary stash before branch switch" || echo "Nothing to stash"
+          
           # Fetch remote branches to see if our branch exists
           git fetch origin
           
@@ -667,6 +679,10 @@ jobs:
             echo "🆕 Creating new branch $BRANCH_NAME"
             git checkout -b "$BRANCH_NAME"
           fi
+          
+          # Pop stashed changes back
+          echo "📤 Restoring stashed changes..."
+          git stash pop || echo "No stash to pop"
           
           # Commit all changes
           git add -A
@@ -896,13 +912,20 @@ jobs:
           
           cat > "$FAILURE_FILE" << 'EOF'
           {
-            "date": "$(date -u +%Y-%m-%d)",
+            "date": "2000-01-01",
             "count": 0,
             "last_failure": "2000-01-01T00:00:00Z"
           }
           EOF
           
           echo "✅ Reset failure counter"
+      
+      - name: Save circuit breaker cache (success)
+        if: always()
+        uses: actions/cache/save@v3
+        with:
+          path: .github/cache/failure-tracker.json
+          key: circuit-breaker-${{ github.run_id }}
       
       - name: Track workflow failure
         if: failure() && steps.trigger.outputs.is_manual == 'false'
@@ -949,9 +972,4 @@ jobs:
             echo "🛑 Circuit breaker will activate on next run"
           fi
           
-          # Commit the failure tracker
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/cache/failure-tracker.json
-          git commit -m "Track workflow failure ($FAILURE_COUNT/3 on $TODAY)" || true
-          git push || true
+          echo "💾 State will be saved to cache for next run"

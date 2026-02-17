@@ -46,8 +46,55 @@ jobs:
             echo "⏰ Automatic trigger - following schedule"
           fi
       
+      - name: Check failure circuit breaker
+        id: circuit_breaker
+        run: |
+          IS_MANUAL="${{ steps.trigger.outputs.is_manual }}"
+          
+          # Manual triggers bypass circuit breaker
+          if [ "$IS_MANUAL" = "true" ]; then
+            echo "🔧 Manual trigger - bypassing circuit breaker"
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          mkdir -p .github/cache
+          FAILURE_FILE=".github/cache/failure-tracker.json"
+          
+          # Initialize if not exists
+          if [ ! -f "$FAILURE_FILE" ]; then
+            cat > "$FAILURE_FILE" << 'EOF'
+          {
+            "date": "2000-01-01",
+            "count": 0,
+            "last_failure": "2000-01-01T00:00:00Z"
+          }
+          EOF
+          fi
+          
+          # Get today's date
+          TODAY=$(date -u +%Y-%m-%d)
+          
+          # Load failure data
+          FAILURE_DATE=$(jq -r '.date // "2000-01-01"' "$FAILURE_FILE")
+          FAILURE_COUNT=$(jq -r '.count // 0' "$FAILURE_FILE")
+          
+          echo "📊 Circuit Breaker Status:"
+          echo "   Date: $FAILURE_DATE"
+          echo "   Failures: $FAILURE_COUNT"
+          
+          # Check if we have 3+ failures today
+          if [ "$FAILURE_DATE" = "$TODAY" ] && [ "$FAILURE_COUNT" -ge 3 ]; then
+            echo "🛑 Circuit breaker ACTIVE: 3+ failures today"
+            echo "⏸️  Pausing checks until tomorrow"
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Circuit breaker OK - proceeding"
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          fi
+      
       - name: Check for recent game updates (Tiered)
-        if: steps.trigger.outputs.is_manual == 'false'
+        if: steps.circuit_breaker.outputs.should_run == 'true' && steps.trigger.outputs.is_manual == 'false'
         id: game_update
         run: |
           echo "🎮 Checking for recent Battlefield game updates (Tiered Detection)..."
@@ -190,6 +237,7 @@ jobs:
           echo "game_version=unknown" >> $GITHUB_OUTPUT
       
       - name: Check work hours (Mon/Tue only)
+        if: steps.circuit_breaker.outputs.should_run == 'true'
         id: work_hours
         run: |
           IS_MANUAL="${{ steps.trigger.outputs.is_manual }}"
@@ -374,17 +422,41 @@ jobs:
             --exclude='.git' \
             --exclude='.github' \
             --exclude='.gitignore' \
-            --exclude='GodotProject/scripts/' \
-            --exclude='GodotProject/addons/bf_portal/' \
-            --exclude='GodotProject/addons/scene-library/' \
-            --exclude='GodotProject/raw/' \
             --exclude='GodotProject/.godot/' \
+            --exclude='FbExportData/thumbnails/' \
+            --exclude='GodotProject/.godot/' \
+            --exclude='GodotProject/scripts/' \
+            --exclude='GodotProject/raw/' \
+            --exclude='python/' \
             --exclude='*.gd' \
             --exclude='*.glb' \
-            --exclude='GodotProject/.objects/**/*.tscn' \
+            --exclude='*.exe' \
+            --exclude='GodotProject/objects/**/*.tscn' \
             /tmp/sdk-new/ ./
           
           echo "✅ SDK updated (only changed files written, large assets excluded)"
+      
+      - name: Track Godot executable version
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          echo "🔍 Detecting Godot executable..."
+          
+          # Find any Godot exe in the extracted SDK
+          GODOT_EXE=$(find /tmp/sdk-new -maxdepth 1 -name 'Godot*.exe' -type f -printf '%f\n' | head -n 1)
+          
+          if [ -n "$GODOT_EXE" ]; then
+            # Remove .exe extension to get base name
+            BASE_NAME="${GODOT_EXE%.exe}"
+            VERSION_FILE="${BASE_NAME}.version"
+            
+            # Create version file in root
+            echo "$GODOT_EXE" > "$VERSION_FILE"
+            
+            echo "✅ Created version file: $VERSION_FILE"
+            echo "   Tracks executable: $GODOT_EXE"
+          else
+            echo "ℹ️  No Godot executable found"
+          fi
       
       - name: Generate file comparison
         if: steps.check.outputs.update_needed == 'true'
@@ -781,3 +853,71 @@ jobs:
           echo "Issue: #${{ steps.create_issue.outputs.issue_number }}"
           echo ""
           echo "Next: Review and merge PR #${{ steps.create_pr.outputs.pr_number }}"
+      
+      - name: Reset failure counter on success
+        if: steps.check.outputs.update_needed == 'true' && success()
+        run: |
+          mkdir -p .github/cache
+          FAILURE_FILE=".github/cache/failure-tracker.json"
+          
+          cat > "$FAILURE_FILE" << 'EOF'
+          {
+            "date": "$(date -u +%Y-%m-%d)",
+            "count": 0,
+            "last_failure": "2000-01-01T00:00:00Z"
+          }
+          EOF
+          
+          echo "✅ Reset failure counter"
+      
+      - name: Track workflow failure
+        if: failure() && steps.trigger.outputs.is_manual == 'false'
+        run: |
+          mkdir -p .github/cache
+          FAILURE_FILE=".github/cache/failure-tracker.json"
+          TODAY=$(date -u +%Y-%m-%d)
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          
+          # Initialize if not exists
+          if [ ! -f "$FAILURE_FILE" ]; then
+            cat > "$FAILURE_FILE" << 'EOF'
+          {
+            "date": "2000-01-01",
+            "count": 0,
+            "last_failure": "2000-01-01T00:00:00Z"
+          }
+          EOF
+          fi
+          
+          # Load current data
+          FAILURE_DATE=$(jq -r '.date // "2000-01-01"' "$FAILURE_FILE")
+          FAILURE_COUNT=$(jq -r '.count // 0' "$FAILURE_FILE")
+          
+          # Reset counter if different day
+          if [ "$FAILURE_DATE" != "$TODAY" ]; then
+            FAILURE_COUNT=0
+          fi
+          
+          # Increment counter
+          FAILURE_COUNT=$((FAILURE_COUNT + 1))
+          
+          # Save updated data
+          jq -n \
+            --arg date "$TODAY" \
+            --argjson count "$FAILURE_COUNT" \
+            --arg last "$NOW" \
+            '{"date": $date, "count": $count, "last_failure": $last}' \
+            > "$FAILURE_FILE"
+          
+          echo "❌ Failure tracked: $FAILURE_COUNT on $TODAY"
+          
+          if [ "$FAILURE_COUNT" -ge 3 ]; then
+            echo "🛑 Circuit breaker will activate on next run"
+          fi
+          
+          # Commit the failure tracker
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/cache/failure-tracker.json
+          git commit -m "Track workflow failure ($FAILURE_COUNT/3 on $TODAY)" || true
+          git push || true

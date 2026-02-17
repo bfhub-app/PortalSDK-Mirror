@@ -36,6 +36,7 @@ yarn-error.log*
 .github/cache/comparison*.json
 .github/cache/versions.json
 .github/cache/game-update-tracker.json
+# Note: failure-tracker.json is NOT ignored - it needs to be committed
 
 # SDK-specific exclusions (large runtime/build files)
 GodotProject/scripts/
@@ -47,4 +48,5 @@ GodotProject/.godot/
 # Large binary files
 *.gd
 *.glb
-GodotProject/.objects/**/*.tscn
+*.exe
+GodotProject/objects/**/*.tscn

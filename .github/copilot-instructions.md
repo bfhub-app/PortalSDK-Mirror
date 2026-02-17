@@ -162,9 +162,24 @@ The workflow uses a **smart adaptive schedule** with tiered boost modes:
 - Tracks EA blog updates (post titles, dates)
 - Maps SDK updates to corresponding game versions
 
+**Circuit Breaker** (Failure Protection):
+- **Purpose**: Prevents spam when something is broken
+- **Trigger**: 3 failed workflow runs on the same day
+- **Behavior**: Pauses automatic checks until tomorrow
+- **Bypass**: Manual triggers always bypass circuit breaker
+- **Tracking**: Stores failure count in `.github/cache/failure-tracker.json` (committed to git)
+- **Reset**: Counter resets on successful run or when date changes
+- **Status**: Shows failure count and circuit breaker state in logs
+
 ### Process When Update Detected
 
-1. **Game Update Detection** (Tiered - Boost Mode)
+1. **Circuit Breaker Check**
+   - Checks if 3+ failures occurred today
+   - If yes and automatic trigger: Exit early with message
+   - If manual trigger: Bypass check completely
+   - Tracks failures in committed cache file
+
+2. **Game Update Detection** (Tiered - Boost Mode)
    - **Tier 1**: Checks SteamDB for game version updates (aggressive boost if within 8h)
    - **Tier 2**: Checks EA Battlefield news page (normal boost if within 72h)
    - **Tier 3**: Regular operation (no recent game updates)
@@ -578,12 +593,21 @@ SDK-specific exclusions (performance optimization):
 - `GodotProject/.godot/` - Godot cache/build files
 - `*.gd` - GDScript files (large, can be excluded per reference repo)
 - `*.glb` - Binary 3D models (very large)
+- `*.exe` - Godot executable (tracked via .version file instead)
 - `GodotProject/.objects/**/*.tscn` - Object scene files in .objects folder
+
+Special handling:
+- `Godot*.exe` - Excluded from commits but version tracked
+  * Workflow detects any `Godot*.exe` in SDK root
+  * Creates corresponding `.version` file (e.g., `Godot_v4.4.1-stable_win64.version`)
+  * Version file contains the exe filename for reference
+  * Allows tracking which Godot version without committing 150+ MB binary
 
 Rationale:
 - Reduces workflow time from 20+ minutes to <5 minutes
 - Excludes build artifacts and runtime-generated files
 - Follows pattern from battlefield-portal-community/PortalSDK
+- Godot exe tracked by name (not binary) to avoid bloating repository
 - Files still tracked in official ZIP for download
 
 These are never included in:
@@ -712,6 +736,6 @@ size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
 
 **Last Updated**: 2026-02-17
 **Repository**: Battlefield Portal SDK Mirror
-**Structure Version**: 3.2 (Tiered boost system with SteamDB/EA blog monitoring, game-SDK version tracking)
+**Structure Version**: 3.3 (Circuit breaker, PR workflow, optimized file extraction)
 **Implementation**: Inline bash + actions/github-script (no external scripts)
 **AI Provider**: Google Gemini 1.5-flash

@@ -106,5 +106,11 @@
         "budget": {
             "physicsCostMax": 100000
         }
+    },
+    "MP_Contaminated": {
+        "theater": "Bavaria",
+        "budget": {
+            "physicsCostMax": 100000
+        }
     }
 }

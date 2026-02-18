@@ -547,6 +547,7 @@ jobs:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-1.5-flash' }}
         with:
           script: |
             const fs = require('fs');
@@ -554,6 +555,7 @@ jobs:
             const oldVersion = process.env.OLD_VERSION;
             const newVersion = process.env.NEW_VERSION;
             const apiKey = process.env.GEMINI_API_KEY;
+            const geminiModel = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
             const summary = comparison.summary || {};
             
             // Basic changelog function
@@ -596,7 +598,7 @@ jobs:
             // Call Gemini API
             try {
               const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`,
                 {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -613,6 +615,7 @@ jobs:
                 const combinedChangelog = `# Portal SDK Changelog\n\n## Version ${newVersion}\n\n${aiAnalysis}\n\n${basicChangelog}`;
                 core.setOutput('changelog', combinedChangelog);
                 console.log('AI changelog generated successfully');
+                console.log(`Using Gemini model: ${geminiModel}`);
               } else {
                 core.setOutput('changelog', basicChangelog);
                 console.log('Gemini response unexpected, using basic changelog only');

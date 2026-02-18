@@ -11,7 +11,7 @@
 [node name="MP_Badlands" type="Node3D"]
 
 [node name="TEAM_1_HQ" parent="." node_paths=PackedStringArray("HQArea", "InfantrySpawns") instance=ExtResource("1_7jdii")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -164.965, 76.3209, -322.587)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -164.965, 76.6388, -322.587)
 AltTeam = 0
 ObjId = 1
 HQArea = NodePath("HQ_Team1")
@@ -34,7 +34,7 @@ transform = Transform3D(-0.0428871, 0, 0.99908, 0, 1, 0, -0.99908, 0, -0.0428871
 transform = Transform3D(0.0841819, 0, -0.99645, 0, 1, 0, 0.99645, 0, 0.0841819, 0, 0, 3)
 
 [node name="TEAM_2_HQ" parent="." node_paths=PackedStringArray("HQArea", "InfantrySpawns") instance=ExtResource("1_7jdii")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.4194, 73.3996, -282.356)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.5228, 73.0381, -274.908)
 Team = 2
 AltTeam = 0
 ObjId = 2

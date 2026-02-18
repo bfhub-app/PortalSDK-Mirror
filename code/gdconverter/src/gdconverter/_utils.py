@@ -83,13 +83,6 @@ def process_asset_types(config: Config, assets: jstype.Assets) -> bool:
         _logging.log_error(f"Asset types malformed. Expected {const.TYPES_KEY_ID} object to be present")
         return False
 
-    level_to_theater: dict[str, str] = {}
-    level_info: dict[str, Any] = json.loads(config.level_info.read_text())
-    for level_name, data in level_info.items():
-        if "theater" in data:
-            theater = data["theater"]
-            level_to_theater[level_name] = theater
-
     custom_types: set[str] = set()
     # Add custom types to idenfity properties that are references
     for asset_type in asset_types:
@@ -98,12 +91,12 @@ def process_asset_types(config: Config, assets: jstype.Assets) -> bool:
     for gd_type in const.TYPES_CUSTOM_TYPES:
         custom_types.add(gd_type)
     for asset_type in asset_types:
-        dst_file = os.path.join(config.dst_assets, _get_level_directory(asset_type, level_to_theater), asset_type.get(const.ASSET_KEY_DIRECTORY, ""))
+        dst_file = config.dst_assets / _get_asset_directory(asset_type)
         asset = jparser.parse_asset_data(asset_type, custom_types, error_callback=lambda msg: _logging.log_error(msg))
         if not asset:
             _logging.log_error("Failed to parse asset")
             return False
-        asset.set_path(Path(dst_file))
+        asset.set_path(dst_file)
         assets[asset.id.lower()] = asset
     return True
 
@@ -130,24 +123,11 @@ def get_filename_without_ext(path: str) -> str:
     return os.path.splitext(os.path.basename(path))[0]
 
 
-def _get_level_directory(asset_type: dict[str, Any], level_to_theater: dict[str, str]) -> str:
-    restrictions: list[str] = asset_type.get(const.ASSET_KEY_RESTRICTIONS, [])
+def _get_asset_directory(asset_type: dict[str, Any]) -> Path:
     directory = asset_type.get(const.ASSET_KEY_DIRECTORY, "")
-    directory = directory.lower()
-    if len(restrictions) == 0:
-        if "entities" not in directory and "gameplay" not in directory and "global" not in directory:
-            return "Global/"
-        else:
-            return ""
-
-    theaters = list(set([level_to_theater[level] for level in restrictions if level in level_to_theater]))
-    if len(theaters) == 1:
-        theater_name = theaters[0]
-        if len(restrictions) == 1:
-            level_name = restrictions[0]
-            return f"{theater_name}/{level_name}"
-        return f"{theater_name}/Shared"
-    elif len(theaters) > 1:
-        return "Shared"
-    else:
-        return ""
+    if directory == "":
+        return Path()
+    path = Path(directory.lower())
+    if len(path.parts) > 1 and path.parts[0] != "gameplay":
+        return Path(path.parts[-1])
+    return path

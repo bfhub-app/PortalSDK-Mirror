@@ -378,14 +378,14 @@ jobs:
           
           cd /tmp/sdk-archive
           if [ "$(ls -A .)" ]; then
-            zip -r "../PortalSDK_v${OLD_VERSION}-archive.zip" . > /dev/null
+            zip -r "../portal-sdk_v${OLD_VERSION}-archive.zip" . > /dev/null
             cd -
             
-            git tag "PortalSDK_v${OLD_VERSION}-archive" || echo "Tag already exists"
-            git push origin "PortalSDK_v${OLD_VERSION}-archive" || echo "Tag push failed or already exists"
+            git tag "portal-sdk_v${OLD_VERSION}-archive" || echo "Tag already exists"
+            git push origin "portal-sdk_v${OLD_VERSION}-archive" || echo "Tag push failed or already exists"
             
-            gh release create "PortalSDK_v${OLD_VERSION}-archive" \
-              "/tmp/PortalSDK_v${OLD_VERSION}-archive.zip" \
+            gh release create "portal-sdk_v${OLD_VERSION}-archive" \
+              "/tmp/portal-sdk_v${OLD_VERSION}-archive.zip" \
               --title "Portal SDK v${OLD_VERSION} (Archive)" \
               --notes "Portal SDK version ${OLD_VERSION} - Archive snapshot before update to ${{ steps.check.outputs.new_version }}" \
               || echo "Release already exists"
@@ -652,27 +652,15 @@ jobs:
             
             This PR updates the Portal SDK from version **${{ steps.check.outputs.old_version }}** to **${{ steps.check.outputs.new_version }}**.
             
-            ### 📊 Summary
+            ### Summary
             - **Update Reason**: ${{ steps.check.outputs.update_reason }}
             - **Download Date**: ${{ steps.download.outputs.download_date }}
             - **ZIP Size**: ${{ steps.download.outputs.zip_size_mb }} MB
             
-            ### 📝 Changelog
+            ### Changelog
             
-            ${{ steps.changelog.outputs.changelog }}
-            
+            ${{ steps.changelog.outputs.changelog || '-' }}   
             ---
-            
-            **Automated Actions Completed:**
-            - ✅ Downloaded and extracted SDK
-            - ✅ Created release for v${{ steps.check.outputs.old_version }}
-            - ✅ Generated file comparison
-            - ✅ AI changelog generated
-            - ✅ Updated game-SDK version tracker
-            
-            **Review and merge this PR to:**
-            - Update the main branch with new SDK files
-            - Trigger dependent repository workflows
             
             *This PR was automatically created by the SDK update workflow.*
           commit-message: 'Update Portal SDK to v${{ steps.check.outputs.new_version }}'

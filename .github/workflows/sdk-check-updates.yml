@@ -1,4 +1,4 @@
-name: Check Portal SDK Updates
+name: SDK Update - Release check
 
 on:
   push:
@@ -57,17 +57,17 @@ jobs:
         run: |
           EVENT_NAME="${{ github.event_name }}"
           MANUAL_REASON="${{ inputs.reason || 'Manual trigger' }}"
-          echo "📋 GitHub Event: $EVENT_NAME"
+          echo "GitHub Event: $EVENT_NAME"
           
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             echo "is_manual=true" >> $GITHUB_OUTPUT
             echo "manual_reason=$MANUAL_REASON" >> $GITHUB_OUTPUT
-            echo "🔧 Manual trigger detected - bypassing schedule checks"
-            echo "📝 Reason: $MANUAL_REASON"
+            echo "Manual trigger detected - bypassing schedule checks"
+            echo "Reason: $MANUAL_REASON"
           else
             echo "is_manual=false" >> $GITHUB_OUTPUT
             echo "manual_reason=" >> $GITHUB_OUTPUT
-            echo "⏰ Automatic trigger ($EVENT_NAME) - following schedule"
+            echo "Automatic trigger ($EVENT_NAME) - following schedule"
           fi
       
       - name: Check failure circuit breaker
@@ -77,7 +77,7 @@ jobs:
           
           # Manual triggers bypass circuit breaker
           if [ "$IS_MANUAL" = "true" ]; then
-            echo "🔧 Manual trigger - bypassing circuit breaker"
+            echo "Manual trigger - bypassing circuit breaker"
             echo "should_run=true" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -103,17 +103,17 @@ jobs:
           FAILURE_DATE=$(jq -r '.date // "2000-01-01"' "$FAILURE_FILE")
           FAILURE_COUNT=$(jq -r '.count // 0' "$FAILURE_FILE")
           
-          echo "📊 Circuit Breaker Status:"
+          echo "Circuit Breaker Status:"
           echo "   Date: $FAILURE_DATE"
           echo "   Failures: $FAILURE_COUNT"
           
           # Check if we have 3+ failures today
           if [ "$FAILURE_DATE" = "$TODAY" ] && [ "$FAILURE_COUNT" -ge 3 ]; then
-            echo "🛑 Circuit breaker ACTIVE: 3+ failures today"
-            echo "⏸️  Pausing checks until tomorrow"
+            echo "Circuit breaker ACTIVE: 3+ failures today"
+            echo "Pausing checks until tomorrow"
             echo "should_run=false" >> $GITHUB_OUTPUT
           else
-            echo "✅ Circuit breaker OK - proceeding"
+            echo "Circuit breaker OK - proceeding"
             echo "should_run=true" >> $GITHUB_OUTPUT
           fi
       
@@ -121,7 +121,7 @@ jobs:
         if: steps.circuit_breaker.outputs.should_run == 'true' && steps.trigger.outputs.is_manual == 'false'
         id: game_update
         run: |
-          echo "🎮 Checking for recent Battlefield game updates (Tiered Detection)..."
+          echo "Checking for recent Battlefield game updates (Tiered Detection)..."
           
           mkdir -p .github/cache
           CACHE_FILE=".github/cache/game-update-tracker.json"
@@ -163,7 +163,7 @@ jobs:
           GAME_VERSION=$(jq -r '.steamdb.game_version // "unknown"' "$CACHE_FILE")
           
           # === TIER 1: SteamDB Check (Aggressive Boost - 8 hours) ===
-          echo "🔍 Tier 1: Checking SteamDB update timestamp..."
+          echo "Tier 1: Checking SteamDB update timestamp..."
           STEAMDB_TIME=$(date -d "$STEAMDB_LAST" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$STEAMDB_LAST" +%s 2>/dev/null || echo "0")
           
           if [ "$STEAMDB_TIME" != "0" ]; then
@@ -193,12 +193,12 @@ jobs:
               jq ".steamdb.last_update_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" | .steamdb.manual_trigger = false" "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
             fi
           else
-            echo "   ⚠️  SteamDB blocked or inaccessible (using cached data)"
+            echo "   WARNING: SteamDB blocked or inaccessible (using cached data)"
           fi
           
           # === TIER 2: EA Blog Check (Normal Boost - 72 hours) ===
           if [ "$BOOST_LEVEL" != "aggressive" ]; then
-            echo "🔍 Tier 2: Checking EA blog update timestamp..."
+            echo "Tier 2: Checking EA blog update timestamp..."
             EA_TIME=$(date -d "$EA_LAST" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$EA_LAST" +%s 2>/dev/null || echo "0")
             
             if [ "$EA_TIME" != "0" ]; then
@@ -209,7 +209,7 @@ jobs:
                 BOOST_MODE="active"
                 BOOST_LEVEL="normal"
                 BOOST_REASON="EA blog update $HOURS_SINCE_EA hours ago"
-                echo "   🔔 NORMAL BOOST ACTIVE (EA Blog)"
+                echo "   NORMAL BOOST ACTIVE (EA Blog)"
               fi
             fi
             
@@ -245,10 +245,10 @@ jobs:
           
           echo ""
           echo "=========================================="
-          echo "🚀 Boost Status: $BOOST_MODE"
-          echo "📊 Boost Level: $BOOST_LEVEL"
-          echo "💡 Reason: $BOOST_REASON"
-          echo "🎮 Game Version: $GAME_VERSION"
+          echo "Boost Status: $BOOST_MODE"
+          echo "Boost Level: $BOOST_LEVEL"
+          echo "Reason: $BOOST_REASON"
+          echo "Game Version: $GAME_VERSION"
           echo "=========================================="
       
       - name: Set default game update outputs (manual trigger)
@@ -268,7 +268,7 @@ jobs:
           
           # Manual trigger: Always run immediately
           if [ "$IS_MANUAL" = "true" ]; then
-            echo "🔧 Manual trigger - bypassing all schedule checks"
+            echo "Manual trigger - bypassing all schedule checks"
             echo "should_run=true" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -287,17 +287,17 @@ jobs:
           
           # Aggressive boost: Always run on weekdays (SteamDB update within 8h)
           if [ "$BOOST_LEVEL" = "aggressive" ] && [ "$DAY" -ge 1 ] && [ "$DAY" -le 5 ]; then
-            echo "⚡ Aggressive boost active - running regardless of time"
+            echo "Aggressive boost active - running regardless of time"
             SHOULD_RUN="true"
           # Normal boost: Run hourly on weekdays (EA blog update within 72h)
           elif [ "$BOOST_LEVEL" = "normal" ] && [ "$DAY" -ge 1 ] && [ "$DAY" -le 5 ]; then
-            echo "🔔 Normal boost active - running hourly on weekday"
+            echo "Normal boost active - running hourly on weekday"
             SHOULD_RUN="true"
           # Regular schedule: Check Mon/Tue work hours (8-20)
           elif [ "$DAY" = "1" ] || [ "$DAY" = "2" ]; then
             if [ "$HOUR" -lt 8 ] || [ "$HOUR" -gt 20 ]; then
               SHOULD_RUN="false"
-              echo "⏰ Outside work hours (8-20 UTC)"
+              echo "Outside work hours (8-20 UTC)"
             fi
           fi
           
@@ -382,7 +382,7 @@ jobs:
         run: |
           OLD_VERSION="${{ steps.check.outputs.old_version }}"
           
-          echo "📦 Creating archive release for v${OLD_VERSION}..."
+          echo "Creating archive release for v${OLD_VERSION}..."
           
           mkdir -p /tmp/sdk-archive
           
@@ -402,9 +402,9 @@ jobs:
               --notes "Portal SDK version ${OLD_VERSION} - Archive snapshot before update to ${{ steps.check.outputs.new_version }}" \
               || echo "Release already exists"
             
-            echo "✅ Archive release created"
+            echo "Archive release created"
           else
-            echo "ℹ️  No content to release"
+            echo "No content to release"
           fi
       
       - name: Download SDK
@@ -413,7 +413,7 @@ jobs:
         env:
           SDK_DOWNLOAD_URL: ${{ vars.SDK_DOWNLOAD_URL || 'https://download.portal.battlefield.com/PortalSDK.zip' }}
         run: |
-          echo "📥 Downloading Portal SDK..."
+          echo "Downloading Portal SDK..."
           
           DOWNLOAD_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           
@@ -429,16 +429,16 @@ jobs:
           echo "zip_size=$ZIP_SIZE" >> $GITHUB_OUTPUT
           echo "zip_size_mb=$ZIP_SIZE_MB" >> $GITHUB_OUTPUT
           
-          echo "✅ Downloaded: ${ZIP_SIZE_MB} MB"
+          echo "Downloaded: ${ZIP_SIZE_MB} MB"
       
       - name: Extract SDK
         if: steps.check.outputs.update_needed == 'true'
         run: |
-          echo "📦 Extracting new SDK to temporary location..."
+          echo "Extracting new SDK to temporary location..."
           mkdir -p /tmp/sdk-new
           unzip -q /tmp/PortalSDK.zip -d /tmp/sdk-new
           
-          echo "🔄 Syncing only changed files (with exclusions)..."
+          echo "Syncing only changed files (with exclusions)..."
           rsync -av --checksum --delete \
             --exclude='.git' \
             --exclude='.github' \
@@ -458,12 +458,12 @@ jobs:
             --exclude='**/tests/' \
             /tmp/sdk-new/ ./
           
-          echo "✅ SDK updated (only changed files written, large assets excluded)"
+          echo "SDK updated (only changed files written, large assets excluded)"
       
       - name: Track Godot executable version
         if: steps.check.outputs.update_needed == 'true'
         run: |
-          echo "🔍 Detecting Godot executable..."
+          echo "Detecting Godot executable..."
           
           # Find any Godot exe in the extracted SDK
           GODOT_EXE=$(find /tmp/sdk-new -maxdepth 1 -name 'Godot*.exe' -type f -printf '%f\n' | head -n 1)
@@ -476,17 +476,17 @@ jobs:
             # Create version file in root
             echo "$GODOT_EXE" > "$VERSION_FILE"
             
-            echo "✅ Created version file: $VERSION_FILE"
+            echo "Created version file: $VERSION_FILE"
             echo "   Tracks executable: $GODOT_EXE"
           else
-            echo "ℹ️  No Godot executable found"
+            echo "No Godot executable found"
           fi
       
       - name: Generate file comparison
         if: steps.check.outputs.update_needed == 'true'
         id: compare
         run: |
-          echo "🔍 Generating quick comparison using git..."
+          echo "Generating quick comparison using git..."
           
           mkdir -p .github/cache
           
@@ -522,7 +522,7 @@ jobs:
           }
           EOF
           
-          echo "✅ Comparison saved (git-based stats)"
+          echo "Comparison saved (git-based stats)"
           cp .github/cache/comparison.json .github/cache/comparison-raw.json
       
       - name: Generate changelog
@@ -641,14 +641,14 @@ jobs:
           GAME_VERSION="${{ steps.game_update.outputs.game_version || 'unknown' }}"
           
           if [ -f "$CACHE_FILE" ]; then
-            echo "📝 Updating game-SDK version mapping..."
+            echo "Updating game-SDK version mapping..."
             
             jq ".sdk.last_update_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" | \
                 .sdk.version = \"$NEW_VERSION\" | \
                 .sdk.matched_game_version = \"$GAME_VERSION\"" \
                 "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
             
-            echo "✅ Linked SDK v$NEW_VERSION with game v$GAME_VERSION"
+            echo "Linked SDK v$NEW_VERSION with game v$GAME_VERSION"
           fi
       
       - name: Create Pull Request
@@ -717,16 +717,16 @@ jobs:
             
             A new version of the Portal SDK has been detected and downloaded.
             
-            ### 📦 Pull Request
+            ### Pull Request
             **Review and merge**: [#${prNumber}](${prUrl})
             
-            ### 📋 Version Information
+            ### Version Information
             - **Previous Version**: \`${oldVersion}\`
             - **New Version**: \`${newVersion}\`
             - **Update Reason**: ${updateReason}
             - **Detected**: ${new Date().toISOString()}
             
-            ### 📊 File Changes
+            ### File Changes
             - **Files in new SDK**: ${comparison.summary?.new_file_count || 'N/A'}
             - **Added**: ${comparison.summary?.added_count || 0} files
             - **Modified**: ${comparison.summary?.modified_count || 0} files
@@ -734,7 +734,7 @@ jobs:
             
             ${comparison.summary?.note ? `> **Note**: ${comparison.summary.note}\n` : ''}
             
-            ### 📝 Changelog
+            ### Changelog
             
             ${changelog}
             
@@ -757,7 +757,7 @@ jobs:
               labels: ['sdk-update', 'automated']
             });
             
-            console.log(`✅ Created issue #${issue.data.number}`);
+            console.log(`Created issue #${issue.data.number}`);
             core.setOutput('issue_number', issue.data.number);
       
       - name: Trigger workflow in target repository
@@ -777,7 +777,7 @@ jobs:
             const targetRepo = process.env.TARGET_REPO;
             
             if (!targetRepo) {
-              console.log('⚠️  TARGET_REPO secret not configured');
+              console.log('WARNING: TARGET_REPO secret not configured');
               return;
             }
             
@@ -789,7 +789,7 @@ jobs:
             const changelogAI = process.env.CHANGELOG || '';
             const [targetOwner, targetRepoName] = targetRepo.split('/');
             
-            console.log(`🚀 Triggering workflow in ${targetRepo}...`);
+            console.log(`Triggering workflow in ${targetRepo}...`);
             
             try {
               await github.rest.repos.createDispatchEvent({
@@ -812,19 +812,19 @@ jobs:
                 }
               });
               
-              console.log('✅ Workflow triggered successfully');
+              console.log('Workflow triggered successfully');
             } catch (error) {
-              console.log('⚠️  Could not trigger workflow:', error.message);
+              console.log('WARNING: Could not trigger workflow:', error.message);
             }
       
       - name: Summary
         if: steps.check.outputs.update_needed == 'true'
         run: |
-          echo "✅ SDK Update Branch Created"
+          echo "SDK Update Branch Created"
           
           if [ "${{ steps.trigger.outputs.is_manual }}" = "true" ]; then
-            echo "🔧 Manual trigger: ${{ steps.trigger.outputs.manual_reason }}"
-            echo "👤 Triggered by: @${{ github.actor }}"
+            echo "Manual trigger: ${{ steps.trigger.outputs.manual_reason }}"
+            echo "Triggered by: @${{ github.actor }}"
           fi
           
           echo "Old version: ${{ steps.check.outputs.old_version }}"
@@ -849,7 +849,7 @@ jobs:
           }
           EOF
           
-          echo "✅ Reset failure counter"
+          echo "Reset failure counter"
       
       - name: Save circuit breaker cache (success)
         if: always()
@@ -897,10 +897,10 @@ jobs:
             '{"date": $date, "count": $count, "last_failure": $last}' \
             > "$FAILURE_FILE"
           
-          echo "❌ Failure tracked: $FAILURE_COUNT on $TODAY"
+          echo "Failure tracked: $FAILURE_COUNT on $TODAY"
           
           if [ "$FAILURE_COUNT" -ge 3 ]; then
-            echo "🛑 Circuit breaker will activate on next run"
+            echo "Circuit breaker will activate on next run"
           fi
           
-          echo "💾 State will be saved to cache for next run"
+          echo "State will be saved to cache for next run"

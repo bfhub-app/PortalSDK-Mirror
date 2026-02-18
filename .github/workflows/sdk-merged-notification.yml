@@ -1,4 +1,4 @@
-name: SDK Update Merged - Notification
+name: SDK Update - Merged [Notification]
 
 on:
   pull_request:

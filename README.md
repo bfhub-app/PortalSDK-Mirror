@@ -222,3 +222,10 @@ mod.SendErrorReport(mod.Message(s)) // works
     - This will need to be exported from Godot for use in an experience.
   - **modname.strings.json**
     - This is a predefined list of strings used in the mod.
+
+---
+
+## Disclaimer
+
+This repository is an unofficial mirror of the Battlefield 6 Portal SDK.  
+It is not affiliated with, endorsed by, or associated with Electronic Arts Inc. (EA) or DICE. All rights to the Battlefield franchise, Battlefield 6, Portal SDK, and related materials are owned by their respective copyright holders. This repository is provided for educational and development purposes only.

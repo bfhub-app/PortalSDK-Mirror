@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Reason for manual run'
+        description: 'Reason for force run'
         required: false
         default: 'Force check'
         type: string
@@ -423,13 +423,26 @@ jobs:
           
           DOWNLOAD_END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           ZIP_SIZE=$(stat -f%z "/tmp/PortalSDK.zip" 2>/dev/null || stat -c%s "/tmp/PortalSDK.zip")
-          ZIP_SIZE_MB=$(echo "scale=2; $ZIP_SIZE / 1024 / 1024" | bc)
           
-          echo "download_date=$DOWNLOAD_START" >> $GITHUB_OUTPUT
+          # Calculate size with proper units
+          SIZE_MB=$(echo "scale=2; $ZIP_SIZE / 1024 / 1024" | bc)
+          SIZE_MB_INT=$(echo "$SIZE_MB / 1" | bc)
+          
+          if [ "$SIZE_MB_INT" -ge 1024 ]; then
+            SIZE_GB=$(echo "scale=1; $SIZE_MB / 1024" | bc)
+            ZIP_SIZE_DISPLAY="${SIZE_GB} GB"
+          else
+            ZIP_SIZE_DISPLAY="${SIZE_MB_INT} MB"
+          fi
+          
+          # Convert UTC to Brazilian time (UTC-3)
+          DOWNLOAD_DATE_BRT=$(date -d "$DOWNLOAD_START -3 hours" +"%Y-%m-%d %H:%M:%S BRT" 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" -v-3H "$DOWNLOAD_START" +"%Y-%m-%d %H:%M:%S BRT" 2>/dev/null || echo "$DOWNLOAD_START (UTC)")
+          
+          echo "download_date=$DOWNLOAD_DATE_BRT" >> $GITHUB_OUTPUT
           echo "zip_size=$ZIP_SIZE" >> $GITHUB_OUTPUT
-          echo "zip_size_mb=$ZIP_SIZE_MB" >> $GITHUB_OUTPUT
+          echo "zip_size_display=$ZIP_SIZE_DISPLAY" >> $GITHUB_OUTPUT
           
-          echo "Downloaded: ${ZIP_SIZE_MB} MB"
+          echo "Downloaded: ${ZIP_SIZE_DISPLAY}"
       
       - name: Extract SDK
         if: steps.check.outputs.update_needed == 'true'
@@ -546,64 +559,39 @@ jobs:
             // Basic changelog function
             function createBasicChangelog() {
               const date = new Date().toISOString().split('T')[0];
-              let changelog = `# Portal SDK Changelog\n\n## Version ${newVersion}\n**Released**: ${date}\n**Previous version**: ${oldVersion}\n\n`;
+              let changelog = `<details>\n<summary>File Change Statistics</summary>\n\n`;
               
-              if (summary.zip_old_size && summary.zip_new_size) {
-                const oldMB = (summary.zip_old_size / 1024 / 1024).toFixed(2);
-                const newMB = (summary.zip_new_size / 1024 / 1024).toFixed(2);
-                const diff = summary.zip_new_size - summary.zip_old_size;
-                const diffMB = (Math.abs(diff) / 1024 / 1024).toFixed(2);
-                changelog += `### ZIP File Size\n- **Old**: ${oldMB} MB\n- **New**: ${newMB} MB\n- **Change**: ${diff > 0 ? '+' : ''}${diffMB} MB\n\n`;
+              changelog += `### Version ${newVersion}\n`;
+              changelog += `**Released**: ${date}\n`;
+              changelog += `**Previous version**: ${oldVersion}\n\n`;
+              
+              changelog += `### File Changes\n`;
+              changelog += `- **Total files in SDK**: ${summary.new_file_count || 'Unknown'}\n`;
+              changelog += `- **Added**: ${summary.added_count || 0} files\n`;
+              changelog += `- **Modified**: ${summary.modified_count || 0} files\n`;
+              changelog += `- **Deleted**: ${summary.deleted_count || 0} files\n\n`;
+              
+              if (summary.note) {
+                changelog += `> **Note**: ${summary.note}\n\n`;
               }
               
-              changelog += `### Summary\n- **Added**: ${summary.added_count || 0} files\n- **Deleted**: ${summary.deleted_count || 0} files\n- **Modified**: ${summary.modified_count || 0} files\n\n`;
+              changelog += `For detailed file-by-file changes, review the Pull Request diff.\n\n`;
+              changelog += `</details>`;
+              
               return changelog;
             }
             
-            // If no API key, return basic changelog
+            const basicChangelog = createBasicChangelog();
+            
+            // If no API key, return only basic changelog
             if (!apiKey) {
-              core.setOutput('changelog', createBasicChangelog());
+              core.setOutput('changelog', basicChangelog);
+              console.log('No Gemini API key - using basic changelog only');
               return;
             }
             
-            // Build file examples for AI prompt
-            let fileExamples = '';
-            if (summary.added_count > 0) {
-              fileExamples += `\n### Added Files (${summary.added_count} total):\n`;
-              (summary.added || []).slice(0, 15).forEach(f => {
-                const sizeInfo = f.size ? ` (${(f.size / 1024).toFixed(1)} KB)` : '';
-                fileExamples += `- ${f.path}${sizeInfo}\n`;
-              });
-            }
-            if (summary.deleted_count > 0) {
-              fileExamples += `\n### Deleted Files (${summary.deleted_count} total):\n`;
-              (summary.deleted || []).slice(0, 15).forEach(f => {
-                fileExamples += `- ${f.path}\n`;
-              });
-            }
-            if (summary.modified_count > 0) {
-              fileExamples += `\n### Modified Files (${summary.modified_count} total):\n`;
-              (summary.modified || []).slice(0, 15).forEach(f => {
-                let info = '';
-                if (f.is_text && f.lines_changed) info += ` - ~${f.lines_changed} lines changed`;
-                if (f.old_size && f.new_size) {
-                  const diff = f.new_size - f.old_size;
-                  info += ` (${diff > 0 ? '+' : ''}${(diff / 1024).toFixed(1)} KB)`;
-                }
-                fileExamples += `- ${f.path}${info}\n`;
-              });
-            }
-            
-            let zipInfo = '';
-            if (summary.zip_old_size && summary.zip_new_size) {
-              const oldMB = (summary.zip_old_size / 1024 / 1024).toFixed(2);
-              const newMB = (summary.zip_new_size / 1024 / 1024).toFixed(2);
-              const diff = summary.zip_new_size - summary.zip_old_size;
-              const diffMB = (Math.abs(diff) / 1024 / 1024).toFixed(2);
-              zipInfo = `\n### ZIP File Size:\n- Old: ${oldMB} MB\n- New: ${newMB} MB\n- Change: ${diff > 0 ? '+' : ''}${diffMB} MB\n`;
-            }
-            
-            const prompt = `You are an expert technical writer analyzing SDK changes for game developers working with Battlefield Portal.\n\nYour task is to analyze the Battlefield Portal SDK update from version ${oldVersion} to version ${newVersion} and create a clear, actionable changelog.\n\n## Context\nThe Battlefield Portal SDK is used by mod developers and content creators to build custom game modes and experiences. Changes can affect:\n- Available game objects and prefabs\n- Python scripting APIs\n- Godot editor plugins and tools\n- Example projects and documentation\n- Asset availability\n\n## Update Data\n${zipInfo}\n\n### File Statistics:\n- Added: ${summary.added_count || 0} files\n- Deleted: ${summary.deleted_count || 0} files\n- Modified: ${summary.modified_count || 0} files\n- Moved/Renamed: ${summary.moved_count || 0} files\n- Unchanged: ${summary.unchanged_count || 0} files\n\n${fileExamples}\n\n## Your Task\nAnalyze these changes and create a concise, developer-friendly changelog in Markdown format with:\n\n1. **Brief Summary** (2-3 sentences): What's the main focus of this update?\n2. **Key Highlights** (bullet points): What are the most important changes developers should know about?\n3. **Potential Impact** (2-3 sentences): How might these changes affect existing projects? What should developers check or update?\n\n## Guidelines\n- Focus on patterns and meaningful changes (e.g., "Added 50 new props to SouthernCalifornia maps" instead of listing all 50 files)\n- Identify if changes are primarily additive (new content) or breaking (removed/modified content)\n- Mention specific folders/categories when they show significant changes (e.g., "Gameplay/Vehicles", "objects/Cairo")\n- Use clear, concise language\n- Keep response under 500 words\n- Use appropriate emojis for visual clarity\n\nGenerate the changelog now:`;
+            // Build prompt for Gemini (we only have summary counts, not individual files)
+            const prompt = `You are an expert technical writer and developer analyzing SDK changes for game developers working with Battlefield 6 Portal (EA/DICE).\n\nYour task is to analyze the Battlefield 6 Portal SDK update from version ${oldVersion} to version ${newVersion} and create a clear, actionable changelog.\n\n## Context\nThe Battlefield 6 Portal SDK is the official level creator and design tool from EA/DICE. It is used by mod developers and content creators to build custom game modes and experiences. Changes can affect:\n- Available game objects and prefabs\n- TypeScript/Python scripting APIs\n- Godot editor plugins and tools\n- Example projects and documentation\n- Asset availability\n\n## Update Data\n\n### File Statistics:\n- Total files in new SDK: ${summary.new_file_count || 'Unknown'}\n- Added: ${summary.added_count || 0} files\n- Modified: ${summary.modified_count || 0} files\n- Deleted: ${summary.deleted_count || 0} files\n\n${summary.note ? 'Note: ' + summary.note + '\\n\\n' : ''}\n\n## Your Task\nBased on these file change statistics, create a concise, developer-friendly changelog in Markdown format with:\n\n1. Brief Summary (2-3 sentences): What\'s the likely focus of this update based on the change counts?\n2. Key Highlights (bullet points): What should developers expect from these changes?\n3. Recommendations (2-3 sentences): What should developers do after updating? (e.g., check compatibility, review examples, code deprecation, new code added, code removed, test their mods)\n\n## Guidelines\n- Be concise and actionable\n- Focus on what developers need to know and do\n- If counts are low (less than 10 changes), mention it\'s a minor update\n- If counts are high (more than 100 changes), emphasize thoroughness in testing\n- Keep response under 300 words\n- Do NOT use emojis\n\nGenerate the changelog now:`;
             
             // Call Gemini API
             try {
@@ -621,16 +609,17 @@ jobs:
               
               const data = await response.json();
               if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                const aiChangelog = `# Portal SDK Changelog\n\n## Version ${newVersion}\n\n` + data.candidates[0].content.parts[0].text;
-                core.setOutput('changelog', aiChangelog);
+                const aiAnalysis = data.candidates[0].content.parts[0].text;
+                const combinedChangelog = `# Portal SDK Changelog\n\n## Version ${newVersion}\n\n${aiAnalysis}\n\n${basicChangelog}`;
+                core.setOutput('changelog', combinedChangelog);
                 console.log('AI changelog generated successfully');
               } else {
-                core.setOutput('changelog', createBasicChangelog());
-                console.log('Gemini response unexpected, using basic changelog');
+                core.setOutput('changelog', basicChangelog);
+                console.log('Gemini response unexpected, using basic changelog only');
               }
             } catch (error) {
-              core.setOutput('changelog', createBasicChangelog());
-              console.log('Gemini request failed, using basic changelog:', error.message);
+              core.setOutput('changelog', basicChangelog);
+              console.log('Gemini request failed, using basic changelog only:', error.message);
             }
       
       - name: Update game-SDK version tracker
@@ -667,12 +656,15 @@ jobs:
             ### Summary
             - **Update Reason**: ${{ steps.check.outputs.update_reason }}
             - **Download Date**: ${{ steps.download.outputs.download_date }}
-            - **ZIP Size**: ${{ steps.download.outputs.zip_size_mb }} MB
+            - **ZIP Size**: ${{ steps.download.outputs.zip_size_display }}
             
             ### Changelog
             
-            ${{ steps.changelog.outputs.changelog || '-' }}   
+            ${{ steps.changelog.outputs.changelog || '-' }}
+            
             ---
+            
+            > **Note**: AI-generated analysis may contain errors or inaccuracies as it is an automated interpretation based on file statistics.
             
             *This PR was automatically created by the SDK update workflow.*
           commit-message: 'Update Portal SDK to v${{ steps.check.outputs.new_version }}'
@@ -739,6 +731,8 @@ jobs:
             ${changelog}
             
             ---
+            
+            > **Note**: AI-generated analysis may contain errors or inaccuracies as it is an automated interpretation based on file statistics.
             
             **Next Steps:**
             1. Review the [Pull Request #${prNumber}](${prUrl})

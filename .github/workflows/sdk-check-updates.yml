@@ -654,6 +654,8 @@ jobs:
               } else {
                 core.setOutput('changelog', basicChangelog);
                 console.log('Gemini response unexpected, using basic changelog only');
+                console.log('[ERROR]: ');
+                console.log(JSON.stringify(data, null, 2));
               }
             } catch (error) {
               core.setOutput('changelog', basicChangelog);

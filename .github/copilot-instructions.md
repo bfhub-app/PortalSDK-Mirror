@@ -152,6 +152,7 @@ Everything automation-related lives here (NOT in separate automation/ folder):
   * `failure-tracker.json` - Circuit breaker state (persisted via Actions cache, ignored)
   * `.gitkeep` - Preserves cache folder in git
 - `workflows/sdk-check-updates.yml` - **CRITICAL**: Main automation workflow (NEVER DELETE)
+- `workflows/sdk-merged.yml` - Triggers dependent repos when PR is merged to main
 - `copilot-instructions.md` - This file
 
 NOTE: Version checking and changelog generation are done INLINE in the workflow using bash scripts and `actions/github-script`. No separate .js files needed.
@@ -388,23 +389,33 @@ The workflow checks boost conditions on each scheduled run and decides whether t
 To receive update notifications in another repo:
 
 1. Set `github.target_repo` in `.github/config.json` to `"your-org/your-repo"`
-2. In target repo, create workflow file `.github/workflows/sdk-updated.yml`:
+2. In target repo, create workflow file `.github/workflows/sdk-events.yml`:
 
 ```yaml
-name: SDK Updated
+name: Handle SDK Events
+
 on:
   repository_dispatch:
-    types: [sdk-updated]
+    types: 
+      - sdk-updated  # PR created (SDK on branch)
+      - sdk-merged   # PR merged (SDK on main)
 
 jobs:
   handle-update:
     runs-on: ubuntu-latest
     steps:
-      - name: Process SDK update
+      - name: Log event details
         run: |
+          echo "Event type: ${{ github.event.action }}"
+          echo "Source repo: ${{ github.event.client_payload.source_repo }}"
+          echo "Timestamp: ${{ github.event.client_payload.timestamp }}"
+      
+      - name: Handle PR created (sdk-updated)
+        if: github.event.action == 'sdk-updated'
+        run: |
+          echo "SDK Update PR Created"
           echo "Old version: ${{ github.event.client_payload.old_version }}"
           echo "New version: ${{ github.event.client_payload.new_version }}"
-          echo "Source repo: ${{ github.event.client_payload.source_repo }}"
           echo "Pull Request: ${{ github.event.client_payload.pr_url }}"
           echo "Issue: ${{ github.event.client_payload.issue_number }}"
           
@@ -413,7 +424,25 @@ jobs:
           
           # Access AI changelog
           echo "${{ github.event.client_payload.changelog_ai }}" > changelog.md
+      
+      - name: Handle PR merged (sdk-merged)
+        if: github.event.action == 'sdk-merged'
+        run: |
+          echo "SDK Update Merged to Main"
+          echo "Version: ${{ github.event.client_payload.sdk_version }}"
+          echo "Previous: ${{ github.event.client_payload.previous_version }}"
+          echo "PR: ${{ github.event.client_payload.pr_url }}"
+          echo "Merged by: ${{ github.event.client_payload.merged_by }}"
+          echo "Release: ${{ github.event.client_payload.release_url }}"
+          
+          # This is the production-ready SDK on main branch
+          # Trigger your deployment, tests, or other workflows here
 ```
+
+**Event Comparison:**
+- **`sdk-updated`**: Fired when PR is created (SDK files on branch, not yet on main)
+- **`sdk-merged`**: Fired when PR is merged (SDK files now on main, production-ready)
+- **Recommendation**: Use `sdk-merged` for production workflows
 
 ## Key Design Principles
 
@@ -473,15 +502,17 @@ jobs:
 - Provides visibility into what changed
 
 ### 8. Cross-Repository Integration
-- `repository_dispatch` events to trigger workflows elsewhere
-- Passes comprehensive metadata (sizes, dates, versions)
-- Passes both raw data and AI analysis
-- Allows dependent repos to react to updates automatically
+- Two workflows send `repository_dispatch` events:
+  * **sdk-check-updates.yml**: Sends `sdk-updated` event when PR is created
+  * **sdk-merged.yml**: Sends `sdk-merged` event when PR is merged to main
+- Passes comprehensive metadata (sizes, dates, versions, PR info)
+- Dependent repos can listen to either or both events
+- **Recommended**: Use `sdk-merged` event for production updates (main branch)
 
-### 9. The Workflow File is Critical
-- `.github/workflows/sdk-check-updates.yml` is THE ONLY THING REALLY NEEDED
-- NEVER delete or attempt to remove the workflow file
-- It orchestrates everything
+### 9. The Workflow Files are Critical
+- `.github/workflows/sdk-check-updates.yml` - Detects and creates PRs (NEVER DELETE)
+- `.github/workflows/sdk-merged.yml` - Notifies on merge (NEVER DELETE)
+- They orchestrate the entire automation
 - Without it, nothing works
 
 ### 10. Git Safety - Never Force Push
@@ -828,6 +859,6 @@ size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
 
 **Last Updated**: 2026-02-18
 **Repository**: Battlefield Portal SDK Mirror
-**Structure Version**: 3.4 (Permissions documentation, circuit breaker, PR workflow, optimized file extraction)
+**Structure Version**: 3.5 (Two-workflow system: PR creation + merge notification)
 **Implementation**: Inline bash + actions/github-script (no external scripts)
 **AI Provider**: Google Gemini 1.5-flash

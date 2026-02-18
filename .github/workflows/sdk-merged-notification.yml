@@ -1,0 +1,89 @@
+name: SDK Update Merged - Notification
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  notify-on-merge:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'sdk-update-v')
+    name: Notify Target Repository
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Trigger workflow in target repository
+        uses: actions/github-script@v7
+        env:
+          TARGET_REPO: ${{ secrets.TARGET_REPO }}
+        with:
+          script: |
+            const targetRepo = process.env.TARGET_REPO;
+            
+            if (!targetRepo) {
+              console.log('⚠️  TARGET_REPO secret not configured');
+              return;
+            }
+            
+            const [targetOwner, targetRepoName] = targetRepo.split('/');
+            const pr = context.payload.pull_request;
+            const branchName = pr.head.ref;
+            const sdkVersion = branchName.replace('sdk-update-v', '');
+            
+            let previousVersion = 'unknown';
+            const versionMatch = pr.title.match(/v([\d.]+)\s*→\s*v([\d.]+)/);
+            if (versionMatch) {
+              previousVersion = versionMatch[1];
+            }
+            
+            let changelog = '';
+            if (pr.body) {
+              const changelogMatch = pr.body.match(/### 📝 Changelog\s+([\s\S]*?)(?:---|\*This PR was automatically created|$)/);
+              if (changelogMatch) {
+                changelog = changelogMatch[1].trim();
+              }
+            }
+            
+            console.log(`🚀 Triggering workflow in ${targetRepo}...`);
+            console.log(`   Version: ${sdkVersion} (previous: ${previousVersion})`);
+            console.log(`   PR: #${pr.number} by ${pr.merged_by?.login || 'unknown'}`);
+            
+            try {
+              await github.rest.repos.createDispatchEvent({
+                owner: targetOwner,
+                repo: targetRepoName,
+                event_type: 'sdk-merged',
+                client_payload: {
+                  sdk_version: sdkVersion,
+                  previous_version: previousVersion,
+                  source_repo: `${context.repo.owner}/${context.repo.repo}`,
+                  pr_number: pr.number,
+                  pr_url: pr.html_url,
+                  merged_by: pr.merged_by?.login || 'unknown',
+                  merged_at: pr.merged_at,
+                  changelog: changelog,
+                  release_tag: `portal-sdk_v${sdkVersion}`,
+                  release_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${sdkVersion}`,
+                  timestamp: new Date().toISOString()
+                }
+              });
+              
+              console.log('✅ Workflow triggered successfully');
+            } catch (error) {
+              console.log('❌ Failed to trigger workflow:', error.message);
+              core.setFailed(error.message);
+            }
+      
+      - name: Summary
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          SDK_VERSION="${BRANCH_NAME#sdk-update-v}"
+          
+          echo "✅ SDK Update Merged to Main"
+          echo "Version: $SDK_VERSION"
+          echo "PR: #${{ github.event.pull_request.number }}"
+          echo "Merged by: ${{ github.event.pull_request.merged_by.login }}"
+          echo "🚀 Target repository notified"

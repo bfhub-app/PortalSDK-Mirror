@@ -4,8 +4,16 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual run'
+        required: false
+        default: 'Force check'
+        type: string
+  
   repository_dispatch:
     types: [check-sdk-updates]
+
   schedule:
     # Monday: Every hour 8-20 UTC
     - cron: '0 8-20 * * 1'
@@ -48,13 +56,17 @@ jobs:
         id: trigger
         run: |
           EVENT_NAME="${{ github.event_name }}"
+          MANUAL_REASON="${{ inputs.reason || 'Manual trigger' }}"
           echo "📋 GitHub Event: $EVENT_NAME"
           
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             echo "is_manual=true" >> $GITHUB_OUTPUT
+            echo "manual_reason=$MANUAL_REASON" >> $GITHUB_OUTPUT
             echo "🔧 Manual trigger detected - bypassing schedule checks"
+            echo "📝 Reason: $MANUAL_REASON"
           else
             echo "is_manual=false" >> $GITHUB_OUTPUT
+            echo "manual_reason=" >> $GITHUB_OUTPUT
             echo "⏰ Automatic trigger ($EVENT_NAME) - following schedule"
           fi
       
@@ -680,6 +692,9 @@ jobs:
           PR_NUMBER: ${{ steps.create_pr.outputs.pull-request-number }}
           PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
           CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+          IS_MANUAL: ${{ steps.trigger.outputs.is_manual }}
+          MANUAL_REASON: ${{ steps.trigger.outputs.manual_reason }}
+          TRIGGERED_BY: ${{ github.actor }}
         with:
           script: |
             const fs = require('fs');
@@ -689,6 +704,9 @@ jobs:
             const prNumber = process.env.PR_NUMBER;
             const prUrl = process.env.PR_URL;
             const changelog = process.env.CHANGELOG || '';
+            const isManual = process.env.IS_MANUAL === 'true';
+            const manualReason = process.env.MANUAL_REASON || '';
+            const triggeredBy = process.env.TRIGGERED_BY || '';
             
             let comparison = {};
             try {
@@ -787,6 +805,9 @@ jobs:
                   issue_number: process.env.ISSUE_NUMBER,
                   comparison_raw: comparisonRaw,
                   changelog_ai: changelogAI,
+                  manual_trigger: '${{ steps.trigger.outputs.is_manual }}' === 'true',
+                  manual_reason: '${{ steps.trigger.outputs.manual_reason }}',
+                  triggered_by: '${{ github.actor }}',
                   timestamp: new Date().toISOString()
                 }
               });
@@ -800,6 +821,12 @@ jobs:
         if: steps.check.outputs.update_needed == 'true'
         run: |
           echo "✅ SDK Update Branch Created"
+          
+          if [ "${{ steps.trigger.outputs.is_manual }}" = "true" ]; then
+            echo "🔧 Manual trigger: ${{ steps.trigger.outputs.manual_reason }}"
+            echo "👤 Triggered by: @${{ github.actor }}"
+          fi
+          
           echo "Old version: ${{ steps.check.outputs.old_version }}"
           echo "New version: ${{ steps.check.outputs.new_version }}"
           echo "Branch: sdk-update-v${{ steps.check.outputs.new_version }}"

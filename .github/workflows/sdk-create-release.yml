@@ -1,0 +1,59 @@
+name: SDK Update - Create Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'sdk-update-v')
+    name: Create Stable Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      
+      - name: Create stable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          SDK_VERSION="${BRANCH_NAME#sdk-update-v}"
+          
+          echo "📦 Creating stable release for v${SDK_VERSION}..."
+          
+          mkdir -p /tmp/sdk-release
+          
+          rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-release/
+          
+          cd /tmp/sdk-release
+          zip -r "../portal-sdk_v${SDK_VERSION}-release.zip" . > /dev/null
+          cd -
+          
+          git tag "portal-sdk_v${SDK_VERSION}-release" || echo "Tag already exists"
+          git push origin "portal-sdk_v${SDK_VERSION}-release" || echo "Tag push failed or already exists"
+          
+          gh release create "portal-sdk_v${SDK_VERSION}-release" \
+            "/tmp/portal-sdk_v${SDK_VERSION}-release.zip" \
+            --title "Portal SDK v${SDK_VERSION} (Release)" \
+            --notes "Portal SDK version ${SDK_VERSION} - Stable release" \
+            || echo "Release already exists"
+          
+          echo "✅ Stable release created"
+      
+      - name: Summary
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          SDK_VERSION="${BRANCH_NAME#sdk-update-v}"
+          
+          echo "✅ Stable Release Created"
+          echo "Version: $SDK_VERSION"
+          echo "Tag: portal-sdk_v${SDK_VERSION}-release"
+          echo "PR: #${{ github.event.pull_request.number }}"

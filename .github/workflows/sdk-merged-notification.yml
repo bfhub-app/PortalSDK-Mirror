@@ -11,7 +11,7 @@ permissions:
 jobs:
   notify-on-merge:
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'sdk-update-v')
-    name: Notify Target Repository
+    name: Notify Repositories
     runs-on: ubuntu-latest
     
     steps:
@@ -65,8 +65,8 @@ jobs:
                   merged_by: pr.merged_by?.login || 'unknown',
                   merged_at: pr.merged_at,
                   changelog: changelog,
-                  release_tag: `portal-sdk_v${sdkVersion}`,
-                  release_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${sdkVersion}`,
+                  release_tag: `portal-sdk_v${sdkVersion}-release`,
+                  release_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${sdkVersion}-release`,
                   timestamp: new Date().toISOString()
                 }
               });

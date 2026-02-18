@@ -80,6 +80,43 @@ When environment variables would be better:
 
 **Decision**: Keep step outputs unless requirements change significantly.
 
+### GitHub Actions Permissions
+**When creating Pull Requests or Issues via `actions/github-script`, explicit permissions are required.**
+
+Key learnings:
+- The GitHub Actions token (`${{ github.token }}`) has limited default permissions
+- Creating resources via GitHub REST API requires explicit permission grants
+- Missing permissions result in **403 "Resource not accessible by integration"** errors
+
+**Required Permissions for This Workflow:**
+```yaml
+permissions:
+  contents: write        # For commits, tags, pushing to branches, creating releases
+  issues: write          # For creating GitHub issues
+  pull-requests: write   # For creating Pull Requests via API
+```
+
+**Common Permission Errors:**
+- **Creating PR without `pull-requests: write`**: 403 error when calling `github.rest.pulls.create()`
+- **Creating issue without `issues: write`**: 403 error when calling `github.rest.issues.create()`
+- **Pushing commits without `contents: write`**: 403 error on `git push`
+
+**Best Practice:**
+- Always declare permissions explicitly in workflow file
+- Grant minimum required permissions (principle of least privilege)
+- Test with manual workflow dispatch after adding new API calls
+- Check GitHub Actions documentation for specific endpoint requirements
+
+**Alternative Approaches:**
+- Use dedicated actions like `peter-evans/create-pull-request` (manages permissions internally)
+- Use Personal Access Token (PAT) with broader permissions (less secure)
+- Keep using `github.token` with explicit permissions (RECOMMENDED)
+
+**Troubleshooting:**
+1. If you see "Resource not accessible by integration" → Check permissions block
+2. If permissions are correct but still failing → Verify API endpoint requirements
+3. If using organization repository → Check organization-level security settings
+
 ## Repository Purpose
 
 This repository is an **automated mirror** of the Battlefield Portal SDK from EA/DICE. It serves as:
@@ -122,20 +159,22 @@ NOTE: Version checking and changelog generation are done INLINE in the workflow 
 ## Workflow Overview
 
 ### Schedule
-The workflow uses a **smart adaptive schedule** with tiered boost modes:
+The workflow uses a **fixed schedule** with internal boost logic:
 
-**Normal Schedule** (configured in `config.json`):
-- **Monday**: Every hour between 8 AM - 8 PM UTC
-- **Tuesday**: Every hour between 8 AM - 8 PM UTC
-- **Wednesday-Friday**: Every 4 hours
-- **Saturday-Sunday**: Every 6 hours
+**Cron Schedule:**
+- **Monday**: Every hour between 8 AM - 8 PM UTC (`0 8-20 * * 1`)
+- **Tuesday**: Every hour between 8 AM - 8 PM UTC (`0 8-20 * * 2`)
+- **Wednesday-Friday**: Every 4 hours (`0 */4 * * 3-5`)
+- **Saturday-Sunday**: Every 6 hours (`0 */6 * * 0,6`)
 
 **Tiered Boost System** (automatic game update detection):
+
+The workflow checks boost conditions on each scheduled run and decides whether to proceed:
 
 **Tier 1 - Aggressive Boost** (SteamDB):
 - **Trigger**: Game update detected on SteamDB (https://steamdb.info/app/2807960/history/)
 - **Duration**: Active for 8 hours after detection
-- **Frequency**: Every 30 minutes on weekdays (Mon-Fri), any time of day
+- **Behavior**: Bypasses work hour restrictions, proceeds with SDK check
 - **Reason**: SDK usually releases within hours of game update
 - **Manual Override**: Can manually update cache to trigger aggressive boost
 - **Falls back to**: Normal boost after 8 hours
@@ -143,13 +182,14 @@ The workflow uses a **smart adaptive schedule** with tiered boost modes:
 **Tier 2 - Normal Boost** (EA Blog):
 - **Trigger**: Game update on EA news page (https://www.ea.com/games/battlefield/battlefield-6/news)
 - **Duration**: Active for 72 hours (3 days) after detection
-- **Frequency**: Every 1 hour on weekdays (Mon-Fri), any time of day
+- **Behavior**: Bypasses work hour restrictions on weekdays, proceeds with SDK check
 - **Detection**: Monitors for updates mentioning "portal" or "sdk"
 - **Falls back to**: Regular schedule after 72 hours
 
 **Tier 3 - Regular Schedule**:
 - No recent game updates detected
-- Follows normal schedule (Mon/Tue hourly 8-20, Wed-Fri every 4h, Sat-Sun every 6h)
+- Follows work hour restrictions (Mon/Tue 8-20 UTC only)
+- Other days follow cron schedule without additional restrictions
 
 **Manual Trigger** (workflow_dispatch):
 - **Priority**: Highest - bypasses ALL schedule checks
@@ -565,6 +605,17 @@ When asked to:
 
 ## Secrets Required
 
+### Required Workflow Permissions:
+The workflow requires explicit permissions in the workflow file (NOT secrets):
+```yaml
+permissions:
+  contents: write        # For git operations and releases
+  issues: write          # For creating tracking issues
+  pull-requests: write   # For creating Pull Requests
+```
+
+See **GitHub Actions Permissions** section for detailed explanation.
+
 ### Optional but Recommended:
 - `GEMINI_API_KEY` - For AI-powered changelog generation (Google Gemini 1.5-flash)
   - Without it: Creates basic file-list changelogs with sizes
@@ -775,8 +826,8 @@ size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
 
 ---
 
-**Last Updated**: 2026-02-17
+**Last Updated**: 2026-02-18
 **Repository**: Battlefield Portal SDK Mirror
-**Structure Version**: 3.3 (Circuit breaker, PR workflow, optimized file extraction)
+**Structure Version**: 3.4 (Permissions documentation, circuit breaker, PR workflow, optimized file extraction)
 **Implementation**: Inline bash + actions/github-script (no external scripts)
 **AI Provider**: Google Gemini 1.5-flash

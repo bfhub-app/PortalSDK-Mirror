@@ -11,18 +11,15 @@ on:
     - cron: '0 8-20 * * 1'
     # Tuesday: Every hour 8-20 UTC
     - cron: '0 8-20 * * 2'
-    # Wednesday-Friday: Every 4 hours (boost mode will override)
+    # Wednesday-Friday: Every 4 hours
     - cron: '0 */4 * * 3-5'
     # Saturday-Sunday: Every 6 hours
     - cron: '0 */6 * * 0,6'
-    # Normal boost check: Every hour on weekdays
-    - cron: '0 * * * 1-5'
-    # Aggressive boost check: Every 30 minutes on weekdays
-    - cron: '*/30 * * * 1-5'
 
 permissions:
   contents: write
   issues: write
+  pull-requests: write
 
 concurrency:
   group: sdk-check-updates

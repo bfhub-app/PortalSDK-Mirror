@@ -708,6 +708,8 @@ jobs:
           commit-message: 'Update Portal SDK to v${{ steps.check.outputs.new_version }}'
           committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          reviewers: ${{ vars.PR_REVIEWERS || '' }}
+          team-reviewers: ${{ vars.PR_TEAM_REVIEWERS || '' }}
           delete-branch: false
           draft: false
       
@@ -781,16 +783,41 @@ jobs:
             *This issue was automatically created by the SDK update workflow.*
             `;
             
-            const issue = await github.rest.issues.create({
+            const issueTitle = `New SDK Update: Migrating from v${oldVersion} to v${newVersion}`;
+            
+            // Check if issue already exists
+            const existingIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `New SDK Update: Migrating from v${oldVersion} to v${newVersion}`,
-              body: issueBody,
-              labels: ['sdk-update', 'automated']
+              state: 'open',
+              labels: 'sdk-update',
+              per_page: 100
             });
             
-            console.log(`Created issue #${issue.data.number}`);
-            core.setOutput('issue_number', issue.data.number);
+            const existingIssue = existingIssues.data.find(issue => issue.title === issueTitle);
+            
+            if (existingIssue) {
+              // Update existing issue
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: issueBody
+              });
+              console.log(`Updated existing issue #${existingIssue.number}`);
+              core.setOutput('issue_number', existingIssue.number);
+            } else {
+              // Create new issue
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issueTitle,
+                body: issueBody,
+                labels: ['sdk-update', 'automated']
+              });
+              console.log(`Created issue #${issue.data.number}`);
+              core.setOutput('issue_number', issue.data.number);
+            }
       
       - name: Trigger workflow in target repository
         if: steps.check.outputs.update_needed == 'true' && steps.create_pr.outputs.pull-request-number

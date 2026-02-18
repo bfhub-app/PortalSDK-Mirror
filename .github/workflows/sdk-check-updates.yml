@@ -294,6 +294,8 @@ jobs:
       - name: Check for SDK updates
         if: steps.work_hours.outputs.should_run == 'true'
         id: check
+        env:
+          SDK_VERSIONS_URL: ${{ vars.SDK_VERSIONS_URL || 'https://download.portal.battlefield.com/versions.json' }}
         run: |
           IS_MANUAL="${{ steps.trigger.outputs.is_manual }}"
           
@@ -302,9 +304,7 @@ jobs:
             echo "=================================================="
           fi
           
-          # Fetch remote versions.json
-          VERSIONS_URL=$(jq -r '.urls.versions' .github/config.json)
-          curl -s -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:143.0) Gecko/20100101 Firefox/143.0" "$VERSIONS_URL" > /tmp/remote-versions.json
+          curl -s -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:143.0) Gecko/20100101 Firefox/143.0" "$SDK_VERSIONS_URL" > /tmp/remote-versions.json
           
           REMOTE_VER=$(jq -r '.versions | last | .version' /tmp/remote-versions.json)
           REMOTE_SIZE=$(jq -r '.versions | last | .fileSize // 0' /tmp/remote-versions.json)
@@ -402,15 +402,16 @@ jobs:
       - name: Download SDK
         if: steps.check.outputs.update_needed == 'true'
         id: download
+        env:
+          SDK_DOWNLOAD_URL: ${{ vars.SDK_DOWNLOAD_URL || 'https://download.portal.battlefield.com/PortalSDK.zip' }}
         run: |
           echo "📥 Downloading Portal SDK..."
           
-          DOWNLOAD_URL=$(jq -r '.urls.sdk_download' .github/config.json)
           DOWNLOAD_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           
           wget -O /tmp/PortalSDK.zip \
             --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
-            "$DOWNLOAD_URL"
+            "$SDK_DOWNLOAD_URL"
           
           DOWNLOAD_END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           ZIP_SIZE=$(stat -f%z "/tmp/PortalSDK.zip" 2>/dev/null || stat -c%s "/tmp/PortalSDK.zip")
@@ -642,99 +643,33 @@ jobs:
             echo "✅ Linked SDK v$NEW_VERSION with game v$GAME_VERSION"
           fi
       
-      - name: Create branch and commit changes
-        if: steps.check.outputs.update_needed == 'true'
-        id: create_branch
-        run: |
-          NEW_VERSION="${{ steps.check.outputs.new_version }}"
-          BRANCH_NAME="sdk-update-v${NEW_VERSION}"
-          
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Stash any uncommitted changes (e.g., failure-tracker.json)
-          echo "💾 Stashing uncommitted changes..."
-          git stash push -u -m "Temporary stash before branch switch" || echo "Nothing to stash"
-          
-          # Fetch remote branches to see if our branch exists
-          git fetch origin
-          
-          # Check if branch exists remotely
-          if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null 2>&1; then
-            echo "📌 Branch $BRANCH_NAME exists remotely - checking out and pulling latest"
-            
-            # Checkout existing branch
-            git checkout "$BRANCH_NAME" 2>/dev/null || git checkout -b "$BRANCH_NAME" --track "origin/$BRANCH_NAME"
-            
-            # Pull latest changes from remote (rebase to avoid merge commits)
-            git pull --rebase origin "$BRANCH_NAME" || {
-              echo "⚠️  Rebase conflict detected - using ours strategy"
-              git rebase --abort 2>/dev/null || true
-              git reset --hard "origin/$BRANCH_NAME"
-            }
-          else
-            echo "🆕 Creating new branch $BRANCH_NAME"
-            git checkout -b "$BRANCH_NAME"
-          fi
-          
-          # Pop stashed changes back
-          echo "📤 Restoring stashed changes..."
-          git stash pop || echo "No stash to pop"
-          
-          # Commit all changes
-          git add -A
-          git commit -m "Update Portal SDK to v${NEW_VERSION}" || echo "No changes to commit"
-          
-          # Push branch (normal push, no force)
-          git push -u origin "$BRANCH_NAME"
-          
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-      
       - name: Create Pull Request
         if: steps.check.outputs.update_needed == 'true'
         id: create_pr
-        uses: actions/github-script@v7
-        env:
-          OLD_VERSION: ${{ steps.check.outputs.old_version }}
-          NEW_VERSION: ${{ steps.check.outputs.new_version }}
-          BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
-          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+        uses: peter-evans/create-pull-request@v6
         with:
-          script: |
-            const fs = require('fs');
-            const oldVersion = process.env.OLD_VERSION;
-            const newVersion = process.env.NEW_VERSION;
-            const branchName = process.env.BRANCH_NAME;
-            const changelog = process.env.CHANGELOG || '';
+          token: ${{ github.token }}
+          branch: sdk-update-v${{ steps.check.outputs.new_version }}
+          title: 'SDK Update: v${{ steps.check.outputs.old_version }} → v${{ steps.check.outputs.new_version }}'
+          body: |
+            ## Portal SDK Update: v${{ steps.check.outputs.old_version }} → v${{ steps.check.outputs.new_version }}
             
-            let comparison = {};
-            try {
-              comparison = JSON.parse(fs.readFileSync('.github/cache/comparison.json', 'utf8'));
-            } catch (e) {}
-            
-            const summary = comparison.summary || {};
-            
-            const prBody = `## Portal SDK Update: v${oldVersion} → v${newVersion}
-            
-            This PR updates the Portal SDK from version **${oldVersion}** to **${newVersion}**.
+            This PR updates the Portal SDK from version **${{ steps.check.outputs.old_version }}** to **${{ steps.check.outputs.new_version }}**.
             
             ### 📊 Summary
-            - **Files in SDK**: ${summary.new_file_count || 'N/A'}
-            - **Added**: ${summary.added_count || 0} files
-            - **Modified**: ${summary.modified_count || 0} files
-            - **Deleted**: ${summary.deleted_count || 0} files
-            
-            ${summary.note ? `> **Note**: ${summary.note}\n` : ''}
+            - **Update Reason**: ${{ steps.check.outputs.update_reason }}
+            - **Download Date**: ${{ steps.download.outputs.download_date }}
+            - **ZIP Size**: ${{ steps.download.outputs.zip_size_mb }} MB
             
             ### 📝 Changelog
             
-            ${changelog}
+            ${{ steps.changelog.outputs.changelog }}
             
             ---
             
             **Automated Actions Completed:**
             - ✅ Downloaded and extracted SDK
-            - ✅ Created release for v${oldVersion}
+            - ✅ Created release for v${{ steps.check.outputs.old_version }}
             - ✅ Generated file comparison
             - ✅ AI changelog generated
             - ✅ Updated game-SDK version tracker
@@ -742,34 +677,24 @@ jobs:
             **Review and merge this PR to:**
             - Update the main branch with new SDK files
             - Trigger dependent repository workflows
-            - Create tracking issue
             
             *This PR was automatically created by the SDK update workflow.*
-            `;
-            
-            const pr = await github.rest.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `SDK Update: v${oldVersion} → v${newVersion}`,
-              head: branchName,
-              base: 'main',
-              body: prBody
-            });
-            
-            console.log(`✅ Created PR #${pr.data.number}`);
-            core.setOutput('pr_number', pr.data.number);
-            core.setOutput('pr_url', pr.data.html_url);
+          commit-message: 'Update Portal SDK to v${{ steps.check.outputs.new_version }}'
+          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          delete-branch: false
+          draft: false
       
       - name: Create GitHub issue for update
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.create_pr.outputs.pull-request-number
         id: create_issue
         uses: actions/github-script@v7
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
           UPDATE_REASON: ${{ steps.check.outputs.update_reason }}
-          PR_NUMBER: ${{ steps.create_pr.outputs.pr_number }}
-          PR_URL: ${{ steps.create_pr.outputs.pr_url }}
+          PR_NUMBER: ${{ steps.create_pr.outputs.pull-request-number }}
+          PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
           CHANGELOG: ${{ steps.changelog.outputs.changelog }}
         with:
           script: |
@@ -834,19 +759,25 @@ jobs:
             core.setOutput('issue_number', issue.data.number);
       
       - name: Trigger workflow in target repository
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.create_pr.outputs.pull-request-number
         uses: actions/github-script@v7
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
-          PR_NUMBER: ${{ steps.create_pr.outputs.pr_number }}
-          PR_URL: ${{ steps.create_pr.outputs.pr_url }}
+          PR_NUMBER: ${{ steps.create_pr.outputs.pull-request-number }}
+          PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
           ISSUE_NUMBER: ${{ steps.create_issue.outputs.issue_number }}
           CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+          TARGET_REPO: ${{ secrets.TARGET_REPO }}
         with:
           script: |
             const fs = require('fs');
-            const config = JSON.parse(fs.readFileSync('.github/config.json', 'utf8'));
+            const targetRepo = process.env.TARGET_REPO;
+            
+            if (!targetRepo) {
+              console.log('⚠️  TARGET_REPO secret not configured');
+              return;
+            }
             
             let comparisonRaw = '';
             try {
@@ -854,15 +785,7 @@ jobs:
             } catch (e) {}
             
             const changelogAI = process.env.CHANGELOG || '';
-            
-            const targetRepo = config.github.target_repo || 'YOUR_ORG/target-repo';
             const [targetOwner, targetRepoName] = targetRepo.split('/');
-            
-            if (targetOwner === 'YOUR_ORG') {
-              console.log('⚠️  Target repository not configured in .github/config.json');
-              console.log('   Skipping workflow trigger');
-              return;
-            }
             
             console.log(`🚀 Triggering workflow in ${targetRepo}...`);
             
@@ -895,11 +818,11 @@ jobs:
           echo "✅ SDK Update Branch Created"
           echo "Old version: ${{ steps.check.outputs.old_version }}"
           echo "New version: ${{ steps.check.outputs.new_version }}"
-          echo "Branch: ${{ steps.create_branch.outputs.branch_name }}"
-          echo "PR: #${{ steps.create_pr.outputs.pr_number }}"
+          echo "Branch: sdk-update-v${{ steps.check.outputs.new_version }}"
+          echo "PR: #${{ steps.create_pr.outputs.pull-request-number }}"
           echo "Issue: #${{ steps.create_issue.outputs.issue_number }}"
           echo ""
-          echo "Next: Review and merge PR #${{ steps.create_pr.outputs.pr_number }}"
+          echo "Next: Review and merge PR #${{ steps.create_pr.outputs.pull-request-number }}"
       
       - name: Reset failure counter on success
         if: steps.check.outputs.update_needed == 'true' && success()

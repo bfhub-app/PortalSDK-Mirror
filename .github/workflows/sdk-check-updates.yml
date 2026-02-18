@@ -363,38 +363,34 @@ jobs:
             echo "$UPDATE_NEEDED: $UPDATE_REASON"
           fi
       
-      - name: Create release of current state
+      - name: Create archive release of current state
         if: steps.check.outputs.update_needed == 'true' && steps.check.outputs.old_version != '0'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           OLD_VERSION="${{ steps.check.outputs.old_version }}"
           
-          echo "📦 Creating release archive for v${OLD_VERSION}..."
+          echo "📦 Creating archive release for v${OLD_VERSION}..."
           
           mkdir -p /tmp/sdk-archive
           
-          # Copy SDK files only (exclude .git, .github, .gitignore)
           rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-archive/ || echo "No files to archive yet"
           
-          # Create ZIP
           cd /tmp/sdk-archive
           if [ "$(ls -A .)" ]; then
-            zip -r "../portal-sdk_v${OLD_VERSION}.zip" . > /dev/null
+            zip -r "../PortalSDK_v${OLD_VERSION}-archive.zip" . > /dev/null
             cd -
             
-            # Create git tag
-            git tag "portal-sdk_v${OLD_VERSION}" || echo "Tag already exists"
-            git push origin "portal-sdk_v${OLD_VERSION}" || echo "Tag push failed or already exists"
+            git tag "PortalSDK_v${OLD_VERSION}-archive" || echo "Tag already exists"
+            git push origin "PortalSDK_v${OLD_VERSION}-archive" || echo "Tag push failed or already exists"
             
-            # Create GitHub release
-            gh release create "portal-sdk_v${OLD_VERSION}" \
-              "/tmp/portal-sdk_v${OLD_VERSION}.zip" \
-              --title "Portal SDK v${OLD_VERSION}" \
-              --notes "Portal SDK version ${OLD_VERSION} - Snapshot before update to ${{ steps.check.outputs.new_version }}" \
+            gh release create "PortalSDK_v${OLD_VERSION}-archive" \
+              "/tmp/PortalSDK_v${OLD_VERSION}-archive.zip" \
+              --title "Portal SDK v${OLD_VERSION} (Archive)" \
+              --notes "Portal SDK version ${OLD_VERSION} - Archive snapshot before update to ${{ steps.check.outputs.new_version }}" \
               || echo "Release already exists"
             
-            echo "✅ Release created"
+            echo "✅ Archive release created"
           else
             echo "ℹ️  No content to release"
           fi

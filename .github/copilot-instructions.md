@@ -152,7 +152,8 @@ Everything automation-related lives here (NOT in separate automation/ folder):
   * `failure-tracker.json` - Circuit breaker state (persisted via Actions cache, ignored)
   * `.gitkeep` - Preserves cache folder in git
 - `workflows/sdk-check-updates.yml` - **CRITICAL**: Main automation workflow (NEVER DELETE)
-- `workflows/sdk-merged.yml` - Triggers dependent repos when PR is merged to main
+- `workflows/sdk-merged-notification.yml` - Notifies dependent repos when PR is merged to main
+- `workflows/sdk-create-release.yml` - Creates stable release when PR is merged to main
 - `copilot-instructions.md` - This file
 
 NOTE: Version checking and changelog generation are done INLINE in the workflow using bash scripts and `actions/github-script`. No separate .js files needed.
@@ -297,15 +298,16 @@ The workflow checks boost conditions on each scheduled run and decides whether t
      * File counts (added/deleted/modified)
    - Uses native `fetch` API in GitHub Actions environment
 
-7. **Pre-Update Release Creation**
+7. **Archive Release Creation (Before Update)**
    - Creates a release/tag of the CURRENT state before updating
-   - Tag format: `portal-sdk_v{current_version}`
+   - Tag format: `portal-sdk_v{current_version}-archive`
+   - ZIP filename: `portal-sdk_v{current_version}-archive.zip`
    - ZIP contains only SDK files from root (excludes .github/, .git/)
    - Release notes include:
      * Current version number
-     * ZIP file size
-     * Download date
-   - Preserves history of each version
+     * Marked as "Archive" snapshot
+     * Reference to version being updated to
+   - Preserves history of each version before changes
 
 8. **GitHub Issue Creation**
    - Automatically creates issue with title: "SDK Update: v{old} → v{new}"
@@ -347,6 +349,16 @@ The workflow checks boost conditions on each scheduled run and decides whether t
    - **NEVER uses force push** - always respects remote state
    - Workflow completes (merge is manual or via auto-merge)
 
+11. **Stable Release Creation (After Merge)**
+   - Triggered by `sdk-create-release.yml` workflow when PR is merged to main
+   - Creates a release/tag of the NEW stable version
+   - Tag format: `portal-sdk_v{new_version}-release`
+   - ZIP filename: `portal-sdk_v{new_version}-release.zip`
+   - ZIP contains only SDK files from root (excludes .github/, .git/)
+   - Release notes marked as "Release" (stable version)
+   - This is always the current production-ready SDK
+   - Notifies dependent repositories via `sdk-merged` event
+
 ## Configuration
 
 ### .github/config.json
@@ -379,7 +391,10 @@ The workflow checks boost conditions on each scheduled run and decides whether t
     "trigger_workflow": "sdk-updated.yml"
   },
   "release": {
-    "tag_prefix": "portal-sdk_v",
+    "archive_tag_prefix": "portal-sdk_v",
+    "archive_tag_suffix": "-archive",
+    "release_tag_prefix": "portal-sdk_v",
+    "release_tag_suffix": "-release",
     "create_github_release": true
   }
 }
@@ -504,16 +519,17 @@ jobs:
 ### 8. Cross-Repository Integration
 - Two workflows send `repository_dispatch` events:
   * **sdk-check-updates.yml**: Sends `sdk-updated` event when PR is created
-  * **sdk-merged.yml**: Sends `sdk-merged` event when PR is merged to main
+  * **sdk-merged-notification.yml**: Sends `sdk-merged` event when PR is merged to main
 - Passes comprehensive metadata (sizes, dates, versions, PR info)
 - Dependent repos can listen to either or both events
 - **Recommended**: Use `sdk-merged` event for production updates (main branch)
 
 ### 9. The Workflow Files are Critical
 - `.github/workflows/sdk-check-updates.yml` - Detects and creates PRs (NEVER DELETE)
-- `.github/workflows/sdk-merged.yml` - Notifies on merge (NEVER DELETE)
+- `.github/workflows/sdk-merged-notification.yml` - Notifies dependent repos on merge (NEVER DELETE)
+- `.github/workflows/sdk-create-release.yml` - Creates stable releases on merge (NEVER DELETE)
 - They orchestrate the entire automation
-- Without it, nothing works
+- Without them, nothing works
 
 ### 10. Git Safety - Never Force Push
 - ALWAYS respect remote branch state
@@ -538,6 +554,8 @@ When asked to:
 - Read `.github/cache/comparison.json`
 - Look at latest GitHub issue with `sdk-update` label
 - Check git log for latest commit message
+- Check latest release (look for `-release` tag for current stable)
+- Check archive releases (look for `-archive` tags for historical snapshots)
 
 **"Add files to the SDK"**
 - DO NOT do this! Root is for SDK files only
@@ -551,14 +569,22 @@ When asked to:
 - Both must stay synchronized
 
 **"See version history"**
-- Check git tags (format: `portal-sdk_v{version}`)
-- Look at GitHub releases (one per version)
-- Each release includes ZIP size and download date
+- Check git tags (format: `portal-sdk_v{version}-archive` for snapshots, `portal-sdk_v{version}-release` for stable)
+- Look at GitHub releases:
+  * `-archive` releases: Historical snapshots before updates
+  * `-release` releases: Current stable versions (production-ready)
+- Each version has two releases:
+  * Archive: Created when update detected (old version snapshot)
+  * Release: Created after PR merged (new stable version)
 
 **"Compare two versions"**
-- Each version is tagged in git
-- Each version has a release
+- Each version has two git tags:
+  * `portal-sdk_v{version}-archive`: Snapshot before update
+  * `portal-sdk_v{version}-release`: Stable version after merge
+- Each version has two releases with ZIPs
 - Comparison JSON includes file sizes and line changes
+- To get current stable: Look for latest `-release` tag
+- To get historical snapshot: Look for corresponding `-archive` tag
 
 **"Fix the workflow" or "Update automation"**
 - Edit workflow file in `.github/workflows/` directory
@@ -859,6 +885,6 @@ size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
 
 **Last Updated**: 2026-02-18
 **Repository**: Battlefield Portal SDK Mirror
-**Structure Version**: 3.5 (Two-workflow system: PR creation + merge notification)
+**Structure Version**: 3.6 (Three-workflow system: detection/archive → notification → release)
 **Implementation**: Inline bash + actions/github-script (no external scripts)
 **AI Provider**: Google Gemini 1.5-flash

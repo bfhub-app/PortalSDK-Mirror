@@ -188,8 +188,8 @@ export async function OnGameModeStarted() {
     bombExplodesVFX_B = mod.SpawnObject(mod.RuntimeSpawn_Common.FX_ArtilleryStrike_Explosion_GS, MCOMPositionB, ZEROVEC);
     alarmSFX_A = mod.SpawnObject(mod.RuntimeSpawn_Common.SFX_Alarm, MCOMPositionA, ZEROVEC);
     alarmSFX_B = mod.SpawnObject(mod.RuntimeSpawn_Common.SFX_Alarm, MCOMPositionB, ZEROVEC);
-    mod.EnableSFX(alarmSFX_A, false);
-    mod.EnableSFX(alarmSFX_B, false);
+    mod.StopSound(alarmSFX_A);
+    mod.StopSound(alarmSFX_B);
 
     if (!INSTANT_START) {
         // wait for required number of players to join the game.
@@ -797,7 +797,6 @@ function ExplodeFeedback(pos: mod.Vector): void {
     let vfx: mod.VFX = mod.SpawnObject(mod.RuntimeSpawn_Common.FX_ArtilleryStrike_Explosion_GS, pos, ZEROVEC);
     mod.EnableVFX(vfx, true);
     let sfx: mod.SFX = mod.SpawnObject(mod.RuntimeSpawn_Common.FX_Gadget_C4_Explosives_Detonation, pos, ZEROVEC);
-    mod.EnableSFX(sfx, true);
     mod.PlaySound(sfx, 100);
 }
 
@@ -2193,8 +2192,8 @@ class BombData {
     }
 
     static Reset() {
-        mod.EnableSFX(alarmSFX_A, false);
-        mod.EnableSFX(alarmSFX_B, false);
+        mod.StopSound(alarmSFX_A);
+        mod.StopSound(alarmSFX_B);
 
         this.isPlanted = false;
         this.isPlanting = false;
@@ -2284,11 +2283,11 @@ class BombData {
             let mapName = GetMapName();
 
             if (this.isAtA) {
-                mod.EnableSFX(alarmSFX_A, false);
+                mod.StopSound(alarmSFX_A);
                 ExplodeFeedback(MCOMPositionA);
             }
             else {
-                mod.EnableSFX(alarmSFX_B, false);
+                mod.StopSound(alarmSFX_B);
                 ExplodeFeedback(MCOMPositionB);
             }
 
@@ -2362,7 +2361,6 @@ class BombData {
             mod.EnableInteractPoint(interactPointB, false);
             mod.EnableWorldIconImage(worldIconB, false);
             mod.EnableWorldIconText(worldIconB, false);
-            mod.EnableSFX(alarmSFX_A, true);
             mod.PlaySound(alarmSFX_A, 100, MCOMPositionA, 1);
         }
         else if (BombData.isAtB) {
@@ -2371,7 +2369,6 @@ class BombData {
             mod.EnableInteractPoint(interactPointA, false);
             mod.EnableWorldIconImage(worldIconA, false);
             mod.EnableWorldIconText(worldIconA, false);
-            mod.EnableSFX(alarmSFX_B, true);
             mod.PlaySound(alarmSFX_B, 100, MCOMPositionB, 1);
         }
         else {
@@ -2422,10 +2419,10 @@ class BombData {
         }
 
             if (this.isAtA) {
-                mod.EnableSFX(alarmSFX_A, false);
+                mod.StopSound(alarmSFX_A);
             }
             else {
-                mod.EnableSFX(alarmSFX_B, false);
+                mod.StopSound(alarmSFX_B);
             }
 
         this.defusingPlayer = null;

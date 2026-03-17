@@ -224,12 +224,10 @@ class PropertySelection(Property):
     def get_selections(self) -> list[str]:
         return list(getattr(self, const.PROP_KEY_SEL))
 
-    def to_gd(self, attr: str = const.PROP_KEY_DEF) -> str:
-        type_str = self.id + "_selection"
+    def to_gd(self, attr: str = const.PROP_KEY_DEF) -> int:
         list_val = getattr(self, const.PROP_KEY_SEL)
         sel_val = getattr(self, attr)
-        sel_val = sel_val if sel_val in list_val else ""
-        return f"{type_str}.{sel_val}"
+        return list_val.index(sel_val) if sel_val in list_val else 0
 
     def to_gd_prop(self, attr: str = const.PROP_KEY_DEF) -> str:
         type_str = self.id + "_selection"

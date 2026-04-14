@@ -66,6 +66,10 @@ def _create_scene(tscn_instances: dict[str, list[ttype.Instance]], assets: jstyp
     if len(nonusable) > 0:
         _log_restrictions(nonusable, level_name)
 
+    valid_check = _validate_assets(scene)
+    if not valid_check:
+        return None
+
     _create_layers(scene, assets)
     return scene
 
@@ -91,6 +95,26 @@ def _check_restrictions(scene: ttype.Scene, assets: jstype.Assets, level_name: s
                 entries.append(error_str)
                 errors[type] = entries
     return errors
+
+
+def _validate_assets(scene: ttype.Scene) -> bool:
+    valid_check: bool = True
+
+    for node in scene.flattened_list:
+        assert "type" in node
+        type: str = node["type"]
+        assert "name" in node
+        name: str = node["name"]
+
+        if type.lower() in const.REQUIRED_PROPS:
+            for prop in const.REQUIRED_PROPS[type.lower()]:
+                node_properties = {p.lower() for p in node}
+                if prop.lower() not in node_properties:
+                    parent: str = node["parent"]
+                    _logging.log_error(f"{parent}/{name} requires {prop} to be set")
+                    valid_check = False
+
+    return valid_check
 
 
 def _log_restrictions(nonusable: dict[str, list[str]], level_name: str) -> None:

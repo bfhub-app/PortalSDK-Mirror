@@ -183,6 +183,19 @@ def _create_root_node(node_name: str = const.PROP_TYPE_NODE3D, node_type: str = 
     return f'[{const.TYPE_NODE} name="{node_name}" type="{node_type}"]'
 
 
+def _create_gd_property_setter(prop_name: str) -> str:
+    return rf""":
+	set(value):
+		{prop_name} = value
+		update_configuration_warnings()"""
+
+
+def _create_warning_check(prop_name: str) -> str:
+    return rf"""
+	if {prop_name} == null:
+		warnings.append("{prop_name} must be set!")"""
+
+
 def _create_gd_file(asset: jstype.Asset, dst: Path) -> Path | None:
     """Create script file (.gd) used by assets. Returns path of created file"""
 
@@ -190,6 +203,11 @@ def _create_gd_file(asset: jstype.Asset, dst: Path) -> Path | None:
         return None
 
     tscn_type = _get_tscn_type(asset)
+
+    required_props = []
+    extra_warning_checks = ""
+    if asset.id.lower() in const.REQUIRED_PROPS:
+        required_props = const.REQUIRED_PROPS[asset.id.lower()]
 
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     with open(dst, "w", encoding="utf-8") as gd_file:
@@ -208,8 +226,16 @@ def _create_gd_file(asset: jstype.Asset, dst: Path) -> Path | None:
             # confusing if present in godot
             if prop_data.id == "Waypoints":
                 continue
-            gd_file.write(prop_data.to_gd_prop() + "\n")
-        gd_file.write(const.CONFIG_WARNING_FUNC)
+            gd_prop = prop_data.to_gd_prop()
+
+            if prop_data.id.lower() in required_props:
+                gd_prop += _create_gd_property_setter(prop_data.id)
+                extra_warning_checks += _create_warning_check(prop_data.id)
+            gd_prop += "\n"
+
+            gd_file.write(gd_prop)
+
+        gd_file.write(const.CONFIG_WARNING_FUNC.format(extra_warnings=extra_warning_checks))
         gd_file.write(const.VALIDATE_PROPERTY_FUNC)
     return dst
 

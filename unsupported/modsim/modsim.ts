@@ -11,12 +11,20 @@ export interface Vector {
     z: number;
 }
 
+export interface Transform {
+    type: 'Transform';
+    position: Vector;
+    rotation: Vector;
+}
+
 export interface ModObject {
     type: string;
     ObjId: number;
     id?: string; // should be unique
     position?: Vector;
-    rotation?: Vector;
+    right?: Vector;
+    up?: Vector;
+    front?: Vector;
     name?: string;
 }
 
@@ -176,7 +184,6 @@ export enum VehicleStateVector {
 
 const spawnerType = 'AI_Spawner';
 const spawnPointType = 'SpawnPoint';
-const cameraType = 'Portal_Camera';
 const hqType = 'HQ_PlayerSpawner';
 const playerSpawnerType = 'PlayerSpawner';
 const worldIconType = 'WorldIcon';
@@ -278,6 +285,7 @@ export interface Player extends ModObject {
     aiMoveSpeed?: MoveSpeed;
     aiStance?: Stance;
     deployEnabled?: boolean;
+    soldierClass?: SoldierClass;
 }
 
 interface MCOM extends ModObject {
@@ -343,6 +351,7 @@ interface Spawner extends ModObject {
 interface CapturePoint extends ModObject {
     type: 'CapturePoint';
     currentOwnerTeam: Team;
+    previousOwnerTeam: Team;
     capturingTime: number;
     neutralizationTime: number;
     maxCaptureMultiplier: number;
@@ -403,6 +412,7 @@ export const uiRoot: UIWidget = {
 const initialGameModeTime = -1000;
 let gameModeTime = initialGameModeTime; // -1000 hacky way to use gameModeTime for Wait before the game mode starts
 let gameModeTimeLimit = 20 * 60;
+let gameModeTimePaused = false;
 let gameModeTargetScore = 100;
 let gameModeScore = Array(16).fill(0);
 
@@ -412,7 +422,6 @@ let mcoms: { [id: number]: MCOM } = {};
 let aiSpawners: { [id: number]: Spawner } = {};
 let spawnPoints: { [id: string]: SpawnPoint } = {};
 let interactPoints: { [id: string]: InteractPoint } = {};
-let cameras: { [id: number]: any } = {};
 let hqs: { [id: number]: HeadQuarters } = {};
 let playerSpawners: { [id: number]: PlayerSpawner } = {};
 let worldIcons: { [id: number]: WorldIcon } = {};
@@ -420,6 +429,8 @@ let capturePoints: { [id: number]: CapturePoint } = {};
 let sectors: { [id: number]: Sector } = {};
 
 let volumes: { [id: string]: PolygonVolume } = {};
+
+const zero = CreateVector(0, 0, 0);
 
 export enum RestrictedInputs {
     Zoom,
@@ -826,7 +837,60 @@ export function GetObjId(obj: ModObject) {
 export function GetObjectPosition(obj: ModObject) {
     if (obj) return obj.position;
     console.warn('GetObjectPosition called with undefined obj');
-    return origin;
+    return zero;
+}
+
+export function rotationMatrixToEuler(right: Vector, up: Vector, front: Vector): Vector {
+    const pitch = Math.asin(-front.y);
+    const yaw = Math.atan2(right.y, up.y);
+    const roll = Math.atan2(front.x, front.z);
+    
+    return CreateVector(pitch, yaw, roll);
+}
+
+export function eulerToRotationMatrix(euler: Vector): { right: Vector; up: Vector; front: Vector } {
+    const e = euler as any;
+    const pitch = e.x;
+    const yaw = e.y;
+    const roll = e.z;
+    
+    const cy = Math.cos(yaw);
+    const sy = Math.sin(yaw);
+    const cp = Math.cos(pitch);
+    const sp = Math.sin(pitch);
+    const cr = Math.cos(roll);
+    const sr = Math.sin(roll);
+    
+    return {
+        right: CreateVector(
+            cy * cr + sy * sp * sr,
+            cp * sr,
+            -sy * cr + cy * sp * sr
+        ),
+        up: CreateVector(
+            -cy * sr + sy * sp * cr,
+            cp * cr,
+            sy * sr + cy * sp * cr
+        ),
+        front: CreateVector(
+            sy * cp,
+            -sp,
+            cy * cp
+        )
+    };
+}
+
+export function GetObjectRotation(obj: ModObject) {
+    if (!obj) {
+        console.warn('GetObjectRotation called with undefined obj');
+        return zero;
+    }
+    
+    if (!obj.right || !obj.up || !obj.front) {
+        return zero;
+    }
+    
+    return rotationMatrixToEuler(obj.right, obj.up, obj.front);
 }
 
 const teams: Team[] = [];
@@ -854,14 +918,6 @@ export function EndGameMode(player: Player) {
 export function GetSpawner(spawnerNumber: number) {
     const spawner = aiSpawners[spawnerNumber];
     return spawner;
-}
-
-function GetCamera(cameraNumber: number): mod.Cameras {
-    const camera = cameras[cameraNumber];
-    if (camera === undefined) return { id: cameraNumber } as unknown as mod.Cameras;
-    else {
-        return camera as mod.Cameras;
-    }
 }
 
 export var aiSpawns: mod.Spawner[] = [];
@@ -934,7 +990,9 @@ export async function Loop(tickSeconds: number) {
     const onGameModeEnding = modscript.OnGameModeEnding;
     let winDelay = 20;
     for (let t = 0; t < ticks; t++) {
-        gameModeTime += SIM_TICK_TIME;
+        if (!gameModeTimePaused) {
+            gameModeTime += SIM_TICK_TIME;
+        }
         let aiSoldier = CreateAI();
         if (aiSoldier) {
             mod.DeployPlayer(aiSoldier as unknown as mod.Player);
@@ -1007,6 +1065,8 @@ export async function Loop(tickSeconds: number) {
     // console.debug("Loop finished");
 }
 
+const captureThreshold = 10;
+
 function UpdateCapturePoints() {
     // for each capture point, check if any players are in the area
     for (const cp of Object.values(capturePoints)) {
@@ -1014,7 +1074,6 @@ function UpdateCapturePoints() {
         let team1Count = 0;
         let team2Count = 0;
         for (let j = 0; j < allPlayers.array.length; j++) {
-            // if player is near capture point
             const player = allPlayers.array[j];
             if (!player.isAlive) continue;
             const distSq = GetDistanceSquared(player.position, cp.position!);
@@ -1036,33 +1095,57 @@ function UpdateCapturePoints() {
             const onCapturePointCapturing = modscript.OnCapturePointCapturing;
             if (onCapturePointCapturing) onCapturePointCapturing(cp);
         }
-        // call enter/exit events
-        const onPlayerEnterCapturePoint = modscript.OnPlayerEnterCapturePoint;
-        for (const playerId of enteredPlayers) {
-            if (onPlayerEnterCapturePoint) onPlayerEnterCapturePoint(allPlayers.array[playerId], cp);
+        // call enter events
+        if (enteredPlayers.length > 0) {
+            const onPlayerEnterCapturePoint = modscript.OnPlayerEnterCapturePoint;
+            for (const playerId of enteredPlayers) {
+                if (onPlayerEnterCapturePoint) onPlayerEnterCapturePoint(allPlayers.array[playerId], cp);
+            }
         }
-        const onPlayerExitCapturePoint = modscript.OnPlayerExitCapturePoint;
-        for (const playerId of exitedPlayers) {
-            if (onPlayerExitCapturePoint) onPlayerExitCapturePoint(allPlayers.array[playerId], cp);
+        // call exit events
+        if (exitedPlayers.length > 0) {
+            const onPlayerExitCapturePoint = modscript.OnPlayerExitCapturePoint;
+            for (const playerId of exitedPlayers) {
+                if (onPlayerExitCapturePoint) onPlayerExitCapturePoint(allPlayers.array[playerId], cp);
+            }
         }
-        // if more players from team 1 increment capture progress, if more from team 2 decrement
+        if (team1Count === team2Count) continue; // No progress when balanced
+        // Capture point progress: positive = Team 1, negative = Team 2, 0 = neutral
         const captureRate = 0.1;
-        const captureThreshold = 20;
-        if (team1Count > team2Count && !Equals(cp.currentOwnerTeam, GetTeam(1))) {
-            cp.captureProgress += (team1Count - team2Count) * captureRate;
-            if (cp.captureProgress > captureThreshold) {
-                cp.captureProgress = captureThreshold;
-                // point captured by team 1
-                cp.currentOwnerTeam = GetTeam(1);
+        const neutralTeam = GetTeam(0);
+        const team1 = GetTeam(1);
+        const team2 = GetTeam(2);
+        // Update progress based on player advantage
+        const previousProgress = cp.captureProgress;
+        const playerDifference = team1Count - team2Count;
+        cp.captureProgress += playerDifference * captureRate;
+        // Check for neutralization (progress crossed zero)
+        if ((previousProgress > 0 && cp.captureProgress <= 0) || 
+            (previousProgress < 0 && cp.captureProgress >= 0)) {
+            cp.captureProgress = 0;
+            if (!Equals(cp.currentOwnerTeam, neutralTeam)) {
+                cp.previousOwnerTeam = cp.currentOwnerTeam;
+                cp.currentOwnerTeam = neutralTeam;
+                const onCapturePointLost = modscript.OnCapturePointLost;
+                if (onCapturePointLost) onCapturePointLost(cp);
+            }
+        }
+        // Check for Team 1 capture
+        else if (cp.captureProgress >= captureThreshold) {
+            cp.captureProgress = captureThreshold;
+            if (!Equals(cp.currentOwnerTeam, team1)) {
+                cp.previousOwnerTeam = cp.currentOwnerTeam;
+                cp.currentOwnerTeam = team1;
                 const onCapturePointCaptured = modscript.OnCapturePointCaptured;
                 if (onCapturePointCaptured) onCapturePointCaptured(cp);
             }
-        } else if (team2Count > team1Count && !Equals(cp.currentOwnerTeam, GetTeam(2))) {
-            cp.captureProgress -= (team2Count - team1Count) * captureRate;
-            if (cp.captureProgress < -captureThreshold) {
-                cp.captureProgress = -captureThreshold;
-                // point captured by team 2
-                cp.currentOwnerTeam = GetTeam(2);
+        }
+        // Check for Team 2 capture
+        else if (cp.captureProgress <= -captureThreshold) {
+            cp.captureProgress = -captureThreshold;
+            if (!Equals(cp.currentOwnerTeam, team2)) {
+                cp.previousOwnerTeam = cp.currentOwnerTeam;
+                cp.currentOwnerTeam = team2;
                 const onCapturePointCaptured = modscript.OnCapturePointCaptured;
                 if (onCapturePointCaptured) onCapturePointCaptured(cp);
             }
@@ -1122,6 +1205,7 @@ export function Reset() {
     aiSpawns = [];
     mcoms = {};
     volumes = {};
+    matchTimeElapsed = 0;
 
     // Clear UI tree
     if (uiRoot && uiRoot.children) {
@@ -1160,6 +1244,10 @@ export function DisplayNotificationMessage(message: Message, target?: Player | T
     console.log(`DisplayNotificationMessage: "${message.text}" -> ${targetInfo}`);
 }
 
+export function SendErrorReport(message: Message) {
+    console.warn(`[ErrorReport] ${message.text || message.format}`);
+}
+
 export function GetUIRoot() {
     return uiRoot;
 }
@@ -1171,6 +1259,26 @@ export function CreateVector(x: number, y: number, z: number) {
         y: y,
         z: z,
     } as unknown as Vector;
+}
+
+export function CreateTransform(position: Vector, rotation: Vector): Transform {
+    return {
+        type: 'Transform',
+        position: position,
+        rotation: rotation,
+    };
+}
+
+export function SetObjectTransform(object: mod.Object, transform: Transform) {
+    const obj = object as any;
+    obj.position = transform.position;
+    
+    if (transform.rotation) {
+        const matrix = eulerToRotationMatrix(transform.rotation);
+        obj.right = matrix.right;
+        obj.up = matrix.up;
+        obj.front = matrix.front;
+    }
 }
 
 const STRING_TYPE = 'string';
@@ -1813,6 +1921,10 @@ export function GetUIWidgetName(widget: UIWidget): string {
 }
 
 export function SetUIWidgetPosition(widget: UIWidget, position: Vector) {
+    if (!widget) {
+        console.warn('SetUIWidgetPosition widget is not defined');
+        return;
+    }
     widget.position = position;
 }
 
@@ -1901,14 +2013,26 @@ export function FindUIWidgetWithName(name: string) {
 }
 
 export function SetUIWidgetName(widget: UIWidget, name: string) {
+    if (!widget) {
+        console.warn('SetUIWidgetName widget is not defined');
+        return;
+    }
     widget.name = name;
 }
 
 export function SetUIWidgetVisible(widget: UIWidget, visible: boolean) {
+    if (!widget) {
+        console.warn('SetUIWidgetVisible widget is not defined');
+        return;
+    }
     widget.visible = visible;
 }
 
 export function SetUIWidgetSize(widget: UIWidget, size: Vector) {
+    if (!widget) {
+        console.warn('SetUIWidgetSize widget is not defined');
+        return;
+    }
     widget.size = size;
 }
 
@@ -1926,6 +2050,14 @@ export function SetUITextColor(widget: UIWidget, color: Vector) {
         return;
     }
     widget.textColor = color;
+}
+
+export function SetUITextAlpha(widget: UIWidget, alpha: number) {
+    if (!widget) {
+        console.warn('SetUITextAlpha widget is not defined');
+        return;
+    }
+    widget.textAlpha = alpha;
 }
 
 export function DumpUITree(player: Player | null = null, widget: UIWidget | null = null, indent: string = '') {
@@ -2067,6 +2199,14 @@ export function SetGameModeTimeLimit(limit: number) {
     gameModeTimeLimit = limit;
 }
 
+export function GetGameModeTimeLimit() {
+    return gameModeTimeLimit;
+}
+
+export function PauseGameModeTime(paused: boolean) {
+    gameModeTimePaused = paused;
+}
+
 export function GetRoundTime() {
     return gameModeTime;
 }
@@ -2113,8 +2253,8 @@ export function SetScoreboardColumnWidths(...columnWidths: number[]) {
     console.warn(`SetScoreboardColumnWidths not simulated`);
 }
 
-export function SetScoreboardSorting(columnName: string, ascending: boolean) {
-    console.warn(`SetScoreboardSorting should not use strings`);
+export function SetScoreboardSorting(columnNum: number, ascending?: boolean) {
+    console.warn(`SetScoreboardSorting not simulated`);
 }
 
 export function SetScoreboardPlayerValues(
@@ -2139,6 +2279,12 @@ export function GetMCOM(mcomId: number) {
     const mcom = mcoms[mcomId];
     if (!mcom) console.warn(`GetMCOM: mcoms[${mcomId}] is undefined`);
     return mcom;
+}
+
+export function GetSpatialObject(spatialObjectId: number) {
+    const obj = modSimObjects[spatialObjectId];
+    if (!obj) console.warn(`GetSpatialObject: modSimObjects[${spatialObjectId}] is undefined`);
+    return obj;
 }
 
 export function EnableGameModeObjective(objective: CapturePoint | HeadQuarters | Sector | MCOM, enable: boolean) {
@@ -2179,6 +2325,10 @@ export function GetCurrentOwnerTeam(capturePoint: CapturePoint) {
     return capturePoint.currentOwnerTeam;
 }
 
+export function GetPreviousOwnerTeam(capturePoint: CapturePoint) {
+    return capturePoint.previousOwnerTeam;
+}
+
 export function SetCapturePointCapturingTime(capturePoint: CapturePoint, capturingTime: number) {
     capturePoint.capturingTime = capturingTime;
 }
@@ -2191,13 +2341,22 @@ export function SetCapturePointOwner(capturePoint: CapturePoint, team: Team) {
     capturePoint.currentOwnerTeam = team;
 }
 
-// Sets the capture time multiplier for target capture point to the provided number.
 export function SetMaxCaptureMultiplier(capturePoint: CapturePoint, multiplier: number) {
     capturePoint.maxCaptureMultiplier = multiplier;
 }
 
 export function GetCaptureProgress(capturePoint: CapturePoint) {
-    return capturePoint.captureProgress;
+    return Math.abs(capturePoint.captureProgress) / captureThreshold;
+}
+
+export function GetOwnerProgressTeam(capturePoint: CapturePoint) {
+    if (capturePoint.captureProgress > 0) {
+        return GetTeam(1);
+    } else if (capturePoint.captureProgress < 0) {
+        return GetTeam(2);
+    } else {
+        return capturePoint.currentOwnerTeam;
+    }
 }
 
 export function GetHQ(id: number) {
@@ -2368,6 +2527,10 @@ export function DeployPlayer(player: Player) {
         weaponsSlots: {},
     };
 
+    if (player.soldierClass === undefined) {
+        player.soldierClass = SoldierClass.Assault;
+    }
+
     let teamHq: HeadQuarters | undefined;
     for (const hq in hqs) {
         const hqObj = hqs[hq];
@@ -2411,6 +2574,11 @@ export function UndeployPlayer(player: Player) {
         console.info('OnPlayerUndeploy not defined by script');
     }
 }
+
+export function IsSoldierClass(player: Player, soldierClass: SoldierClass) {
+    return player.soldierClass === soldierClass;
+}
+
 
 export function ForceRevive(player: mod.Player) {
     let playerObj = player as unknown as Player;
@@ -2494,22 +2662,29 @@ export function SetUIWidgetBgColor(w: UIWidget, color: Vector) {
 }
 
 export function SetUIWidgetBgFill(w: UIWidget, fill: UIBgFill) {
+    if (!w) {
+        console.warn('SetUIWidgetBgFill widget is not defined');
+        return;
+    }
     w.bgFill = fill;
 }
 
 export function SetUIWidgetBgAlpha(w: UIWidget, alpha: number) {
+    if (!w) {
+        console.warn('SetUIWidgetBgAlpha widget is not defined');
+        return;
+    }
     w.bgAlpha = alpha;
 }
 
 export let matchTimeElapsed: number = 0;
 
 export function GetMatchTimeElapsed() {
-    matchTimeElapsed += 0.5;
-    return matchTimeElapsed;
+    return Math.max(0, gameModeTime);
 }
 
 export function GetMatchTimeRemaining() {
-    return gameModeTimeLimit - matchTimeElapsed;
+    return gameModeTimeLimit - Math.max(0, gameModeTime);
 }
 
 let createdPlayers: number[] = [];
@@ -2704,9 +2879,6 @@ export function LoadLevel(script: any, mapData: any) {
                 // Spawn points are entities indexed by their string ID
                 spawnPoints[obj.id] = obj;
                 break;
-            case cameraType:
-                cameras[obj.ObjId] = obj;
-                break;
             case hqType:
                 obj.type = 'HeadQuarters';
                 if (obj.Team)
@@ -2744,6 +2916,7 @@ export function LoadLevel(script: any, mapData: any) {
                 capturePoint.captureRadius = 10; // hardcoded for now
                 capturePoint.currentPlayersInArea = [];
                 capturePoint.captureProgress = 0;
+                capturePoint.currentOwnerTeam = GetTeam(0)
                 allCapturePoints.array.push(capturePoint);
                 break;
             case sectorType:
@@ -3284,11 +3457,9 @@ export function PlaySound(sfx: SFX, amplitude: number, playerOrTeam: Player | Te
     console.warn('PlaySound not implemented');
 }
 
-const origin = CreateVector(0, 0, 0);
-
 export function GetVehicleState(vehicle: Vehicle, vehicleState: VehicleStateVector) {
     if (vehicleState in VehicleStateVector) {
-        return origin;
+        return zero;
     } else {
         throw new Error(`GetVehicleState: State ${vehicleState} not implemented`);
     }
@@ -3371,7 +3542,11 @@ export function EnableVFX(vfx: VFX, enable: boolean) {
 export function MoveVFX(vfx: VFX, position: Vector, rotation: Vector) {
     console.log(`MoveVFX called for VFX ${vfx.prefab} to position=${position} rotation=${rotation}`);
     vfx.position = position;
-    vfx.rotation = rotation;
+    
+    const matrix = eulerToRotationMatrix(rotation);
+    vfx.right = matrix.right;
+    vfx.up = matrix.up;
+    vfx.front = matrix.front;
 }
 
 export function LoadMusic(musicPackage: MusicPackages) {

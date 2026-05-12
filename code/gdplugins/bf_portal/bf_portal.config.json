@@ -5,6 +5,15 @@
   "gdconverter": "../code/gdconverter",
   "fbExportData": "../FbExportData",
   "export": "../export/levels",
+  "mods": "mods",
+  "modInfoFile": "modinfo.json",
+  "modIconFile": "icon",
+  "modIconFileExtensions": [
+    "svg",
+    "png"
+  ],
+  "modExportDir": "../export",
   "dataVersion": "",
-  "modelsUrl": "https://download.portal.battlefield.com/PortalSDKModels.zip"
+  "modelsUrl": "https://download.portal.battlefield.com/PortalSDKModels.zip",
+  "portalUrl": "https://portal.battlefield.com/bf6/"
 }

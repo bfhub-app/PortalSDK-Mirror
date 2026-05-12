@@ -1,3 +1,5 @@
+from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Any
 
 ASSET_KEY_ID = "type"
@@ -31,7 +33,35 @@ PROP_KEYS = [
     PROP_KEY_SEL,
 ]
 
-REQUIRED_PROPS: dict[str, Any] = {"ringoffire": ["hardrestrictobb", "restrictshapedata"]}
+
+@dataclass(frozen=True)
+class PropCheckRule:
+    validate: Callable[[Any], bool]
+    gd_invalid_expr: str
+    warning: str
+    setter_signaled: bool
+
+
+MAX_COMBATVOLUME = 16640000
+REQUIRED_PROPS: dict[str, dict[str, PropCheckRule]] = {
+    "ringoffire": {
+        "hardrestrictobb": PropCheckRule(validate=lambda prop_value: prop_value is None, gd_invalid_expr="if {prop} == null", warning="{prop} must be set!", setter_signaled=False),
+        "restrictshapedata": PropCheckRule(validate=lambda prop_value: prop_value is None, gd_invalid_expr="if {prop} == null", warning="{prop} must be set!", setter_signaled=False),
+    },
+    "combatarea": {
+        "combatvolume": PropCheckRule(
+            validate=lambda prop_value: (
+                prop_value is not None
+                and bool(points := prop_value["points"])
+                and (pointsize := len(points)) > 0
+                and abs(sum(points[i]["x"] * points[(i + 1) % pointsize]["z"] - points[(i + 1) % pointsize]["x"] * points[i]["z"] for i in range(len(points)))) / 2 > MAX_COMBATVOLUME
+            ),
+            gd_invalid_expr=f"if {{prop}} != null and {{prop}}.area() > {MAX_COMBATVOLUME}",
+            warning=f"{{prop}} total area exceeds limit {MAX_COMBATVOLUME}",
+            setter_signaled=True,
+        )
+    },
+}
 
 PROP_INJECTED_KEYS: dict[str, Any] = {
     "name": "string",

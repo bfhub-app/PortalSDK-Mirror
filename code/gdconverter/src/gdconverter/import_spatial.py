@@ -10,7 +10,7 @@ from gdconverter import _logging, _meta, _utils
 
 
 def import_spatial(fb_export_data_dir: Path, output_dir: Path, spatial: Path) -> bool:
-    """Create a godot project using level json and types"""
+    """Convert a spatial to tscn"""
     if not os.path.exists(fb_export_data_dir):
         _logging.log_error(f"Path does not exist {fb_export_data_dir}")
         return False
@@ -44,7 +44,7 @@ def import_spatial(fb_export_data_dir: Path, output_dir: Path, spatial: Path) ->
 def _main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("FB_EXPORT_DATA", type=str, help="Path to FbExportData directory")
-    parser.add_argument("OUTPUT_DIR", type=str, help="Path where godot project will be created")
+    parser.add_argument("OUTPUT_DIR", type=str, help="Path where tscn will be created")
     parser.add_argument("SPATIAL", type=str, help="Path to spatial json to import")
     args = parser.parse_args()
 

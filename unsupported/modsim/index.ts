@@ -21,6 +21,7 @@ export {
     aiSpawns,
     uiRoot,
     ArmMCOM,
+    SIM_TICK_TIME
 } from './modsim';
 export { modmap };
 

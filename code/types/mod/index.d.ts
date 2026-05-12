@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 //
 // Generated automatically. Do *NOT* modify the contents of this file.
-// Version: 1.2.3.0
+// Version: 1.3.1.0
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -211,6 +211,7 @@ declare namespace mod {
         | WorldIcon;
     //------------------------
     export const stringkeys: Any;
+    export const strings: Any;
     export enum AiInput {
         Crouch,
         FireWeapon,
@@ -282,6 +283,7 @@ declare namespace mod {
         Launcher_Auto_Guided,
         Launcher_Breaching_Projectile,
         Launcher_High_Explosive,
+        Launcher_IGLA,
         Launcher_Incendiary_Airburst,
         Launcher_Long_Range,
         Launcher_Smoke_Grenade,
@@ -292,6 +294,7 @@ declare namespace mod {
         Melee_Combat_Knife,
         Melee_Hunting_Knife,
         Melee_Ice_Axe,
+        Melee_Serrated_Blade,
         Melee_Sledgehammer,
         Misc_Acoustic_Sensor_AV_Mine,
         Misc_Anti_Personnel_Mine,
@@ -304,6 +307,7 @@ declare namespace mod {
         Misc_PortalGadget,
         Misc_Sniper_Decoy,
         Misc_Supply_Pouch,
+        Misc_Suppression,
         Misc_Tracer_Dart,
         Misc_Tripwire_Sensor_AV_Mine,
         Throwable_Anti_Vehicle_Grenade,
@@ -402,11 +406,16 @@ declare namespace mod {
         Gauntlet_Urgency,
         Gauntlet_Urgency_FinalMission,
         Gauntlet_WonOperation_Loop,
+        Radio_ClearQueue,
+        Radio_NextQueuedTrack,
+        Radio_Play,
+        Radio_Stop,
     }
     export enum MusicPackages {
         BR,
         Core,
         Gauntlet,
+        Radio,
     }
     export enum MusicParams {
         BR_Amplitude,
@@ -417,6 +426,12 @@ declare namespace mod {
         Core_Sector,
         Core_Urgency,
         Gauntlet_Amplitude,
+        Radio_Amplitude,
+        Radio_Biome,
+        Radio_Channel,
+        Radio_ContinueQueueOnTrackEnd,
+        Radio_LoopQueuedTracks,
+        Radio_QueueTrackNumber,
     }
     export enum PlayerDamageTypes {
         Default,
@@ -26000,6 +26015,7 @@ declare namespace mod {
         AssaultRifle_NVO_228E,
         AssaultRifle_SOR_556_Mk2,
         AssaultRifle_TR_7,
+        AssaultRifle_VCR_2,
         BattlePickup_MP_RMG,
         BattlePickup_Rorsch_Mk_2_SMRW,
         Carbine_AK_205,
@@ -26010,6 +26026,7 @@ declare namespace mod {
         Carbine_QBZ_192,
         Carbine_SG_553R,
         Carbine_SOR_300SC,
+        DMR_GRT_CPS,
         DMR_LMR27,
         DMR_M39_EMR,
         DMR_SVDM,
@@ -26018,6 +26035,7 @@ declare namespace mod {
         LMG_KTS100_MK8,
         LMG_L110,
         LMG_M_60,
+        LMG_M121_A2,
         LMG_M123K,
         LMG_M240L,
         LMG_M250,
@@ -26032,6 +26050,8 @@ declare namespace mod {
         Sidearm_M44,
         Sidearm_M45A1,
         Sidearm_P18,
+        Sidearm_VZ_61,
+        SMG_CZ3A1,
         SMG_KV9,
         SMG_PW5A3,
         SMG_PW7A2,

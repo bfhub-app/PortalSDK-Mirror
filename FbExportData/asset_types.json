@@ -144331,9 +144331,9 @@
           ]
         },
         {
-          "name": "DisableRespawn",
+          "name": "EnableRespawn",
           "type": "bool",
-          "default": false
+          "default": true
         },
         {
           "name": "ObjId",
@@ -271819,9 +271819,9 @@
           ]
         },
         {
-          "name": "DisableRespawn",
+          "name": "EnableRespawn",
           "type": "bool",
-          "default": false
+          "default": true
         },
         {
           "name": "ObjId",

@@ -973,13 +973,13 @@ export function DestroyAI() {
 }
 
 let modscript: any;
-
-const SIM_TICK_TIME = 0.1; // seconds
 let gameModeStarted = false;
 
+export var SIM_TICK_TIME = 0.1; // seconds
+
 // mods run at 30hz but using 10hz here for simpler debugging (for now)
-export async function Loop(tickSeconds: number) {
-    const ticks = Math.floor(tickSeconds / SIM_TICK_TIME);
+export async function Loop(loopSeconds: number, waitTimeout: number = SIM_TICK_TIME) {
+    const ticks = Math.floor(loopSeconds / SIM_TICK_TIME);
     const onPlayerLeaveGame = modscript.OnPlayerLeaveGame;
     const ongoingGlobal = modscript.OngoingGlobal;
     const ongoingPlayer = modscript.OngoingPlayer;
@@ -987,7 +987,7 @@ export async function Loop(tickSeconds: number) {
     const ongoingHQ = modscript.OngoingHQ;
     const ongoingSector = modscript.OngoingSector;
     const ongoingMCOM = modscript.OngoingMCOM;
-    const onGameModeEnding = modscript.OnGameModeEnding;
+
     let winDelay = 20;
     for (let t = 0; t < ticks; t++) {
         if (!gameModeTimePaused) {
@@ -1039,30 +1039,36 @@ export async function Loop(tickSeconds: number) {
         if (!localWinningTeam) {
             UpdateCapturePoints();
             UpdateMCOMs();
+            UpdateWinningTeam();
         }
-        await WaitTimeout(SIM_TICK_TIME);
-        resolveWaits();
         if (localWinningTeam && winDelay-- == 0) {
             break;
         }
-        if (gameModeTime >= gameModeTimeLimit) {
-            winningTeam = GetTeam(0);
-            console.log('Game ended due to timeout');
+        await WaitTimeout(waitTimeout);
+        resolveWaits();
+    }
+    // console.debug("Loop finished");
+}
+
+function UpdateWinningTeam() {
+    const onGameModeEnding = modscript.OnGameModeEnding;
+
+    if (gameModeTime >= gameModeTimeLimit) {
+        winningTeam = GetTeam(0);
+        console.log('Game ended due to timeout');
+        if (onGameModeEnding) onGameModeEnding();
+        return;
+    }
+    // see if any team scored enough points to win
+    for (const teamNum in gameModeScore) {
+        const score = gameModeScore[teamNum];
+        if (score >= gameModeTargetScore) {
+            winningTeam = GetTeam(parseInt(teamNum));
+            console.log('Game ended due to score limit reached by team ' + winningTeam);
             if (onGameModeEnding) onGameModeEnding();
             break;
         }
-        // see if any team scored enough points to win
-        for (const teamNum in gameModeScore) {
-            const score = gameModeScore[teamNum];
-            if (score >= gameModeTargetScore) {
-                winningTeam = GetTeam(parseInt(teamNum));
-                console.log('Game ended due to score limit reached by team ' + winningTeam);
-                if (onGameModeEnding) onGameModeEnding();
-                break;
-            }
-        }
     }
-    // console.debug("Loop finished");
 }
 
 const captureThreshold = 10;
@@ -1223,13 +1229,13 @@ export function Message(format: string, ...args: any[]) {
             text = text.replace(/{}/, args[i].toString());
         }
     }
-    console.log(format);
-    const m: Message = {
+    // console.log(format);
+    const m = {
         type: 'Message',
         format: format,
         text: text,
-    };
-    return m as unknown as mod.Message;
+    } as Message;
+    return m;
 }
 
 export function DisplayNotificationMessage(message: Message, target?: Player | Team) {
@@ -1252,21 +1258,21 @@ export function GetUIRoot() {
     return uiRoot;
 }
 
-export function CreateVector(x: number, y: number, z: number) {
+export function CreateVector(x: number, y: number, z: number): Vector {
     return {
         type: 'Vector',
-        x: x,
-        y: y,
-        z: z,
-    } as unknown as Vector;
+        x,
+        y,
+        z,
+    } as Vector;
 }
 
-export function CreateTransform(position: Vector, rotation: Vector): Transform {
+export function CreateTransform(position: Vector, rotation: Vector) {
     return {
         type: 'Transform',
-        position: position,
-        rotation: rotation,
-    };
+        position,
+        rotation,
+    } as Transform;
 }
 
 export function SetObjectTransform(object: mod.Object, transform: Transform) {

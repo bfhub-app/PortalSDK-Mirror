@@ -107,11 +107,15 @@ def _validate_assets(scene: ttype.Scene) -> bool:
         name: str = node["name"]
 
         if type.lower() in const.REQUIRED_PROPS:
-            for prop in const.REQUIRED_PROPS[type.lower()]:
-                node_properties = {p.lower() for p in node}
-                if prop.lower() not in node_properties:
-                    parent: str = node["parent"]
-                    _logging.log_error(f"{parent}/{name} requires {prop} to be set")
+            node_properties = {str(key).lower(): value for key, value in node.items()}
+            node_links = {link.lower() for link in node["linked"]} if "linked" in node else []
+            for prop_name, prop_rule in const.REQUIRED_PROPS[type.lower()].items():
+                prop_value = node_properties[prop_name] if prop_name.lower() in node_properties else None
+                if prop_value is not None and prop_name in node_links:
+                    prop_value = scene.flattened_name_to_node[prop_value]
+                if prop_rule.validate(prop_value):
+                    parent: str = node.get("parent", ".")
+                    _logging.log_error(prop_rule.warning.format(prop=f"{parent}/{name} - {prop_name}"))
                     valid_check = False
 
     return valid_check

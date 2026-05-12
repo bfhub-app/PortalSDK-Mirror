@@ -13,10 +13,6 @@ def _process_node_spatial(node: dict[str, Any], scene: ttype.Scene) -> bool:
 
 
 def _process_node_polygon_volume(node: dict[str, Any], scene: ttype.Scene) -> bool:
-    transform_flat = putils.json_to_tscn_transform(node)
-    if not transform_flat:
-        transform_flat = putils.TSCN_TRANSFORM_IDENTITY
-    translation = transform_flat[-3:]
     points = node.pop("points", [-5, -5, -5, 5, 5, 5, 5, -5])
     if len(points) < 6:
         _logging.log_error("processNodeVolume:" + str(node) + "\nVolume with less than 3 points is unsupported")
@@ -24,10 +20,18 @@ def _process_node_polygon_volume(node: dict[str, Any], scene: ttype.Scene) -> bo
     point_raw = [(points[i], points[i + 1]) for i in range(0, len(points), 2)]
     height = Decimal(node.pop("height", 0.0))
 
+    transform = {
+        "right": node.pop("right", putils.JSON_VECTOR_X),
+        "up": node.pop("up", putils.JSON_VECTOR_Y),
+        "front": node.pop("front", putils.JSON_VECTOR_Z),
+        "position": node.pop("position", putils.JSON_VECTOR_ZERO),
+    }
     fb_points = []
     for point in point_raw:
-        fb_point = [point[0] + translation[0], translation[1], point[1] + translation[2]]
-        fb_points.append(putils.vector3_to_json(fb_point))
+        local_point = [point[0], 0, point[1]]
+        local_point_json = putils.vector3_to_json(local_point)
+        parent_point = putils.pos_to_parent_space(local_point_json, transform)
+        fb_points.append(parent_point)
 
     node["height"] = height
     node["points"] = fb_points

@@ -183,17 +183,27 @@ def _create_root_node(node_name: str = const.PROP_TYPE_NODE3D, node_type: str = 
     return f'[{const.TYPE_NODE} name="{node_name}" type="{node_type}"]'
 
 
-def _create_gd_property_setter(prop_name: str) -> str:
-    return rf""":
+def _create_gd_property_setter(prop_name: str, prop_rule: const.PropCheckRule) -> str:
+    if prop_rule.setter_signaled:
+        return rf""":
+	set(value):
+		if {prop_name} and {prop_name}.changed.is_connected(update_configuration_warnings):
+			{prop_name}.changed.disconnect(update_configuration_warnings)
+		{prop_name} = value
+		if {prop_name}:
+			{prop_name}.changed.connect(update_configuration_warnings)
+		update_configuration_warnings()"""
+    else:
+        return rf""":
 	set(value):
 		{prop_name} = value
 		update_configuration_warnings()"""
 
 
-def _create_warning_check(prop_name: str) -> str:
+def _create_warning_check(prop_name: str, prop_rule: const.PropCheckRule) -> str:
     return rf"""
-	if {prop_name} == null:
-		warnings.append("{prop_name} must be set!")"""
+	{prop_rule.gd_invalid_expr.format(prop = prop_name)}:
+		warnings.append("{prop_rule.warning.format(prop = prop_name)}")"""
 
 
 def _create_gd_file(asset: jstype.Asset, dst: Path) -> Path | None:
@@ -204,7 +214,7 @@ def _create_gd_file(asset: jstype.Asset, dst: Path) -> Path | None:
 
     tscn_type = _get_tscn_type(asset)
 
-    required_props = []
+    required_props = {}
     extra_warning_checks = ""
     if asset.id.lower() in const.REQUIRED_PROPS:
         required_props = const.REQUIRED_PROPS[asset.id.lower()]
@@ -229,8 +239,8 @@ def _create_gd_file(asset: jstype.Asset, dst: Path) -> Path | None:
             gd_prop = prop_data.to_gd_prop()
 
             if prop_data.id.lower() in required_props:
-                gd_prop += _create_gd_property_setter(prop_data.id)
-                extra_warning_checks += _create_warning_check(prop_data.id)
+                gd_prop += _create_gd_property_setter(prop_data.id, required_props[prop_data.id.lower()])
+                extra_warning_checks += _create_warning_check(prop_data.id, required_props[prop_data.id.lower()])
             gd_prop += "\n"
 
             gd_file.write(gd_prop)

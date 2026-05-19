@@ -26,6 +26,571 @@
             "id": "Camera3D/DeployCam"
         },
         {
+            "name": "CombatArea",
+            "CombatVolume": "Play Area/CombatArea/CombatVolume",
+            "SurroundingVolume": "Play Area/CombatArea/AirCombatArea",
+            "type": "CombatArea",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 58.2776,
+                "y": 447.787,
+                "z": 140.54
+            },
+            "id": "Play Area/CombatArea",
+            "linked": [
+                "CombatVolume",
+                "SurroundingVolume"
+            ]
+        },
+        {
+            "name": "CombatVolume",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/CombatVolume",
+            "height": 400,
+            "points": [
+                {
+                    "x": -204.44319,
+                    "y": 99.83,
+                    "z": 110.226
+                },
+                {
+                    "x": -237.90619,
+                    "y": 99.83,
+                    "z": 139.896
+                },
+                {
+                    "x": -245.39019,
+                    "y": 99.83,
+                    "z": 186.5542
+                },
+                {
+                    "x": -157.27519,
+                    "y": 99.83,
+                    "z": 222.5469
+                },
+                {
+                    "x": -92.26819,
+                    "y": 99.83,
+                    "z": 215.4492
+                },
+                {
+                    "x": -22.01219,
+                    "y": 99.83,
+                    "z": 233.5545
+                },
+                {
+                    "x": -4.70659,
+                    "y": 99.83,
+                    "z": 207.1373
+                },
+                {
+                    "x": 12.10131,
+                    "y": 99.83,
+                    "z": 206.6746
+                },
+                {
+                    "x": 21.28121,
+                    "y": 99.83,
+                    "z": 219.8812
+                },
+                {
+                    "x": 15.80841,
+                    "y": 99.83,
+                    "z": 254.93533
+                },
+                {
+                    "x": 35.81121,
+                    "y": 99.83,
+                    "z": 259.0051
+                },
+                {
+                    "x": 63.39674,
+                    "y": 99.83,
+                    "z": 231.7608
+                },
+                {
+                    "x": 69.83031,
+                    "y": 99.83,
+                    "z": 238.35876
+                },
+                {
+                    "x": 93.47651,
+                    "y": 99.83,
+                    "z": 270.9604
+                },
+                {
+                    "x": 71.04881,
+                    "y": 99.83,
+                    "z": 319.3554
+                },
+                {
+                    "x": 71.14311,
+                    "y": 99.83,
+                    "z": 341.8584
+                },
+                {
+                    "x": 85.25961,
+                    "y": 99.83,
+                    "z": 366.607
+                },
+                {
+                    "x": 136.79621,
+                    "y": 99.83,
+                    "z": 416.827
+                },
+                {
+                    "x": 152.59351,
+                    "y": 99.83,
+                    "z": 391.215
+                },
+                {
+                    "x": 174.88381,
+                    "y": 99.83,
+                    "z": 378.049
+                },
+                {
+                    "x": 203.01181,
+                    "y": 99.83,
+                    "z": 351.935
+                },
+                {
+                    "x": 214.45781,
+                    "y": 99.83,
+                    "z": 309.4691
+                },
+                {
+                    "x": 266.64881,
+                    "y": 99.83,
+                    "z": 239.50019
+                },
+                {
+                    "x": 270.04381,
+                    "y": 99.83,
+                    "z": 124.786
+                },
+                {
+                    "x": 263.03381,
+                    "y": 99.83,
+                    "z": 107.081
+                },
+                {
+                    "x": 231.19381,
+                    "y": 99.83,
+                    "z": 66.834
+                },
+                {
+                    "x": 157.83581,
+                    "y": 99.83,
+                    "z": 5.249
+                },
+                {
+                    "x": 100.34491,
+                    "y": 99.83,
+                    "z": -29.547
+                },
+                {
+                    "x": 44.85441,
+                    "y": 99.83,
+                    "z": -31.116
+                },
+                {
+                    "x": -46.77519,
+                    "y": 99.83,
+                    "z": -19.748
+                },
+                {
+                    "x": -176.33119,
+                    "y": 99.83,
+                    "z": 46.581
+                }
+            ]
+        },
+        {
+            "name": "AirCombatArea",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/AirCombatArea",
+            "height": 400,
+            "points": [
+                {
+                    "x": -1328.30619,
+                    "y": 99.83,
+                    "z": -848.884
+                },
+                {
+                    "x": -1509.18619,
+                    "y": 99.83,
+                    "z": -350.433
+                },
+                {
+                    "x": -1429.64619,
+                    "y": 99.83,
+                    "z": 241.26564
+                },
+                {
+                    "x": -1183.26619,
+                    "y": 99.83,
+                    "z": 730.145
+                },
+                {
+                    "x": -554.71119,
+                    "y": 99.83,
+                    "z": 1092.924
+                },
+                {
+                    "x": 153.38701,
+                    "y": 99.83,
+                    "z": 1331.546
+                },
+                {
+                    "x": 842.08581,
+                    "y": 99.83,
+                    "z": 1339.306
+                },
+                {
+                    "x": 1319.32381,
+                    "y": 99.83,
+                    "z": 1187.983
+                },
+                {
+                    "x": 1606.44381,
+                    "y": 99.83,
+                    "z": 666.125
+                },
+                {
+                    "x": 1628.38381,
+                    "y": 99.83,
+                    "z": -538.326
+                },
+                {
+                    "x": 1267.54381,
+                    "y": 99.83,
+                    "z": -1182.404
+                },
+                {
+                    "x": 241.28881,
+                    "y": 99.83,
+                    "z": -1459.824
+                },
+                {
+                    "x": -656.93019,
+                    "y": 99.83,
+                    "z": -1388.044
+                }
+            ]
+        },
+        {
+            "name": "Sector - Combat area and Objectives",
+            "CapturePoints": [
+                "Objectives/CapturePointA",
+                "Objectives/CapturePointB",
+                "Objectives/CapturePointC",
+                "Objectives/CapturePointD",
+                "Objectives/CapturePointE",
+                "Objectives/CapturePointF"
+            ],
+            "type": "Sector",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 103.577,
+                "y": 189.155,
+                "z": 73.5485
+            },
+            "id": "Play Area/Sector - Combat area and Objectives",
+            "linked": [
+                "CapturePoints"
+            ]
+        },
+        {
+            "name": "AreaTrigger - Out of bounds",
+            "ObjId": 1300,
+            "Area": "Play Area/OutOfBounds/AreaTrigger - Out of bounds/PolygonVolume - Cliff",
+            "type": "AreaTrigger",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 113.766,
+                "y": 154.357,
+                "z": 123.468
+            },
+            "id": "Play Area/OutOfBounds/AreaTrigger - Out of bounds",
+            "linked": [
+                "Area"
+            ]
+        },
+        {
+            "name": "PolygonVolume - Cliff",
+            "color": [
+                0.947254,
+                4.23551e-06,
+                0.583957,
+                0.42
+            ],
+            "type": "PolygonVolume",
+            "id": "Play Area/OutOfBounds/AreaTrigger - Out of bounds/PolygonVolume - Cliff",
+            "height": 15,
+            "points": [
+                {
+                    "x": 128.669755,
+                    "y": 143.861,
+                    "z": 124.33338
+                },
+                {
+                    "x": 124.103735,
+                    "y": 143.861,
+                    "z": 113.97785
+                },
+                {
+                    "x": 116.487245,
+                    "y": 143.861,
+                    "z": 109.36387
+                },
+                {
+                    "x": 108.474255,
+                    "y": 143.861,
+                    "z": 110.15357
+                },
+                {
+                    "x": 101.561855,
+                    "y": 143.861,
+                    "z": 126.66413
+                },
+                {
+                    "x": 103.845055,
+                    "y": 143.861,
+                    "z": 133.19727
+                },
+                {
+                    "x": 108.361435,
+                    "y": 143.861,
+                    "z": 139.18567
+                },
+                {
+                    "x": 117.962205,
+                    "y": 143.861,
+                    "z": 140.52777
+                }
+            ]
+        },
+        {
+            "name": "AreaTrigger - Out of bounds2",
+            "ObjId": 1301,
+            "Area": "Play Area/OutOfBounds/AreaTrigger - Out of bounds2/PolygonVolume - Cliff2",
+            "type": "AreaTrigger",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 144.976,
+                "y": 148.54,
+                "z": 134.401
+            },
+            "id": "Play Area/OutOfBounds/AreaTrigger - Out of bounds2",
+            "linked": [
+                "Area"
+            ]
+        },
+        {
+            "name": "PolygonVolume - Cliff2",
+            "color": [
+                0.947254,
+                4.23551e-06,
+                0.583957,
+                0.42
+            ],
+            "type": "PolygonVolume",
+            "id": "Play Area/OutOfBounds/AreaTrigger - Out of bounds2/PolygonVolume - Cliff2",
+            "height": 15,
+            "points": [
+                {
+                    "x": 141.15346,
+                    "y": 141.57416,
+                    "z": 123.13329
+                },
+                {
+                    "x": 127.16967,
+                    "y": 141.57416,
+                    "z": 141.79533
+                },
+                {
+                    "x": 133.12585,
+                    "y": 141.57416,
+                    "z": 149.89833
+                },
+                {
+                    "x": 141.790146,
+                    "y": 141.57416,
+                    "z": 148.13363
+                },
+                {
+                    "x": 153.81647,
+                    "y": 141.57416,
+                    "z": 138.21086
+                },
+                {
+                    "x": 156.64377,
+                    "y": 141.57416,
+                    "z": 130.45246
+                },
+                {
+                    "x": 154.11097,
+                    "y": 141.57416,
+                    "z": 122.46897
+                },
+                {
+                    "x": 147.11618,
+                    "y": 141.57416,
+                    "z": 121.07833
+                }
+            ]
+        },
+        {
+            "name": "AreaTrigger - Out of bounds3",
+            "ObjId": 1302,
+            "Area": "Play Area/OutOfBounds/AreaTrigger - Out of bounds3/PolygonVolume - Cliff3",
+            "type": "AreaTrigger",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 43.3937,
+                "y": 148.54,
+                "z": 151.943
+            },
+            "id": "Play Area/OutOfBounds/AreaTrigger - Out of bounds3",
+            "linked": [
+                "Area"
+            ]
+        },
+        {
+            "name": "PolygonVolume - Cliff3",
+            "color": [
+                0.947254,
+                4.23551e-06,
+                0.583957,
+                0.42
+            ],
+            "type": "PolygonVolume",
+            "id": "Play Area/OutOfBounds/AreaTrigger - Out of bounds3/PolygonVolume - Cliff3",
+            "height": 52,
+            "points": [
+                {
+                    "x": 0.25057,
+                    "y": 141.57416,
+                    "z": 136.15633
+                },
+                {
+                    "x": 3.87397,
+                    "y": 141.57416,
+                    "z": 151.16474
+                },
+                {
+                    "x": 23.10067,
+                    "y": 141.57416,
+                    "z": 173.58623
+                },
+                {
+                    "x": 44.02926,
+                    "y": 141.57416,
+                    "z": 177.38423
+                },
+                {
+                    "x": 61.25577,
+                    "y": 141.57416,
+                    "z": 182.76943
+                },
+                {
+                    "x": 81.38507,
+                    "y": 141.57416,
+                    "z": 178.84033
+                },
+                {
+                    "x": 81.27947,
+                    "y": 141.57416,
+                    "z": 144.00514
+                },
+                {
+                    "x": 56.32667,
+                    "y": 141.57416,
+                    "z": 124.29013
+                },
+                {
+                    "x": 30.42797,
+                    "y": 141.57416,
+                    "z": 117.41143
+                },
+                {
+                    "x": 8.79127,
+                    "y": 141.57416,
+                    "z": 128.14003
+                }
+            ]
+        },
+        {
             "name": "TEAM_1_HQ",
             "AltTeam": "TeamNeutral",
             "ObjId": 1,
@@ -424,588 +989,6 @@
                 "z": 459.23992
             },
             "id": "HQs/TEAM_2_HQ/SpawnPoint_2_4"
-        },
-        {
-            "name": "AreaTrigger - Team 1 Spawn Protection",
-            "ObjId": 1100,
-            "Area": "HQs/TEAM_1_HQ/HQ_Team1",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 128.076,
-                "y": 200.437,
-                "z": 88.9863
-            },
-            "id": "Area Triggers/AreaTrigger - Team 1 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger - Team 2 Spawn Protection",
-            "ObjId": 1200,
-            "Area": "HQs/TEAM_2_HQ/HQ_Team2",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 128.076,
-                "y": 200.437,
-                "z": 88.9863
-            },
-            "id": "Area Triggers/AreaTrigger - Team 2 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger - Out of bounds",
-            "ObjId": 1300,
-            "Area": "Area Triggers/AreaTrigger - Out of bounds/PolygonVolume - Cliff",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 113.766,
-                "y": 154.357,
-                "z": 123.468
-            },
-            "id": "Area Triggers/AreaTrigger - Out of bounds",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "PolygonVolume - Cliff",
-            "color": [
-                0.947254,
-                4.23551e-06,
-                0.583957,
-                0.42
-            ],
-            "type": "PolygonVolume",
-            "id": "Area Triggers/AreaTrigger - Out of bounds/PolygonVolume - Cliff",
-            "height": 15,
-            "points": [
-                {
-                    "x": 128.669755,
-                    "y": 143.861,
-                    "z": 124.33338
-                },
-                {
-                    "x": 124.103735,
-                    "y": 143.861,
-                    "z": 113.97785
-                },
-                {
-                    "x": 116.487245,
-                    "y": 143.861,
-                    "z": 109.36387
-                },
-                {
-                    "x": 108.474255,
-                    "y": 143.861,
-                    "z": 110.15357
-                },
-                {
-                    "x": 101.561855,
-                    "y": 143.861,
-                    "z": 126.66413
-                },
-                {
-                    "x": 103.845055,
-                    "y": 143.861,
-                    "z": 133.19727
-                },
-                {
-                    "x": 108.361435,
-                    "y": 143.861,
-                    "z": 139.18567
-                },
-                {
-                    "x": 117.962205,
-                    "y": 143.861,
-                    "z": 140.52777
-                }
-            ]
-        },
-        {
-            "name": "AreaTrigger - Out of bounds2",
-            "ObjId": 1301,
-            "Area": "Area Triggers/AreaTrigger - Out of bounds2/PolygonVolume - Cliff2",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 144.976,
-                "y": 148.54,
-                "z": 134.401
-            },
-            "id": "Area Triggers/AreaTrigger - Out of bounds2",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "PolygonVolume - Cliff2",
-            "color": [
-                0.947254,
-                4.23551e-06,
-                0.583957,
-                0.42
-            ],
-            "type": "PolygonVolume",
-            "id": "Area Triggers/AreaTrigger - Out of bounds2/PolygonVolume - Cliff2",
-            "height": 15,
-            "points": [
-                {
-                    "x": 141.15346,
-                    "y": 141.57416,
-                    "z": 123.13329
-                },
-                {
-                    "x": 127.16967,
-                    "y": 141.57416,
-                    "z": 141.79533
-                },
-                {
-                    "x": 133.12585,
-                    "y": 141.57416,
-                    "z": 149.89833
-                },
-                {
-                    "x": 141.790146,
-                    "y": 141.57416,
-                    "z": 148.13363
-                },
-                {
-                    "x": 153.81647,
-                    "y": 141.57416,
-                    "z": 138.21086
-                },
-                {
-                    "x": 156.64377,
-                    "y": 141.57416,
-                    "z": 130.45246
-                },
-                {
-                    "x": 154.11097,
-                    "y": 141.57416,
-                    "z": 122.46897
-                },
-                {
-                    "x": 147.11618,
-                    "y": 141.57416,
-                    "z": 121.07833
-                }
-            ]
-        },
-        {
-            "name": "AreaTrigger - Out of bounds3",
-            "ObjId": 1302,
-            "Area": "Area Triggers/AreaTrigger - Out of bounds3/PolygonVolume - Cliff3",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 43.3937,
-                "y": 148.54,
-                "z": 151.943
-            },
-            "id": "Area Triggers/AreaTrigger - Out of bounds3",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "PolygonVolume - Cliff3",
-            "color": [
-                0.947254,
-                4.23551e-06,
-                0.583957,
-                0.42
-            ],
-            "type": "PolygonVolume",
-            "id": "Area Triggers/AreaTrigger - Out of bounds3/PolygonVolume - Cliff3",
-            "height": 50,
-            "points": [
-                {
-                    "x": 0.25057,
-                    "y": 141.57416,
-                    "z": 136.15633
-                },
-                {
-                    "x": 3.87397,
-                    "y": 141.57416,
-                    "z": 151.16474
-                },
-                {
-                    "x": 23.10067,
-                    "y": 141.57416,
-                    "z": 173.58623
-                },
-                {
-                    "x": 44.02926,
-                    "y": 141.57416,
-                    "z": 177.38423
-                },
-                {
-                    "x": 61.25577,
-                    "y": 141.57416,
-                    "z": 182.76943
-                },
-                {
-                    "x": 81.38507,
-                    "y": 141.57416,
-                    "z": 178.84033
-                },
-                {
-                    "x": 81.27947,
-                    "y": 141.57416,
-                    "z": 144.00514
-                },
-                {
-                    "x": 56.32667,
-                    "y": 141.57416,
-                    "z": 124.29013
-                },
-                {
-                    "x": 30.42797,
-                    "y": 141.57416,
-                    "z": 117.41143
-                },
-                {
-                    "x": 8.79127,
-                    "y": 141.57416,
-                    "z": 128.14003
-                }
-            ]
-        },
-        {
-            "name": "AreaTrigger - Combat Area",
-            "ObjId": 1400,
-            "Area": "Area Triggers/AreaTrigger - Combat Area/CombatVolume",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 113.121,
-                "y": 191.2,
-                "z": 69.9086
-            },
-            "id": "Area Triggers/AreaTrigger - Combat Area",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "CombatVolume",
-            "type": "PolygonVolume",
-            "id": "Area Triggers/AreaTrigger - Combat Area/CombatVolume",
-            "height": 400,
-            "points": [
-                {
-                    "x": -204.4432,
-                    "y": 99.8302,
-                    "z": 110.2266
-                },
-                {
-                    "x": -237.9062,
-                    "y": 99.8302,
-                    "z": 139.8966
-                },
-                {
-                    "x": -245.3902,
-                    "y": 99.8302,
-                    "z": 186.5548
-                },
-                {
-                    "x": -157.2752,
-                    "y": 99.8302,
-                    "z": 222.5475
-                },
-                {
-                    "x": -92.2682,
-                    "y": 99.8302,
-                    "z": 215.4498
-                },
-                {
-                    "x": -22.0122,
-                    "y": 99.8302,
-                    "z": 233.5551
-                },
-                {
-                    "x": -4.7066,
-                    "y": 99.8302,
-                    "z": 207.1379
-                },
-                {
-                    "x": 12.1013,
-                    "y": 99.8302,
-                    "z": 206.6752
-                },
-                {
-                    "x": 21.2812,
-                    "y": 99.8302,
-                    "z": 219.8818
-                },
-                {
-                    "x": 15.8084,
-                    "y": 99.8302,
-                    "z": 254.93593
-                },
-                {
-                    "x": 35.8112,
-                    "y": 99.8302,
-                    "z": 259.0057
-                },
-                {
-                    "x": 63.39673,
-                    "y": 99.8302,
-                    "z": 231.7614
-                },
-                {
-                    "x": 69.8303,
-                    "y": 99.8302,
-                    "z": 238.35936
-                },
-                {
-                    "x": 93.4765,
-                    "y": 99.8302,
-                    "z": 270.961
-                },
-                {
-                    "x": 71.0488,
-                    "y": 99.8302,
-                    "z": 319.356
-                },
-                {
-                    "x": 71.1431,
-                    "y": 99.8302,
-                    "z": 341.859
-                },
-                {
-                    "x": 85.2596,
-                    "y": 99.8302,
-                    "z": 366.6076
-                },
-                {
-                    "x": 136.7962,
-                    "y": 99.8302,
-                    "z": 416.8276
-                },
-                {
-                    "x": 152.5935,
-                    "y": 99.8302,
-                    "z": 391.2156
-                },
-                {
-                    "x": 174.8838,
-                    "y": 99.8302,
-                    "z": 378.0496
-                },
-                {
-                    "x": 203.0118,
-                    "y": 99.8302,
-                    "z": 351.9356
-                },
-                {
-                    "x": 214.4578,
-                    "y": 99.8302,
-                    "z": 309.4697
-                },
-                {
-                    "x": 266.6488,
-                    "y": 99.8302,
-                    "z": 239.50079
-                },
-                {
-                    "x": 270.0438,
-                    "y": 99.8302,
-                    "z": 124.7866
-                },
-                {
-                    "x": 263.0338,
-                    "y": 99.8302,
-                    "z": 107.0816
-                },
-                {
-                    "x": 231.1938,
-                    "y": 99.8302,
-                    "z": 66.8346
-                },
-                {
-                    "x": 157.8358,
-                    "y": 99.8302,
-                    "z": 5.2496
-                },
-                {
-                    "x": 100.3449,
-                    "y": 99.8302,
-                    "z": -29.5464
-                },
-                {
-                    "x": 44.8544,
-                    "y": 99.8302,
-                    "z": -31.1154
-                },
-                {
-                    "x": -46.7752,
-                    "y": 99.8302,
-                    "z": -19.7474
-                },
-                {
-                    "x": -176.3312,
-                    "y": 99.8302,
-                    "z": 46.5816
-                }
-            ]
-        },
-        {
-            "name": "Sector - Combat area and Objectives",
-            "CapturePoints": [
-                "Objectives/CapturePointA",
-                "Objectives/CapturePointB",
-                "Objectives/CapturePointC",
-                "Objectives/CapturePointD",
-                "Objectives/CapturePointE",
-                "Objectives/CapturePointF"
-            ],
-            "SectorArea": "Area Triggers/AreaTrigger - Combat Area/CombatVolume",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 103.577,
-                "y": 189.155,
-                "z": 73.5485
-            },
-            "id": "Sector - Combat area and Objectives",
-            "linked": [
-                "SectorArea",
-                "CapturePoints"
-            ]
-        },
-        {
-            "name": "Sector - Draw Team1",
-            "SectorArea": "HQs/TEAM_1_HQ/HQ_Team1",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 100.208,
-                "y": 190.728,
-                "z": 70.2174
-            },
-            "id": "Sector - Draw Team1",
-            "linked": [
-                "SectorArea"
-            ]
         },
         {
             "name": "CapturePointA",
@@ -2917,207 +2900,6 @@
             "id": "Objectives/CapturePointF/Spawners/Team2/SpawnPoint7"
         },
         {
-            "name": "Sector - Draw Team2",
-            "SectorArea": "HQs/TEAM_2_HQ/HQ_Team2",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 100.208,
-                "y": 190.728,
-                "z": 70.2174
-            },
-            "id": "Objectives/Sector - Draw Team2",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "MannequinRotation_01",
-            "type": "MannequinRotation_01",
-            "right": {
-                "x": -0.0189357,
-                "y": 0,
-                "z": 0.999821
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": -0.999821,
-                "y": 0,
-                "z": -0.0189357
-            },
-            "position": {
-                "x": -282.997,
-                "y": 130.816,
-                "z": 113.216
-            },
-            "id": "TeamSwitcher/Switch1/MannequinRotation_01"
-        },
-        {
-            "name": "InteractPoint",
-            "ObjId": 998,
-            "type": "InteractPoint",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -283.75,
-                "y": 131.965,
-                "z": 112.952
-            },
-            "id": "TeamSwitcher/Switch1/InteractPoint"
-        },
-        {
-            "name": "MannequinRotation_01",
-            "type": "MannequinRotation_01",
-            "right": {
-                "x": 0.360729,
-                "y": 0,
-                "z": -0.93267
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0.93267,
-                "y": 0,
-                "z": 0.360729
-            },
-            "position": {
-                "x": 256.036,
-                "y": 139.705,
-                "z": 450.086
-            },
-            "id": "TeamSwitcher/Switch2/MannequinRotation_01"
-        },
-        {
-            "name": "InteractPoint",
-            "ObjId": 999,
-            "type": "InteractPoint",
-            "right": {
-                "x": -0.939334,
-                "y": 0,
-                "z": -0.343004
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0.343004,
-                "y": 0,
-                "z": -0.939334
-            },
-            "position": {
-                "x": 256.652,
-                "y": 140.854,
-                "z": 450.592
-            },
-            "id": "TeamSwitcher/Switch2/InteractPoint"
-        },
-        {
-            "name": "AI_Spawner - Team1",
-            "ObjId": 901,
-            "AlternateSpawns": [
-                "HQs/TEAM_1_HQ/SpawnPoint_1_1",
-                "HQs/TEAM_1_HQ/SpawnPoint_1_2",
-                "HQs/TEAM_1_HQ/SpawnPoint_1_3",
-                "HQs/TEAM_1_HQ/SpawnPoint_1_4"
-            ],
-            "type": "AI_Spawner",
-            "right": {
-                "x": 0.333017,
-                "y": 0,
-                "z": -0.942921
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0.942921,
-                "y": 0,
-                "z": 0.333017
-            },
-            "position": {
-                "x": -318.481,
-                "y": 130.658,
-                "z": 92.8493
-            },
-            "id": "AI Spawns/AI_Spawner - Team1",
-            "linked": [
-                "AlternateSpawns"
-            ]
-        },
-        {
-            "name": "AI_Spawner - Team2",
-            "ObjId": 902,
-            "AlternateSpawns": [
-                "HQs/TEAM_2_HQ/SpawnPoint_2_1",
-                "HQs/TEAM_2_HQ/SpawnPoint_2_2",
-                "HQs/TEAM_2_HQ/SpawnPoint_2_3",
-                "HQs/TEAM_2_HQ/SpawnPoint_2_4"
-            ],
-            "type": "AI_Spawner",
-            "right": {
-                "x": -0.960953,
-                "y": 0,
-                "z": 0.276711
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": -0.276711,
-                "y": 0,
-                "z": -0.960953
-            },
-            "position": {
-                "x": 255.743,
-                "y": 139.778,
-                "z": 455.316
-            },
-            "id": "AI Spawns/AI_Spawner - Team2",
-            "linked": [
-                "AlternateSpawns"
-            ]
-        },
-        {
             "name": "VehicleSpawner-F16",
             "VehicleType": "F16",
             "P_AutoSpawnEnabled": true,
@@ -3311,6 +3093,62 @@
                 "z": 98.3335
             },
             "id": "Vehicles/Team1/VehicleSpawner-Flyer61"
+        },
+        {
+            "name": "VehicleSpawner-DirtBike",
+            "VehicleType": "DirtBike",
+            "P_AutoSpawnEnabled": true,
+            "P_DefaultRespawnTime": 25,
+            "type": "VehicleSpawner",
+            "right": {
+                "x": 0.971562,
+                "y": 0,
+                "z": -0.236788
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.236788,
+                "y": 0,
+                "z": 0.971562
+            },
+            "position": {
+                "x": -283.11,
+                "y": 131.166,
+                "z": 97.906
+            },
+            "id": "Vehicles/Team1/VehicleSpawner-DirtBike"
+        },
+        {
+            "name": "VehicleSpawner-DirtBike2",
+            "VehicleType": "DirtBike",
+            "P_AutoSpawnEnabled": true,
+            "P_DefaultRespawnTime": 25,
+            "type": "VehicleSpawner",
+            "right": {
+                "x": 0.971562,
+                "y": 0,
+                "z": -0.236788
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.236788,
+                "y": 0,
+                "z": 0.971562
+            },
+            "position": {
+                "x": -287.412,
+                "y": 131.166,
+                "z": 96.0971
+            },
+            "id": "Vehicles/Team1/VehicleSpawner-DirtBike2"
         },
         {
             "name": "VehicleSpawner-F22",
@@ -3537,6 +3375,62 @@
             "id": "Vehicles/Team2/VehicleSpawner-Flyer63"
         },
         {
+            "name": "VehicleSpawner-DirtBike3",
+            "VehicleType": "DirtBike",
+            "P_AutoSpawnEnabled": true,
+            "P_DefaultRespawnTime": 25,
+            "type": "VehicleSpawner",
+            "right": {
+                "x": -0.999975,
+                "y": 0,
+                "z": -0.00710295
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.00710295,
+                "y": 0,
+                "z": -0.999975
+            },
+            "position": {
+                "x": 255.301,
+                "y": 141.639,
+                "z": 465.153
+            },
+            "id": "Vehicles/Team2/VehicleSpawner-DirtBike3"
+        },
+        {
+            "name": "VehicleSpawner-DirtBike4",
+            "VehicleType": "DirtBike",
+            "P_AutoSpawnEnabled": true,
+            "P_DefaultRespawnTime": 25,
+            "type": "VehicleSpawner",
+            "right": {
+                "x": -0.999975,
+                "y": 0,
+                "z": -0.00710295
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.00710295,
+                "y": 0,
+                "z": -0.999975
+            },
+            "position": {
+                "x": 259.033,
+                "y": 141.639,
+                "z": 467.955
+            },
+            "id": "Vehicles/Team2/VehicleSpawner-DirtBike4"
+        },
+        {
             "name": "VehicleSpawner-F23",
             "VehicleType": "JAS39",
             "P_AutoSpawnEnabled": true,
@@ -3729,6 +3623,178 @@
                 "z": 189.988
             },
             "id": "Vehicles/VehicleSpawner-Leopard - E"
+        },
+        {
+            "name": "MannequinRotation_01",
+            "type": "MannequinRotation_01",
+            "right": {
+                "x": -0.0189357,
+                "y": 0,
+                "z": 0.999821
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.999821,
+                "y": 0,
+                "z": -0.0189357
+            },
+            "position": {
+                "x": -282.997,
+                "y": 130.816,
+                "z": 113.216
+            },
+            "id": "TeamSwitcher/Switch1/MannequinRotation_01"
+        },
+        {
+            "name": "InteractPoint",
+            "ObjId": 998,
+            "type": "InteractPoint",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -283.75,
+                "y": 131.965,
+                "z": 112.952
+            },
+            "id": "TeamSwitcher/Switch1/InteractPoint"
+        },
+        {
+            "name": "MannequinRotation_01",
+            "type": "MannequinRotation_01",
+            "right": {
+                "x": 0.360729,
+                "y": 0,
+                "z": -0.93267
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.93267,
+                "y": 0,
+                "z": 0.360729
+            },
+            "position": {
+                "x": 256.036,
+                "y": 139.705,
+                "z": 450.086
+            },
+            "id": "TeamSwitcher/Switch2/MannequinRotation_01"
+        },
+        {
+            "name": "InteractPoint",
+            "ObjId": 999,
+            "type": "InteractPoint",
+            "right": {
+                "x": -0.939334,
+                "y": 0,
+                "z": -0.343004
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.343004,
+                "y": 0,
+                "z": -0.939334
+            },
+            "position": {
+                "x": 256.652,
+                "y": 140.854,
+                "z": 450.592
+            },
+            "id": "TeamSwitcher/Switch2/InteractPoint"
+        },
+        {
+            "name": "AI_Spawner - Team1",
+            "ObjId": 901,
+            "AlternateSpawns": [
+                "HQs/TEAM_1_HQ/SpawnPoint_1_1",
+                "HQs/TEAM_1_HQ/SpawnPoint_1_2",
+                "HQs/TEAM_1_HQ/SpawnPoint_1_3",
+                "HQs/TEAM_1_HQ/SpawnPoint_1_4"
+            ],
+            "type": "AI_Spawner",
+            "right": {
+                "x": 0.333017,
+                "y": 0,
+                "z": -0.942921
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.942921,
+                "y": 0,
+                "z": 0.333017
+            },
+            "position": {
+                "x": -318.481,
+                "y": 130.658,
+                "z": 92.8493
+            },
+            "id": "AI Spawns/AI_Spawner - Team1",
+            "linked": [
+                "AlternateSpawns"
+            ]
+        },
+        {
+            "name": "AI_Spawner - Team2",
+            "ObjId": 902,
+            "AlternateSpawns": [
+                "HQs/TEAM_2_HQ/SpawnPoint_2_1",
+                "HQs/TEAM_2_HQ/SpawnPoint_2_2",
+                "HQs/TEAM_2_HQ/SpawnPoint_2_3",
+                "HQs/TEAM_2_HQ/SpawnPoint_2_4"
+            ],
+            "type": "AI_Spawner",
+            "right": {
+                "x": -0.960953,
+                "y": 0,
+                "z": 0.276711
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.276711,
+                "y": 0,
+                "z": -0.960953
+            },
+            "position": {
+                "x": 255.743,
+                "y": 139.778,
+                "z": 455.316
+            },
+            "id": "AI Spawns/AI_Spawner - Team2",
+            "linked": [
+                "AlternateSpawns"
+            ]
         },
         {
             "name": "HighwayOverpass_Straight_01_4096",

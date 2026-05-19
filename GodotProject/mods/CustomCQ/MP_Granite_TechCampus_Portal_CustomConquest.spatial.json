@@ -26,6 +26,103 @@
             "id": "Camera3D/DeployCam"
         },
         {
+            "name": "CombatArea",
+            "CombatVolume": "Play Area/CombatArea/CombatVolume",
+            "type": "CombatArea",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 58.2776,
+                "y": 447.787,
+                "z": 140.54
+            },
+            "id": "Play Area/CombatArea",
+            "linked": [
+                "CombatVolume"
+            ]
+        },
+        {
+            "name": "CombatVolume",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/CombatVolume",
+            "height": 100,
+            "points": [
+                {
+                    "x": -415.2044,
+                    "y": 118.997,
+                    "z": 24.228
+                },
+                {
+                    "x": -543.6744,
+                    "y": 118.997,
+                    "z": 150.3593
+                },
+                {
+                    "x": -555.8304,
+                    "y": 118.997,
+                    "z": 261.4953
+                },
+                {
+                    "x": -473.9704,
+                    "y": 118.997,
+                    "z": 378.173
+                },
+                {
+                    "x": -349.2694,
+                    "y": 118.997,
+                    "z": 477.98
+                },
+                {
+                    "x": -170.5806,
+                    "y": 118.997,
+                    "z": 482.768
+                },
+                {
+                    "x": -55.146,
+                    "y": 118.997,
+                    "z": 454.609
+                },
+                {
+                    "x": 8.9356,
+                    "y": 118.997,
+                    "z": 303.6727
+                },
+                {
+                    "x": 2.3806,
+                    "y": 118.997,
+                    "z": 251.2518
+                },
+                {
+                    "x": -64.3046,
+                    "y": 118.997,
+                    "z": 166.5717
+                },
+                {
+                    "x": -185.2557,
+                    "y": 118.997,
+                    "z": 70.747
+                },
+                {
+                    "x": -314.1044,
+                    "y": 118.997,
+                    "z": 17.509
+                }
+            ]
+        },
+        {
             "name": "Sector - This manages the CapturePoint Names",
             "CapturePoints": [
                 "Objectives/CapturePointA",
@@ -35,7 +132,7 @@
                 "Objectives/CapturePointE",
                 "Objectives/CapturePointF"
             ],
-            "SectorArea": "CombatArea/CombatVolume",
+            "SectorArea": "Play Area/CombatArea/CombatVolume",
             "type": "Sector",
             "right": {
                 "x": 1,
@@ -57,225 +154,10 @@
                 "y": 169.006,
                 "z": 276.891
             },
-            "id": "Sector - This manages the CapturePoint Names",
+            "id": "Play Area/Sector - This manages the CapturePoint Names",
             "linked": [
                 "SectorArea",
                 "CapturePoints"
-            ]
-        },
-        {
-            "name": "Sector - Displays Team1 HQ Area On Map",
-            "SectorArea": "TEAM_1_HQ/HQ_Team1",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -297.525,
-                "y": 168.138,
-                "z": 534.988
-            },
-            "id": "Sector - Displays Team1 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "Sector - Displays Team2 HQ Area On Map",
-            "SectorArea": "TEAM_2_HQ/HQ_Team2",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -62.0825,
-                "y": 215.31,
-                "z": 49.6073
-            },
-            "id": "Sector - Displays Team2 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "AreaTrigger- Team1 Spawn Protection",
-            "ObjId": 1100,
-            "Area": "TEAM_1_HQ/HQ_Team1",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -197.82,
-                "y": -209.199,
-                "z": 640.623
-            },
-            "id": "AreaTrigger- Team1 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger- Team2 Spawn Protection",
-            "ObjId": 1200,
-            "Area": "TEAM_2_HQ/HQ_Team2",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -111.436,
-                "y": 169.325,
-                "z": 53.9104
-            },
-            "id": "AreaTrigger- Team2 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "CombatArea",
-            "CombatVolume": "CombatArea/CombatVolume",
-            "type": "CombatArea",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -193.415,
-                "y": 136.643,
-                "z": 352.408
-            },
-            "id": "CombatArea",
-            "linked": [
-                "CombatVolume"
-            ]
-        },
-        {
-            "name": "CombatVolume",
-            "type": "PolygonVolume",
-            "id": "CombatArea/CombatVolume",
-            "height": 100,
-            "points": [
-                {
-                    "x": -415.2041,
-                    "y": 271.024,
-                    "z": 24.228
-                },
-                {
-                    "x": -543.6741,
-                    "y": 271.024,
-                    "z": 150.3593
-                },
-                {
-                    "x": -555.8301,
-                    "y": 271.024,
-                    "z": 261.4953
-                },
-                {
-                    "x": -473.9701,
-                    "y": 271.024,
-                    "z": 378.173
-                },
-                {
-                    "x": -349.2691,
-                    "y": 271.024,
-                    "z": 477.98
-                },
-                {
-                    "x": -170.5803,
-                    "y": 271.024,
-                    "z": 482.768
-                },
-                {
-                    "x": -55.1457,
-                    "y": 271.024,
-                    "z": 454.609
-                },
-                {
-                    "x": 8.9359,
-                    "y": 271.024,
-                    "z": 303.6727
-                },
-                {
-                    "x": 2.3809,
-                    "y": 271.024,
-                    "z": 251.2518
-                },
-                {
-                    "x": -64.3043,
-                    "y": 271.024,
-                    "z": 166.5717
-                },
-                {
-                    "x": -185.2554,
-                    "y": 271.024,
-                    "z": 70.747
-                },
-                {
-                    "x": -314.1041,
-                    "y": 271.024,
-                    "z": 17.509
-                }
             ]
         },
         {
@@ -4441,7 +4323,7 @@
             },
             "position": {
                 "x": -420.048,
-                "y": 134.897,
+                "y": 134.12,
                 "z": 477.488
             },
             "id": "Vehicles/VehicleSpawner"
@@ -4469,7 +4351,7 @@
             },
             "position": {
                 "x": -405.802,
-                "y": 134.897,
+                "y": 134.12,
                 "z": 490.321
             },
             "id": "Vehicles/VehicleSpawner2"
@@ -4497,7 +4379,7 @@
             },
             "position": {
                 "x": -212.764,
-                "y": 134.897,
+                "y": 129.975,
                 "z": 576.968
             },
             "id": "Vehicles/VehicleSpawner3"
@@ -4525,7 +4407,7 @@
             },
             "position": {
                 "x": -202.574,
-                "y": 134.897,
+                "y": 129.975,
                 "z": 582.935
             },
             "id": "Vehicles/VehicleSpawner4"
@@ -4553,7 +4435,7 @@
             },
             "position": {
                 "x": -176.378,
-                "y": 134.897,
+                "y": 129.738,
                 "z": 594.664
             },
             "id": "Vehicles/VehicleSpawner5"
@@ -4581,7 +4463,7 @@
             },
             "position": {
                 "x": -36.4992,
-                "y": 150.34,
+                "y": 149.546,
                 "z": 97.2366
             },
             "id": "Vehicles/VehicleSpawner6"
@@ -4697,6 +4579,62 @@
                 "z": 32.422
             },
             "id": "Vehicles/VehicleSpawner9"
+        },
+        {
+            "name": "Little Bird",
+            "VehicleType": "AH6M",
+            "P_AutoSpawnEnabled": true,
+            "P_DefaultRespawnTime": 30,
+            "type": "VehicleSpawner",
+            "right": {
+                "x": -0.999281,
+                "y": 0,
+                "z": -0.0379172
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.0379172,
+                "y": 0,
+                "z": -0.999281
+            },
+            "position": {
+                "x": -301.539,
+                "y": 132.002,
+                "z": 553.162
+            },
+            "id": "Vehicles/Little Bird"
+        },
+        {
+            "name": "Little Bird2",
+            "VehicleType": "AH6M",
+            "P_AutoSpawnEnabled": true,
+            "P_DefaultRespawnTime": 30,
+            "type": "VehicleSpawner",
+            "right": {
+                "x": 0.704411,
+                "y": 0,
+                "z": 0.709792
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.709792,
+                "y": 0,
+                "z": 0.704411
+            },
+            "position": {
+                "x": -195.654,
+                "y": 144.281,
+                "z": -4.69078
+            },
+            "id": "Vehicles/Little Bird2"
         }
     ],
     "Static": [

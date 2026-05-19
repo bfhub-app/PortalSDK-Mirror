@@ -26,6 +26,208 @@
             "id": "Camera3D/DeployCam"
         },
         {
+            "name": "CombatArea",
+            "CombatVolume": "Play Area/CombatArea/CombatVolume",
+            "SurroundingVolume": "Play Area/CombatArea/AirCombatArea",
+            "type": "CombatArea",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 58.2776,
+                "y": 447.787,
+                "z": 140.54
+            },
+            "id": "Play Area/CombatArea",
+            "linked": [
+                "CombatVolume",
+                "SurroundingVolume"
+            ]
+        },
+        {
+            "name": "CombatVolume",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/CombatVolume",
+            "height": 10,
+            "points": [
+                {
+                    "x": -580.4795,
+                    "y": 182.889,
+                    "z": -963.588
+                },
+                {
+                    "x": -571.5585,
+                    "y": 182.889,
+                    "z": -880.487
+                },
+                {
+                    "x": -692.6785,
+                    "y": 182.889,
+                    "z": -823.852
+                },
+                {
+                    "x": -803.9415,
+                    "y": 182.889,
+                    "z": -788.705
+                },
+                {
+                    "x": -866.2565,
+                    "y": 182.889,
+                    "z": -534.359
+                },
+                {
+                    "x": -871.9445,
+                    "y": 182.889,
+                    "z": -362.676
+                },
+                {
+                    "x": -805.2365,
+                    "y": 182.889,
+                    "z": -274.766
+                },
+                {
+                    "x": -606.8855,
+                    "y": 182.889,
+                    "z": -183.518
+                },
+                {
+                    "x": -473.9865,
+                    "y": 182.889,
+                    "z": -176.278
+                },
+                {
+                    "x": -330.1395,
+                    "y": 182.889,
+                    "z": -180.353
+                },
+                {
+                    "x": -172.8895,
+                    "y": 182.889,
+                    "z": -207.573
+                },
+                {
+                    "x": -78.9947,
+                    "y": 182.889,
+                    "z": -311.515
+                },
+                {
+                    "x": -31.5934,
+                    "y": 182.889,
+                    "z": -395.968
+                },
+                {
+                    "x": -0.660588,
+                    "y": 182.889,
+                    "z": -491.653
+                },
+                {
+                    "x": 20.49,
+                    "y": 182.889,
+                    "z": -568.209
+                },
+                {
+                    "x": -67.8046,
+                    "y": 182.889,
+                    "z": -587.4
+                },
+                {
+                    "x": -119.1165,
+                    "y": 182.889,
+                    "z": -640.687
+                },
+                {
+                    "x": -120.9315,
+                    "y": 182.889,
+                    "z": -708.845
+                },
+                {
+                    "x": -127.3965,
+                    "y": 182.889,
+                    "z": -813.743
+                },
+                {
+                    "x": -22.6391,
+                    "y": 182.889,
+                    "z": -917.439
+                },
+                {
+                    "x": -132.0135,
+                    "y": 182.889,
+                    "z": -974.719
+                },
+                {
+                    "x": -275.0705,
+                    "y": 182.889,
+                    "z": -992.968
+                },
+                {
+                    "x": -444.5245,
+                    "y": 182.889,
+                    "z": -986.125
+                }
+            ]
+        },
+        {
+            "name": "AirCombatArea",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/AirCombatArea",
+            "height": 400,
+            "points": [
+                {
+                    "x": -1087.94619,
+                    "y": 99.83,
+                    "z": -577.37
+                },
+                {
+                    "x": -954.31619,
+                    "y": 99.83,
+                    "z": -75.072
+                },
+                {
+                    "x": -449.40319,
+                    "y": 99.83,
+                    "z": 67.819
+                },
+                {
+                    "x": 48.07831,
+                    "y": 99.83,
+                    "z": -74.96
+                },
+                {
+                    "x": 189.87081,
+                    "y": 99.83,
+                    "z": -575.017
+                },
+                {
+                    "x": 45.22681,
+                    "y": 99.83,
+                    "z": -1075.304
+                },
+                {
+                    "x": -449.35819,
+                    "y": 99.83,
+                    "z": -1197.754
+                },
+                {
+                    "x": -949.68619,
+                    "y": 99.83,
+                    "z": -1075.144
+                }
+            ]
+        },
+        {
             "name": "Sector - This manages the CapturePoint Names",
             "CapturePoints": [
                 "Objectives/CapturePointA",
@@ -35,7 +237,7 @@
                 "Objectives/CapturePointE",
                 "Objectives/CapturePointF"
             ],
-            "SectorArea": "CombatArea/CombatVolume",
+            "SectorArea": "Play Area/CombatArea/CombatVolume",
             "type": "Sector",
             "right": {
                 "x": 1,
@@ -57,128 +259,10 @@
                 "y": 196.109,
                 "z": -643.189
             },
-            "id": "Sector - This manages the CapturePoint Names",
+            "id": "Play Area/Sector - This manages the CapturePoint Names",
             "linked": [
                 "SectorArea",
                 "CapturePoints"
-            ]
-        },
-        {
-            "name": "Sector - Displays Team1 HQ Area On Map",
-            "SectorArea": "TEAM_1_HQ/HQ_Team1",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -847.375,
-                "y": 392.217,
-                "z": -1286.38
-            },
-            "id": "Sector - Displays Team1 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "Sector - Displays Team2 HQ Area On Map",
-            "SectorArea": "TEAM_2_HQ/HQ_Team2",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -1694.75,
-                "y": 784.435,
-                "z": -2572.76
-            },
-            "id": "Sector - Displays Team2 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "AreaTrigger- Team1 Spawn Protection",
-            "ObjId": 1100,
-            "Area": "TEAM_1_HQ/HQ_Team1",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -197.82,
-                "y": -209.199,
-                "z": 640.623
-            },
-            "id": "AreaTrigger- Team1 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger- Team2 Spawn Protection",
-            "ObjId": 1200,
-            "Area": "TEAM_2_HQ/HQ_Team2",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -111.436,
-                "y": 169.325,
-                "z": 53.9104
-            },
-            "id": "AreaTrigger- Team2 Spawn Protection",
-            "linked": [
-                "Area"
             ]
         },
         {
@@ -557,158 +641,6 @@
             "id": "TEAM_2_HQ/SpawnPoint_2_4"
         },
         {
-            "name": "CombatArea",
-            "CombatVolume": "CombatArea/CombatVolume",
-            "type": "CombatArea",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "id": "CombatArea",
-            "linked": [
-                "CombatVolume"
-            ]
-        },
-        {
-            "name": "CombatVolume",
-            "type": "PolygonVolume",
-            "id": "CombatArea/CombatVolume",
-            "height": 10,
-            "points": [
-                {
-                    "x": -580.479494,
-                    "y": 182.889,
-                    "z": -963.58808
-                },
-                {
-                    "x": -571.558494,
-                    "y": 182.889,
-                    "z": -880.48708
-                },
-                {
-                    "x": -692.678494,
-                    "y": 182.889,
-                    "z": -823.85208
-                },
-                {
-                    "x": -803.941494,
-                    "y": 182.889,
-                    "z": -788.70508
-                },
-                {
-                    "x": -866.256494,
-                    "y": 182.889,
-                    "z": -534.35908
-                },
-                {
-                    "x": -871.944494,
-                    "y": 182.889,
-                    "z": -362.67608
-                },
-                {
-                    "x": -805.236494,
-                    "y": 182.889,
-                    "z": -274.76608
-                },
-                {
-                    "x": -606.885494,
-                    "y": 182.889,
-                    "z": -183.51808
-                },
-                {
-                    "x": -473.986494,
-                    "y": 182.889,
-                    "z": -176.27808
-                },
-                {
-                    "x": -330.139494,
-                    "y": 182.889,
-                    "z": -180.35308
-                },
-                {
-                    "x": -172.889494,
-                    "y": 182.889,
-                    "z": -207.57308
-                },
-                {
-                    "x": -78.994694,
-                    "y": 182.889,
-                    "z": -311.51508
-                },
-                {
-                    "x": -31.593394,
-                    "y": 182.889,
-                    "z": -395.96808
-                },
-                {
-                    "x": -0.660582,
-                    "y": 182.889,
-                    "z": -491.65308
-                },
-                {
-                    "x": 20.490006,
-                    "y": 182.889,
-                    "z": -568.20908
-                },
-                {
-                    "x": -67.804594,
-                    "y": 182.889,
-                    "z": -587.40008
-                },
-                {
-                    "x": -119.116494,
-                    "y": 182.889,
-                    "z": -640.68708
-                },
-                {
-                    "x": -120.931494,
-                    "y": 182.889,
-                    "z": -708.84508
-                },
-                {
-                    "x": -127.396494,
-                    "y": 182.889,
-                    "z": -813.74308
-                },
-                {
-                    "x": -22.639094,
-                    "y": 182.889,
-                    "z": -917.43908
-                },
-                {
-                    "x": -132.013494,
-                    "y": 182.889,
-                    "z": -974.71908
-                },
-                {
-                    "x": -275.070494,
-                    "y": 182.889,
-                    "z": -992.96808
-                },
-                {
-                    "x": -444.524494,
-                    "y": 182.889,
-                    "z": -986.12508
-                }
-            ]
-        },
-        {
             "name": "VehicleSpawner",
             "VehicleType": "UH60",
             "P_AutoSpawnEnabled": true,
@@ -869,13 +801,13 @@
         },
         {
             "name": "VehicleSpawner7",
-            "VehicleType": "Quadbike",
+            "VehicleType": "AH6M",
             "P_AutoSpawnEnabled": true,
             "type": "VehicleSpawner",
             "right": {
-                "x": 0.726155,
+                "x": 0.448337,
                 "y": 0,
-                "z": -0.687531
+                "z": -0.893865
             },
             "up": {
                 "x": 0,
@@ -883,14 +815,14 @@
                 "z": 0
             },
             "front": {
-                "x": 0.687531,
+                "x": 0.893865,
                 "y": 0,
-                "z": 0.726155
+                "z": 0.448337
             },
             "position": {
-                "x": -769.213,
-                "y": 153.351,
-                "z": -896.642
+                "x": -711.741,
+                "y": 159.663,
+                "z": -935.543
             },
             "id": "Vehicles/Team1/VehicleSpawner7"
         },
@@ -915,9 +847,9 @@
                 "z": 0.726155
             },
             "position": {
-                "x": -693.735,
+                "x": -688.724,
                 "y": 164.022,
-                "z": -896.547
+                "z": -899.668
             },
             "id": "Vehicles/Team1/VehicleSpawner8"
         },
@@ -942,9 +874,9 @@
                 "z": 0.726155
             },
             "position": {
-                "x": -688.222,
-                "y": 164.022,
-                "z": -901.767
+                "x": -678.91,
+                "y": 163.961,
+                "z": -906.859
             },
             "id": "Vehicles/Team1/VehicleSpawner9"
         },
@@ -1212,9 +1144,9 @@
                 "z": -0.469487
             },
             "position": {
-                "x": -61.2021,
-                "y": 191.232,
-                "z": -652.347
+                "x": -23.9826,
+                "y": 190.655,
+                "z": -675.903
             },
             "id": "Vehicles/Team2/VehicleSpawner8"
         },
@@ -1662,56 +1594,6 @@
                 "z": -503.572
             },
             "id": "Vehicles/Neutral/VehicleSpawner25"
-        },
-        {
-            "name": "HighwayOverpass_Bridge_01",
-            "type": "HighwayOverpass_Bridge_01",
-            "right": {
-                "x": 0.79986,
-                "y": 0.0149671,
-                "z": 2.25996e-09
-            },
-            "up": {
-                "x": 0.0149671,
-                "y": -0.79986,
-                "z": -1.20775e-07
-            },
-            "front": {
-                "x": 0,
-                "y": 1.20797e-07,
-                "z": -0.8
-            },
-            "position": {
-                "x": -310.783,
-                "y": 169.584,
-                "z": -304.802
-            },
-            "id": "MapObjects/HighwayOverpass_Bridge_01"
-        },
-        {
-            "name": "HighwayOverpass_Bridge_02",
-            "type": "HighwayOverpass_Bridge_01",
-            "right": {
-                "x": 0.570186,
-                "y": 0.126962,
-                "z": -0.546597
-            },
-            "up": {
-                "x": 0.0988882,
-                "y": -0.789793,
-                "z": -0.0802955
-            },
-            "front": {
-                "x": -0.552367,
-                "y": -0.0103359,
-                "z": -0.578605
-            },
-            "position": {
-                "x": -210.424,
-                "y": 175.528,
-                "z": -351.842
-            },
-            "id": "MapObjects/HighwayOverpass_Bridge_02"
         },
         {
             "name": "CapturePointA",
@@ -7545,6 +7427,2568 @@
                 "z": -544.482
             },
             "id": "Map Details/Construction/BarrierPlastic_03"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A11",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": 0.442946,
+                "y": 0,
+                "z": 0.896548
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.896548,
+                "y": 0,
+                "z": 0.442946
+            },
+            "position": {
+                "x": -662.74,
+                "y": 161.738,
+                "z": -908.821
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A11"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A12",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": 0.442946,
+                "y": 0,
+                "z": 0.896548
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.896548,
+                "y": 0,
+                "z": 0.442946
+            },
+            "position": {
+                "x": -672.024,
+                "y": 161.68,
+                "z": -910.598
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A12"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A13",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": -0.00713818,
+                "y": 0,
+                "z": 0.999974
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.999974,
+                "y": 0,
+                "z": -0.00713818
+            },
+            "position": {
+                "x": -670.491,
+                "y": 161.68,
+                "z": -910.831
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A13"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A14",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": 0.829272,
+                "y": 0,
+                "z": 0.558845
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.558845,
+                "y": 0,
+                "z": 0.829272
+            },
+            "position": {
+                "x": -671.019,
+                "y": 162.15,
+                "z": -909.278
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A14"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A15",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": -0.333988,
+                "y": 0,
+                "z": 0.942578
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.942578,
+                "y": 0,
+                "z": -0.333988
+            },
+            "position": {
+                "x": -661.168,
+                "y": 161.625,
+                "z": -909.547
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A15"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A16",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": -0.669623,
+                "y": 0,
+                "z": 0.742701
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.742701,
+                "y": 0,
+                "z": -0.669623
+            },
+            "position": {
+                "x": -667.32,
+                "y": 162.69,
+                "z": -897.81
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A16"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A17",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": -0.669623,
+                "y": 0,
+                "z": 0.742701
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.742701,
+                "y": 0,
+                "z": -0.669623
+            },
+            "position": {
+                "x": -665.467,
+                "y": 162.359,
+                "z": -903.227
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A17"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A18",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": -0.669623,
+                "y": 0,
+                "z": 0.742701
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.742701,
+                "y": 0,
+                "z": -0.669623
+            },
+            "position": {
+                "x": -662.88,
+                "y": 164.296,
+                "z": -906.685
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A18"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A19",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": -0.0688339,
+                "y": 0,
+                "z": 0.997628
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.997628,
+                "y": 0,
+                "z": -0.0688339
+            },
+            "position": {
+                "x": -673.787,
+                "y": 163.134,
+                "z": -886.806
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A19"
+        },
+        {
+            "name": "BarrierStoneBlock_01_A20",
+            "type": "BarrierStoneBlock_01_A",
+            "right": {
+                "x": 0.673206,
+                "y": 0,
+                "z": 0.739455
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.739455,
+                "y": 0,
+                "z": 0.673206
+            },
+            "position": {
+                "x": -671.08,
+                "y": 162.947,
+                "z": -891.835
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_A20"
+        },
+        {
+            "name": "BarrierStoneBlock_01_E4",
+            "type": "BarrierStoneBlock_01_E",
+            "right": {
+                "x": -0.439579,
+                "y": 0.0763626,
+                "z": 0.894952
+            },
+            "up": {
+                "x": 0,
+                "y": 0.996379,
+                "z": -0.085017
+            },
+            "front": {
+                "x": -0.898204,
+                "y": -0.0373716,
+                "z": -0.437987
+            },
+            "position": {
+                "x": -663.064,
+                "y": 161.923,
+                "z": -907.035
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_E4"
+        },
+        {
+            "name": "BarrierStoneBlock_01_E5",
+            "type": "BarrierStoneBlock_01_E",
+            "right": {
+                "x": -0.439579,
+                "y": 0.0763626,
+                "z": 0.894952
+            },
+            "up": {
+                "x": 0,
+                "y": 0.996379,
+                "z": -0.085017
+            },
+            "front": {
+                "x": -0.898204,
+                "y": -0.0373716,
+                "z": -0.437987
+            },
+            "position": {
+                "x": -663.702,
+                "y": 162.023,
+                "z": -905.87
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_E5"
+        },
+        {
+            "name": "BarrierStoneBlock_01_E6",
+            "type": "BarrierStoneBlock_01_E",
+            "right": {
+                "x": 0.653896,
+                "y": -0.0643225,
+                "z": -0.753846
+            },
+            "up": {
+                "x": 0,
+                "y": 0.996379,
+                "z": -0.085017
+            },
+            "front": {
+                "x": 0.756585,
+                "y": 0.0555923,
+                "z": 0.651529
+            },
+            "position": {
+                "x": -664.421,
+                "y": 162.134,
+                "z": -904.56
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_E6"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G3",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.881542,
+                "y": 0,
+                "z": 0.472105
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.472105,
+                "y": 0,
+                "z": 0.881542
+            },
+            "position": {
+                "x": -669.13,
+                "y": 162.796,
+                "z": -894.804
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G3"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G4",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.881542,
+                "y": 0,
+                "z": 0.472105
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.472105,
+                "y": 0,
+                "z": 0.881542
+            },
+            "position": {
+                "x": -675.341,
+                "y": 163.2,
+                "z": -883.65
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G4"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G7",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.87311,
+                "y": 0.0108908,
+                "z": 0.487401
+            },
+            "up": {
+                "x": 0.0742708,
+                "y": 0.98511,
+                "z": -0.155058
+            },
+            "front": {
+                "x": -0.481832,
+                "y": 0.171582,
+                "z": 0.859301
+            },
+            "position": {
+                "x": -770.154,
+                "y": 146.95,
+                "z": -851.731
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G7"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G8",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.87311,
+                "y": 0.0108908,
+                "z": 0.487401
+            },
+            "up": {
+                "x": 0.0742708,
+                "y": 0.98511,
+                "z": -0.155058
+            },
+            "front": {
+                "x": -0.481832,
+                "y": 0.171582,
+                "z": 0.859301
+            },
+            "position": {
+                "x": -772.85,
+                "y": 147.859,
+                "z": -847.245
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G8"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G9",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.87311,
+                "y": 0.0108909,
+                "z": 0.487401
+            },
+            "up": {
+                "x": 0.0113817,
+                "y": 0.999023,
+                "z": -0.0427118
+            },
+            "front": {
+                "x": -0.487389,
+                "y": 0.0428395,
+                "z": 0.872133
+            },
+            "position": {
+                "x": -777.338,
+                "y": 148.994,
+                "z": -839.678
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G9"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G10",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.87311,
+                "y": 0.0108909,
+                "z": 0.487401
+            },
+            "up": {
+                "x": 0.0113817,
+                "y": 0.999023,
+                "z": -0.0427118
+            },
+            "front": {
+                "x": -0.487389,
+                "y": 0.0428395,
+                "z": 0.872133
+            },
+            "position": {
+                "x": -777.362,
+                "y": 146.749,
+                "z": -839.584
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G10"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G11",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.87311,
+                "y": 0.0108909,
+                "z": 0.487401
+            },
+            "up": {
+                "x": 0.0113817,
+                "y": 0.999023,
+                "z": -0.0427118
+            },
+            "front": {
+                "x": -0.487389,
+                "y": 0.0428395,
+                "z": 0.872133
+            },
+            "position": {
+                "x": -779.888,
+                "y": 148.132,
+                "z": -835.091
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G11"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G5",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.634245,
+                "y": 0,
+                "z": 0.773132
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.773132,
+                "y": 0,
+                "z": 0.634245
+            },
+            "position": {
+                "x": -655.81,
+                "y": 160.995,
+                "z": -915.713
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G5"
+        },
+        {
+            "name": "BarrierStoneBlock_01_G6",
+            "type": "BarrierStoneBlock_01_G",
+            "right": {
+                "x": 0.835404,
+                "y": 0,
+                "z": 0.549636
+            },
+            "up": {
+                "x": 0.044434,
+                "y": 0.996727,
+                "z": -0.0675363
+            },
+            "front": {
+                "x": -0.547836,
+                "y": 0.0808426,
+                "z": 0.83267
+            },
+            "position": {
+                "x": -652.569,
+                "y": 160.878,
+                "z": -919.561
+            },
+            "id": "Map Details/HQ Defences/BarrierStoneBlock_01_G6"
+        },
+        {
+            "name": "ContainerStandard_01_1282",
+            "type": "ContainerStandard_01_1280",
+            "right": {
+                "x": 0.536026,
+                "y": 0.0241549,
+                "z": -0.843856
+            },
+            "up": {
+                "x": -0.0384164,
+                "y": 0.999253,
+                "z": 0.00420051
+            },
+            "front": {
+                "x": 0.843327,
+                "y": 0.0301663,
+                "z": 0.536553
+            },
+            "position": {
+                "x": -688.076,
+                "y": 162.498,
+                "z": -890.237
+            },
+            "id": "Map Details/HQ Defences/ContainerStandard_01_1282"
+        },
+        {
+            "name": "ContainerStandard_01_1283",
+            "type": "ContainerStandard_01_1280",
+            "right": {
+                "x": -0.923291,
+                "y": 0,
+                "z": 0.384102
+            },
+            "up": {
+                "x": 0.0348055,
+                "y": 0.995886,
+                "z": 0.0836642
+            },
+            "front": {
+                "x": -0.382522,
+                "y": 0.0906152,
+                "z": -0.919492
+            },
+            "position": {
+                "x": -661.758,
+                "y": 161.959,
+                "z": -946.975
+            },
+            "id": "Map Details/HQ Defences/ContainerStandard_01_1283"
+        },
+        {
+            "name": "SandBags_01_C90_B15",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.93974,
+                "y": 0,
+                "z": -0.341889
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.341889,
+                "y": 0,
+                "z": 0.93974
+            },
+            "position": {
+                "x": -704.061,
+                "y": 161.922,
+                "z": -892.986
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B15"
+        },
+        {
+            "name": "SandBags_01_C90_B16",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.228753,
+                "y": 0.00431336,
+                "z": 0.973475
+            },
+            "up": {
+                "x": 0.00123071,
+                "y": 0.999988,
+                "z": -0.00472003
+            },
+            "front": {
+                "x": -0.973483,
+                "y": 0.00227779,
+                "z": 0.228745
+            },
+            "position": {
+                "x": -707.022,
+                "y": 161.922,
+                "z": -894.864
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B16"
+        },
+        {
+            "name": "SandBags_01_C90_B25",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.93035,
+                "y": 0.19861,
+                "z": -0.308225
+            },
+            "up": {
+                "x": -0.276415,
+                "y": 0.932202,
+                "z": -0.233653
+            },
+            "front": {
+                "x": 0.240922,
+                "y": 0.302577,
+                "z": 0.922173
+            },
+            "position": {
+                "x": -784.102,
+                "y": 148.266,
+                "z": -829.804
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B25"
+        },
+        {
+            "name": "SandBags_01_C90_B26",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.128405,
+                "y": 0.28108,
+                "z": 0.951056
+            },
+            "up": {
+                "x": -0.274801,
+                "y": 0.931527,
+                "z": -0.238207
+            },
+            "front": {
+                "x": -0.952888,
+                "y": -0.230764,
+                "z": 0.196854
+            },
+            "position": {
+                "x": -786.763,
+                "y": 147,
+                "z": -831.705
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B26"
+        },
+        {
+            "name": "SandBags_01_C90_B17",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.318017,
+                "y": 0,
+                "z": -0.948085
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.948085,
+                "y": 0,
+                "z": 0.318017
+            },
+            "position": {
+                "x": -644.944,
+                "y": 161.42,
+                "z": -913.664
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B17"
+        },
+        {
+            "name": "SandBags_01_C90_B18",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.959141,
+                "y": 0,
+                "z": 0.282927
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.282927,
+                "y": 0,
+                "z": 0.959141
+            },
+            "position": {
+                "x": -648.041,
+                "y": 161.42,
+                "z": -912.073
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B18"
+        },
+        {
+            "name": "SandBags_01_C90_B19",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.778189,
+                "y": 0,
+                "z": -0.628031
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.628031,
+                "y": 0,
+                "z": 0.778189
+            },
+            "position": {
+                "x": -651.537,
+                "y": 161.42,
+                "z": -903.305
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B19"
+        },
+        {
+            "name": "SandBags_01_C90_B20",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.656231,
+                "y": 0,
+                "z": 0.75456
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.75456,
+                "y": 0,
+                "z": 0.656231
+            },
+            "position": {
+                "x": -655.003,
+                "y": 161.42,
+                "z": -903.63
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B20"
+        },
+        {
+            "name": "SandBags_01_C90_B21",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.778189,
+                "y": 0,
+                "z": -0.628031
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.628031,
+                "y": 0,
+                "z": 0.778189
+            },
+            "position": {
+                "x": -664.534,
+                "y": 162.753,
+                "z": -884.393
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B21"
+        },
+        {
+            "name": "SandBags_01_C90_B22",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.656231,
+                "y": 0,
+                "z": 0.75456
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.75456,
+                "y": 0,
+                "z": 0.656231
+            },
+            "position": {
+                "x": -668.001,
+                "y": 162.753,
+                "z": -884.719
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B22"
+        },
+        {
+            "name": "SandBags_01_C90_B23",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.90759,
+                "y": 0.143265,
+                "z": -0.394658
+            },
+            "up": {
+                "x": -0.0774737,
+                "y": 0.980986,
+                "z": 0.177944
+            },
+            "front": {
+                "x": 0.412647,
+                "y": -0.130924,
+                "z": 0.901433
+            },
+            "position": {
+                "x": -765.736,
+                "y": 149.763,
+                "z": -880.48
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B23"
+        },
+        {
+            "name": "SandBags_01_C90_B24",
+            "type": "SandBags_01_C90_B",
+            "right": {
+                "x": 0.445753,
+                "y": -0.125566,
+                "z": 0.886306
+            },
+            "up": {
+                "x": -0.0774737,
+                "y": 0.980986,
+                "z": 0.177944
+            },
+            "front": {
+                "x": -0.891798,
+                "y": -0.147984,
+                "z": 0.427549
+            },
+            "position": {
+                "x": -769.002,
+                "y": 149.724,
+                "z": -881.686
+            },
+            "id": "Map Details/HQ Defences/SandBags_01_C90_B24"
+        },
+        {
+            "name": "CommandPost_01_A",
+            "type": "CommandPost_01_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -693.616,
+                "y": 159.108,
+                "z": -915.847
+            },
+            "id": "Map Details/HQ Defences/CommandPost_01_A"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -733.268,
+                "y": 151.441,
+                "z": -888.554
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B2",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -719.533,
+                "y": 153.848,
+                "z": -884.973
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B2"
+        },
+        {
+            "name": "BroadleafUrban_01_M_B",
+            "type": "BroadleafUrban_01_M_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -687.564,
+                "y": 155.694,
+                "z": -860.49
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_B"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -708.442,
+                "y": 153.829,
+                "z": -858.282
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A2",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -700.177,
+                "y": 152.844,
+                "z": -862.497
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A2"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A3",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -693.307,
+                "y": 154.154,
+                "z": -870.562
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A3"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -705.721,
+                "y": 151.549,
+                "z": -870.391
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A2",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -732.188,
+                "y": 153.53,
+                "z": -831.296
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A2"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A3",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": -0.357455,
+                "y": 0,
+                "z": 0.93393
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.93393,
+                "y": 0,
+                "z": -0.357455
+            },
+            "position": {
+                "x": -743.172,
+                "y": 155.109,
+                "z": -821.693
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A3"
+        },
+        {
+            "name": "BroadleafUrban_01_M_B2",
+            "type": "BroadleafUrban_01_M_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -746.857,
+                "y": 149.868,
+                "z": -837.96
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_B2"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A4",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -791.911,
+                "y": 148.15,
+                "z": -814.927
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A4"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A4",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -800.535,
+                "y": 145.636,
+                "z": -805.489
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A4"
+        },
+        {
+            "name": "BroadleafUrban_01_M_B3",
+            "type": "BroadleafUrban_01_M_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -799.174,
+                "y": 145.463,
+                "z": -811.541
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_B3"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A5",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -809.877,
+                "y": 144.664,
+                "z": -799.958
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A5"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B3",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -800.457,
+                "y": 147.747,
+                "z": -794.771
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B3"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A5",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -774.86,
+                "y": 151.191,
+                "z": -809.628
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A5"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A6",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -783.835,
+                "y": 150.741,
+                "z": -812.134
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A6"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A7",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -779.493,
+                "y": 151.294,
+                "z": -814.461
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A7"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A6",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -586.551,
+                "y": 166.265,
+                "z": -951.245
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A6"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A7",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -583.174,
+                "y": 165.046,
+                "z": -902.234
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A7"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A8",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": -0.973435,
+                "y": 0,
+                "z": 0.228963
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.228963,
+                "y": 0,
+                "z": -0.973435
+            },
+            "position": {
+                "x": -588.889,
+                "y": 166.201,
+                "z": -933.194
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A8"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A9",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -586.781,
+                "y": 165.984,
+                "z": -917.495
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A9"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A10",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -584.103,
+                "y": 167.878,
+                "z": -882.174
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A10"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A11",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -595.855,
+                "y": 162.474,
+                "z": -903.038
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A11"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A12",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -588.526,
+                "y": 169.815,
+                "z": -860.65
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A12"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A13",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": -0.946531,
+                "y": 0,
+                "z": -0.322613
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.322613,
+                "y": 0,
+                "z": -0.946531
+            },
+            "position": {
+                "x": -606.428,
+                "y": 166.361,
+                "z": -864.381
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A13"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A14",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -620.95,
+                "y": 169.493,
+                "z": -840.391
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A14"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A15",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.533673,
+                "y": 0,
+                "z": -0.845691
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.845691,
+                "y": 0,
+                "z": 0.533673
+            },
+            "position": {
+                "x": -623.699,
+                "y": 166.383,
+                "z": -851.545
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A15"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A16",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -600.016,
+                "y": 165.345,
+                "z": -882.691
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A16"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A17",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -623.216,
+                "y": 161.626,
+                "z": -875.226
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A17"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A18",
+            "metadata/_edit_group_": true,
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.365462,
+                "y": 0,
+                "z": 0.930826
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.930826,
+                "y": 0,
+                "z": 0.365462
+            },
+            "position": {
+                "x": -642.57,
+                "y": 164.997,
+                "z": -835.363
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A18"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A19",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -810.496,
+                "y": 144.277,
+                "z": -841.955
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A19"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B4",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -818.274,
+                "y": 142.183,
+                "z": -834.171
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B4"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B5",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -817.706,
+                "y": 142.593,
+                "z": -845.122
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B5"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B6",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -805.559,
+                "y": 144.429,
+                "z": -850.636
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B6"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B7",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -752.249,
+                "y": 156.236,
+                "z": -925.25
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B7"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B8",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -757.382,
+                "y": 154.312,
+                "z": -915.85
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B8"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A20",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -17.4721,
+                "y": 185.504,
+                "z": -581.388
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A20"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A21",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -56.955,
+                "y": 187.887,
+                "z": -590.451
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A21"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B9",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -28.5708,
+                "y": 184.758,
+                "z": -584.774
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B9"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B10",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -20.906,
+                "y": 186.736,
+                "z": -587.741
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B10"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B11",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -64.3703,
+                "y": 186.83,
+                "z": -600.904
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B11"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A22",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -87.3355,
+                "y": 187.681,
+                "z": -619.443
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A22"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A23",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.509192,
+                "y": 0,
+                "z": -0.860653
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.860653,
+                "y": 0,
+                "z": 0.509192
+            },
+            "position": {
+                "x": -91.3569,
+                "y": 187.906,
+                "z": -630.554
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A23"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A24",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": -0.124606,
+                "y": 0,
+                "z": 0.992206
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.992206,
+                "y": 0,
+                "z": -0.124606
+            },
+            "position": {
+                "x": -106.015,
+                "y": 187.314,
+                "z": -627.161
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A24"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A25",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -107.279,
+                "y": 188.996,
+                "z": -720.04
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A25"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A26",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": -0.600937,
+                "y": 0,
+                "z": 0.799297
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.799297,
+                "y": 0,
+                "z": -0.600937
+            },
+            "position": {
+                "x": -111.805,
+                "y": 188.587,
+                "z": -736.628
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A26"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A8",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -116.729,
+                "y": 188.825,
+                "z": -753.108
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A8"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A9",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -111.313,
+                "y": 188.49,
+                "z": -726.155
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A9"
+        },
+        {
+            "name": "BroadleafUrban_01_M_A10",
+            "type": "BroadleafUrban_01_M_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -112.404,
+                "y": 188.509,
+                "z": -712.17
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_M_A10"
+        },
+        {
+            "name": "LemonadeBerry_01_L",
+            "type": "LemonadeBerry_01_L",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -108.558,
+                "y": 188.589,
+                "z": -692.129
+            },
+            "id": "Map Details/Trees/LemonadeBerry_01_L"
+        },
+        {
+            "name": "LemonadeBerry_01_L2",
+            "type": "LemonadeBerry_01_L",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -106.905,
+                "y": 189.088,
+                "z": -697.558
+            },
+            "id": "Map Details/Trees/LemonadeBerry_01_L2"
+        },
+        {
+            "name": "LemonadeBerry_01_L3",
+            "type": "LemonadeBerry_01_L",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -105.66,
+                "y": 189.191,
+                "z": -702.151
+            },
+            "id": "Map Details/Trees/LemonadeBerry_01_L3"
+        },
+        {
+            "name": "LemonadeBerry_01_L4",
+            "type": "LemonadeBerry_01_L",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -119.595,
+                "y": 187.611,
+                "z": -657.057
+            },
+            "id": "Map Details/Trees/LemonadeBerry_01_L4"
+        },
+        {
+            "name": "LemonadeBerry_01_L5",
+            "type": "LemonadeBerry_01_L",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -116.426,
+                "y": 187.509,
+                "z": -659.689
+            },
+            "id": "Map Details/Trees/LemonadeBerry_01_L5"
+        },
+        {
+            "name": "LemonadeBerry_01_L6",
+            "type": "LemonadeBerry_01_L",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -119.636,
+                "y": 187.695,
+                "z": -661.451
+            },
+            "id": "Map Details/Trees/LemonadeBerry_01_L6"
+        },
+        {
+            "name": "LemonadeBerry_01_L7",
+            "type": "LemonadeBerry_01_L",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -116.857,
+                "y": 187.867,
+                "z": -663.474
+            },
+            "id": "Map Details/Trees/LemonadeBerry_01_L7"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A27",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -747.361,
+                "y": 147.815,
+                "z": -882.813
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A27"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A28",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -745.447,
+                "y": 149.848,
+                "z": -893.199
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A28"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A29",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -732.512,
+                "y": 154.819,
+                "z": -879.767
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A29"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A30",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -742.095,
+                "y": 146.597,
+                "z": -875.115
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A30"
+        },
+        {
+            "name": "BroadleafUrban_01_L_A31",
+            "type": "BroadleafUrban_01_L_A",
+            "right": {
+                "x": 0.218011,
+                "y": -0.00352163,
+                "z": 0.97594
+            },
+            "up": {
+                "x": -0.0827219,
+                "y": 0.996328,
+                "z": 0.0220741
+            },
+            "front": {
+                "x": -0.972434,
+                "y": -0.085544,
+                "z": 0.216919
+            },
+            "position": {
+                "x": -723.41,
+                "y": 150.936,
+                "z": -876.28
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_A31"
+        },
+        {
+            "name": "BroadleafUrban_01_L_B12",
+            "type": "BroadleafUrban_01_L_B",
+            "right": {
+                "x": 0.236601,
+                "y": 0,
+                "z": -0.971607
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.971607,
+                "y": 0,
+                "z": 0.236601
+            },
+            "position": {
+                "x": -734.853,
+                "y": 147.512,
+                "z": -877.496
+            },
+            "id": "Map Details/Trees/BroadleafUrban_01_L_B12"
+        },
+        {
+            "name": "HighwayOverpass_Bridge_01",
+            "type": "HighwayOverpass_Bridge_01",
+            "right": {
+                "x": 0.79986,
+                "y": 0.0149671,
+                "z": 2.25996e-09
+            },
+            "up": {
+                "x": 0.0149671,
+                "y": -0.79986,
+                "z": -1.20775e-07
+            },
+            "front": {
+                "x": 0,
+                "y": 1.20797e-07,
+                "z": -0.8
+            },
+            "position": {
+                "x": -310.783,
+                "y": 169.584,
+                "z": -304.802
+            },
+            "id": "Map Details/HighwayOverpass_Bridge_01"
+        },
+        {
+            "name": "HighwayOverpass_Bridge_02",
+            "type": "HighwayOverpass_Bridge_01",
+            "right": {
+                "x": 0.570186,
+                "y": 0.126962,
+                "z": -0.546597
+            },
+            "up": {
+                "x": 0.0988882,
+                "y": -0.789793,
+                "z": -0.0802955
+            },
+            "front": {
+                "x": -0.552367,
+                "y": -0.0103359,
+                "z": -0.578605
+            },
+            "position": {
+                "x": -210.424,
+                "y": 175.528,
+                "z": -351.842
+            },
+            "id": "Map Details/HighwayOverpass_Bridge_02"
         }
     ],
     "Static": [

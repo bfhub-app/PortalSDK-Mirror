@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bv5yex4p5a2w0"]
+[gd_scene load_steps=16 format=3 uid="uid://bv5yex4p5a2w0"]
 
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/HQ_PlayerSpawner.tscn" id="1_3a2xv"]
 [ext_resource type="PackedScene" path="res://static/MP_Dumbo_Terrain.tscn" id="1_sjg54"]
@@ -8,9 +8,8 @@
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/CombatArea.tscn" id="4_lfldh"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/Sector.tscn" id="4_sit30"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/DeployCam.tscn" id="5_01xix"]
-[ext_resource type="PackedScene" path="res://objects/Gameplay/Common/AreaTrigger.tscn" id="7_w1vfw"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Conquest/CapturePoint.tscn" id="10_lbtbc"]
-[ext_resource type="PackedScene" uid="uid://bgva3omvxelw4" path="res://objects/gameplay/common/VehicleSpawner.tscn" id="11_egooc"]
+[ext_resource type="PackedScene" path="res://objects/gameplay/common/VehicleSpawner.tscn" id="11_egooc"]
 [ext_resource type="PackedScene" path="res://objects/props/MannequinRotation_01.tscn" id="12_e2rnb"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/InteractPoint.tscn" id="13_hvrle"]
 [ext_resource type="PackedScene" path="res://objects/props/FlagPole_01_USA.tscn" id="15_lbtbc"]
@@ -32,53 +31,29 @@ metadata/_edit_lock_ = true
 [node name="MP_Dumbo_Terrain" parent="Static" instance=ExtResource("1_sjg54")]
 metadata/_edit_lock_ = true
 
-[node name="Sector" type="Node3D" parent="."]
+[node name="Play Area" type="Node3D" parent="."]
 
-[node name="Sector - This manages the CapturePoint Names" parent="Sector" node_paths=PackedStringArray("SectorArea", "CapturePoints") instance=ExtResource("4_sit30")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.41775, 152.306, 140.228)
-SectorArea = NodePath("../../CombatArea/Infantry combat area")
-CapturePoints = [NodePath("../../Objectives/CapturePointA"), NodePath("../../Objectives/CapturePointB"), NodePath("../../Objectives/CapturePointC"), NodePath("../../Objectives/CapturePointD"), NodePath("../../Objectives/CapturePointE"), null]
+[node name="CombatArea" parent="Play Area" node_paths=PackedStringArray("CombatVolume", "SurroundingVolume") instance=ExtResource("4_lfldh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1458.32, 33.5003, 0)
+CombatVolume = NodePath("Infantry combat area")
+SurroundingVolume = NodePath("Air combat area")
 
-[node name="Sector - Displays Team1 HQ Area On Map" parent="Sector" node_paths=PackedStringArray("SectorArea") instance=ExtResource("4_sit30")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -281.392, 130.917, 116.557)
-SectorArea = NodePath("../../TEAM_1_HQ NATO/HQ_Team1")
-
-[node name="Sector - Displays Team2 HQ Area On Map" parent="Sector" node_paths=PackedStringArray("SectorArea") instance=ExtResource("4_sit30")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 285.433, 138.01, 476.401)
-SectorArea = NodePath("../../TEAM_2_HQ PAX/HQ_Team2")
-
-[node name="CombatArea" parent="." node_paths=PackedStringArray("CombatVolume") instance=ExtResource("4_lfldh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -110.236, 0, -325.59)
-CombatVolume = NodePath("Air combat area")
-
-[node name="Infantry combat area" parent="CombatArea" instance=ExtResource("2_cjtf1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 129.825, 50.5388, -105.306)
+[node name="Infantry combat area" parent="Play Area/CombatArea" instance=ExtResource("2_cjtf1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1438.73, 17.0385, -430.896)
 points = PackedVector2Array(-206.624, -19.7361, -205.597, 69.2321, -277.718, 69.9146, -277.463, 84.61, -269.259, 85.2107, -269.094, 110.525, -203.39, 109.872, -199.132, 144.16, -185.386, 144.694, -185.505, 164.882, -120.73, 212.696, -97.2488, 212.665, -97.128, 256.915, -92.917, 264.19, 85.9295, 265.129, 86.1846, 147.761, 95.9227, 147.692, 95.6929, 114.793, 126.401, 114.554, 126.443, 87.9475, 131.461, 88.0259, 131.265, 73.2069, 123.931, 73.1326, 123.738, 31.3249, 95.8761, 30.794, 95.7689, 10.305, 70.481, 8.78162, 70.4529, 15.0597, 12.2033, 14.9887, 12.1635, -43.0749, 23.3586, -43.2604, 21.873, -68.6804, -0.274052, -68.882, 0.150749, -93.376, -72.4849, -93.0676, -92.7696, -92.4545, -110.237, -86.2772, -170.6, -109.857)
 height = 300.0
 color = Color(0.690196, 0.498039, 0.0235294, 0.419608)
 
-[node name="Air combat area" parent="CombatArea" instance=ExtResource("2_cjtf1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 129.825, 50.5388, -105.306)
+[node name="Air combat area" parent="Play Area/CombatArea" instance=ExtResource("2_cjtf1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1438.73, 17.0385, -430.896)
 points = PackedVector2Array(15.9743, -179.608, -179.652, -213.516, -320.503, -143.091, -359.628, -62.2321, -358.759, 39.4936, -346.586, 113.397, -290.942, 202.95, -187.477, 259.465, -87.4902, 294.243, 69.011, 313.37, 182.039, 275.984, 217.687, 225.556, 216.817, 169.042, 196.82, 16.8879, 150.739, -85.7072)
 height = 400.0
 color = Color(0.428207, 0.498842, 0.522439, 0.25098)
 
-[node name="Areatriggers" type="Node3D" parent="."]
-
-[node name="AreaTrigger- Team1 Spawn Protection" parent="Areatriggers" node_paths=PackedStringArray("Area") instance=ExtResource("7_w1vfw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -241.042, 95.4493, -452.247)
-ObjId = 1100
-Area = NodePath("../../TEAM_1_HQ NATO/HQ_Team1")
-
-[node name="AreaTrigger- Team2 Spawn Protection" parent="Areatriggers" node_paths=PackedStringArray("Area") instance=ExtResource("7_w1vfw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 176.316, 87.6604, -231.526)
-ObjId = 1200
-Area = NodePath("../../TEAM_2_HQ PAX/HQ_Team2")
-
-[node name="AreaTrigger- CombatArea_infantry" parent="Areatriggers" node_paths=PackedStringArray("Area") instance=ExtResource("7_w1vfw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125.302, 262.279, 107.24)
-ObjId = 1400
-Area = NodePath("../../CombatArea/Infantry combat area")
+[node name="Sector - This manages the CapturePoint Names" parent="Play Area" node_paths=PackedStringArray("SectorArea", "CapturePoints") instance=ExtResource("4_sit30")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.41775, 152.306, 140.228)
+SectorArea = NodePath("../CombatArea/Infantry combat area")
+CapturePoints = [NodePath("../../Objectives/CapturePointA"), NodePath("../../Objectives/CapturePointB"), NodePath("../../Objectives/CapturePointC"), NodePath("../../Objectives/CapturePointD"), NodePath("../../Objectives/CapturePointE")]
 
 [node name="TEAM_1_HQ NATO" parent="." node_paths=PackedStringArray("HQArea", "InfantrySpawns") instance=ExtResource("1_3a2xv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -281.176, 52.6785, -440.377)
@@ -404,7 +379,7 @@ transform = Transform3D(-0.355287, 0, 0.934757, 0, 1, 0, -0.934757, 0, -0.355287
 
 [node name="VehicleSpawner-Bradly" parent="Vehicles/Team1 NATO" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.014834, 0, 0.999891, 0, 1, 0, -0.999891, 0, 0.014834, -274.105, 52.8866, -446.067)
-VehicleType = 16
+VehicleType = 17
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 80
 
@@ -415,6 +390,13 @@ P_DefaultRespawnTime = 90
 
 [node name="VehicleSpawner_attack_heli_AH64" parent="Vehicles/Team1 NATO" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.585198, 0, 0.810891, 0, 1, 0, -0.810891, 0, 0.585198, -284.614, 52.2726, -462.997)
+VehicleType = 8
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 90
+metadata/_edit_group_ = true
+
+[node name="VehicleSpawner_attack_heli_AH65" parent="Vehicles/Team1 NATO" instance=ExtResource("11_egooc")]
+transform = Transform3D(0.585198, 0, 0.810891, 0, 1, 0, -0.810891, 0, 0.585198, -254.754, 52.2726, -486.982)
 VehicleType = 7
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 90
@@ -422,48 +404,55 @@ metadata/_edit_group_ = true
 
 [node name="VehicleSpawner_LV_Flyer60" parent="Vehicles/Team1 NATO" instance=ExtResource("11_egooc")]
 transform = Transform3D(-0.452201, 0, 0.891916, 0, 1, 0, -0.891916, 0, -0.452201, -285.165, 52.9933, -429.698)
-VehicleType = 12
+VehicleType = 13
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 30
 
 [node name="VehicleSpawner_LV_Flyer61" parent="Vehicles/Team1 NATO" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.9958, 0, 0.091554, 0, 1, 0, -0.091554, 0, 0.9958, -266.234, 52.9933, -461.19)
-VehicleType = 12
+VehicleType = 13
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 30
 
 [node name="VehicleSpawner_LV_Flyer62" parent="Vehicles/Team1 NATO" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.995797, 0, 0.0915888, 0, 1, 0, -0.0915888, 0, 0.995797, -260.955, 52.9933, -461.432)
-VehicleType = 12
+VehicleType = 13
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 30
 
 [node name="Team 2 PAX" type="Node3D" parent="Vehicles"]
 
 [node name="VehicleSpawner_LV_Vector3" parent="Vehicles/Team 2 PAX" instance=ExtResource("11_egooc")]
-transform = Transform3D(-0.462941, 0, -0.886391, 0, 1, 0, 0.886391, 0, -0.462941, 187.849, 58.1805, -226.915)
-VehicleType = 8
+transform = Transform3D(-0.462941, 0, -0.886391, 0, 1, 0, 0.886391, 0, -0.462941, 186.487, 58.1805, -221.88)
+VehicleType = 9
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 30
 metadata/_edit_group_ = true
 
 [node name="VehicleSpawner_LV_Vector4" parent="Vehicles/Team 2 PAX" instance=ExtResource("11_egooc")]
 transform = Transform3D(-0.462941, 0, -0.886391, 0, 1, 0, 0.886391, 0, -0.462941, 189.323, 58.1805, -229.737)
-VehicleType = 8
+VehicleType = 9
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 30
 metadata/_edit_group_ = true
 
 [node name="VehicleSpawner_LV_Vector5" parent="Vehicles/Team 2 PAX" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.325701, 0, -0.945474, 0, 1, 0, 0.945474, 0, 0.325701, 190.536, 58.1805, -259.105)
-VehicleType = 8
+VehicleType = 9
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 30
 metadata/_edit_group_ = true
 
 [node name="VehicleSpawner_attack_heli_Eurcopter" parent="Vehicles/Team 2 PAX" instance=ExtResource("11_egooc")]
-transform = Transform3D(-0.917637, 0, -0.397421, 0, 1, 0, 0.397421, 0, -0.917637, 181.871, 58.1805, -218.189)
+transform = Transform3D(-0.917637, 0, -0.397421, 0, 1, 0, 0.397421, 0, -0.917637, 178.068, 58.1805, -204.494)
 VehicleType = 6
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 90
+metadata/_edit_group_ = true
+
+[node name="VehicleSpawner_attack_heli_Eurcopter2" parent="Vehicles/Team 2 PAX" instance=ExtResource("11_egooc")]
+transform = Transform3D(-0.917637, 0, -0.397421, 0, 1, 0, 0.397421, 0, -0.917637, 157.243, 61.7953, -210.229)
+VehicleType = 7
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 90
 metadata/_edit_group_ = true
@@ -489,7 +478,7 @@ metadata/_edit_group_ = true
 [node name="VehicleSpawner-quad" parent="Vehicles/Flag A/Team1" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.783543, 0, 0.62134, 0, 1, 0, -0.62134, 0, 0.783543, -152.54, 54.1638, -356.411)
 ObjId = 600
-VehicleType = 9
+VehicleType = 10
 P_DefaultRespawnTime = 30
 metadata/_edit_group_ = true
 
@@ -498,7 +487,7 @@ metadata/_edit_group_ = true
 [node name="VehicleSpawner-quad" parent="Vehicles/Flag A/Team2" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.786549, 0, 0.617531, 0, 1, 0, -0.617531, 0, 0.786549, -152.606, 54.1223, -356.42)
 ObjId = 601
-VehicleType = 9
+VehicleType = 10
 P_DefaultRespawnTime = 30
 metadata/_edit_group_ = true
 
@@ -509,7 +498,7 @@ metadata/_edit_group_ = true
 [node name="VehicleSpawner-quad" parent="Vehicles/Flag E/Team1" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.998773, 0, 0.0495645, 0, 1, 0, -0.0495645, 0, 0.998773, 78.2226, 55.4685, -354.502)
 ObjId = 640
-VehicleType = 9
+VehicleType = 10
 P_DefaultRespawnTime = 30
 metadata/_edit_group_ = true
 
@@ -518,7 +507,7 @@ metadata/_edit_group_ = true
 [node name="VehicleSpawner-quad" parent="Vehicles/Flag E/Team2" instance=ExtResource("11_egooc")]
 transform = Transform3D(0.981673, 0, -0.190587, 0, 1, 0, 0.190587, 0, 0.981673, 78.1872, 55.4674, -354.482)
 ObjId = 641
-VehicleType = 9
+VehicleType = 10
 P_DefaultRespawnTime = 30
 metadata/_edit_group_ = true
 

@@ -1,6 +1,6 @@
 {
     "name": "Custom Conquest",
     "description": "CONQUEST: Capture the sectors to control the field. Deplete the enemy's reinforcements to win. Recommended for 64 players.\nListed below are levels that have been pre-configured to immediately work with this Conquest Template once imported into the Battlefield 6 Web Builder.\nTo use your custom levels, you will need to export them and upload them to the web-builder separately.",
-    "workspace": "custom_conquest_template_V9.5.json",
+    "workspace": "custom_conquest_template_10.0.json",
     "strings": "CustomCQ.strings.json"
 }

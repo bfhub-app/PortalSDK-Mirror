@@ -1,138 +1,6 @@
 {
     "Portal_Dynamic": [
         {
-            "name": "CombatArea",
-            "CombatVolume": "CombatArea/CombatVolume",
-            "type": "CombatArea",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -85.6095,
-                "y": 287.693,
-                "z": 253.579
-            },
-            "id": "CombatArea",
-            "linked": [
-                "CombatVolume"
-            ]
-        },
-        {
-            "name": "CombatVolume",
-            "type": "PolygonVolume",
-            "id": "CombatArea/CombatVolume",
-            "height": 200,
-            "points": [
-                {
-                    "x": -263.6685,
-                    "y": 352.7332,
-                    "z": -176.0384
-                },
-                {
-                    "x": -306.5525,
-                    "y": 352.7332,
-                    "z": -110.7234
-                },
-                {
-                    "x": -344.6555,
-                    "y": 352.7332,
-                    "z": -23.5264
-                },
-                {
-                    "x": -347.7475,
-                    "y": 352.7332,
-                    "z": 108.3066
-                },
-                {
-                    "x": -317.3995,
-                    "y": 352.7332,
-                    "z": 195.3927
-                },
-                {
-                    "x": -279.1345,
-                    "y": 352.7332,
-                    "z": 284.458
-                },
-                {
-                    "x": -151.8045,
-                    "y": 352.7332,
-                    "z": 413.1076
-                },
-                {
-                    "x": 27.7146,
-                    "y": 352.7332,
-                    "z": 476.3526
-                },
-                {
-                    "x": 234.2145,
-                    "y": 352.7332,
-                    "z": 487.5686
-                },
-                {
-                    "x": 399.5135,
-                    "y": 352.7332,
-                    "z": 442.2166
-                },
-                {
-                    "x": 522.2535,
-                    "y": 352.7332,
-                    "z": 390.1796
-                },
-                {
-                    "x": 577.5435,
-                    "y": 352.7332,
-                    "z": 329.5027
-                },
-                {
-                    "x": 594.4455,
-                    "y": 352.7332,
-                    "z": 192.6833
-                },
-                {
-                    "x": 507.3395,
-                    "y": 352.7332,
-                    "z": 20.7336
-                },
-                {
-                    "x": 363.1175,
-                    "y": 352.7332,
-                    "z": -147.4204
-                },
-                {
-                    "x": 176.0925,
-                    "y": 352.7332,
-                    "z": -264.1654
-                },
-                {
-                    "x": -15.6538,
-                    "y": 352.7332,
-                    "z": -322.9904
-                },
-                {
-                    "x": -112.7005,
-                    "y": 352.7332,
-                    "z": -304.9634
-                },
-                {
-                    "x": -208.0985,
-                    "y": 352.7332,
-                    "z": -239.2134
-                }
-            ]
-        },
-        {
             "name": "DeployCam",
             "type": "DeployCam",
             "right": {
@@ -156,6 +24,326 @@
                 "z": 86.9254
             },
             "id": "Camera3D/DeployCam"
+        },
+        {
+            "name": "CombatArea",
+            "CombatVolume": "Play Area/CombatArea/Infantry Area",
+            "SurroundingVolume": "Play Area/CombatArea/AirCombatArea",
+            "type": "CombatArea",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 1458.32,
+                "y": 33.5003,
+                "z": 0
+            },
+            "id": "Play Area/CombatArea",
+            "linked": [
+                "CombatVolume",
+                "SurroundingVolume"
+            ]
+        },
+        {
+            "name": "Infantry Area",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/Infantry Area",
+            "height": 300,
+            "points": [
+                {
+                    "x": -124.014,
+                    "y": 283.9143,
+                    "z": -18.386
+                },
+                {
+                    "x": -142.555,
+                    "y": 283.9143,
+                    "z": -29.928
+                },
+                {
+                    "x": -176.468,
+                    "y": 283.9143,
+                    "z": -41.424
+                },
+                {
+                    "x": -196.804,
+                    "y": 283.9143,
+                    "z": -7.652
+                },
+                {
+                    "x": -204.024,
+                    "y": 283.9143,
+                    "z": 13.648
+                },
+                {
+                    "x": -206.519,
+                    "y": 283.9143,
+                    "z": 50.2402
+                },
+                {
+                    "x": -188.263,
+                    "y": 283.9143,
+                    "z": 97.1316
+                },
+                {
+                    "x": -149.486,
+                    "y": 283.9143,
+                    "z": 158.7269
+                },
+                {
+                    "x": -99.182,
+                    "y": 283.9143,
+                    "z": 210.92
+                },
+                {
+                    "x": -21.8457,
+                    "y": 283.9143,
+                    "z": 267.001
+                },
+                {
+                    "x": 60.0996,
+                    "y": 283.9143,
+                    "z": 301.828
+                },
+                {
+                    "x": 132.0579,
+                    "y": 283.9143,
+                    "z": 309.767
+                },
+                {
+                    "x": 229.087,
+                    "y": 283.9143,
+                    "z": 303.349
+                },
+                {
+                    "x": 291.28,
+                    "y": 283.9143,
+                    "z": 290.722
+                },
+                {
+                    "x": 304.184,
+                    "y": 283.9143,
+                    "z": 220.0662
+                },
+                {
+                    "x": 349.577,
+                    "y": 283.9143,
+                    "z": 177.2072
+                },
+                {
+                    "x": 365.437,
+                    "y": 283.9143,
+                    "z": 143.92016
+                },
+                {
+                    "x": 365.178,
+                    "y": 283.9143,
+                    "z": 106.385
+                },
+                {
+                    "x": 395.396,
+                    "y": 283.9143,
+                    "z": 39.485
+                },
+                {
+                    "x": 352.525,
+                    "y": 283.9143,
+                    "z": 0.898
+                },
+                {
+                    "x": 284.484,
+                    "y": 283.9143,
+                    "z": -54.112
+                },
+                {
+                    "x": 197.743,
+                    "y": 283.9143,
+                    "z": -95.83
+                },
+                {
+                    "x": 114.4874,
+                    "y": 283.9143,
+                    "z": -124.717
+                },
+                {
+                    "x": 46.32004,
+                    "y": 283.9143,
+                    "z": -126.392
+                },
+                {
+                    "x": 16.8768,
+                    "y": 283.9143,
+                    "z": -85.014
+                },
+                {
+                    "x": -31.6762,
+                    "y": 283.9143,
+                    "z": -16.307
+                },
+                {
+                    "x": -74.696,
+                    "y": 283.9143,
+                    "z": -31.452
+                },
+                {
+                    "x": -108.884,
+                    "y": 283.9143,
+                    "z": -14.535
+                }
+            ]
+        },
+        {
+            "name": "AirCombatArea",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/AirCombatArea",
+            "height": 200,
+            "points": [
+                {
+                    "x": -263.672,
+                    "y": 352.7333,
+                    "z": -176.038
+                },
+                {
+                    "x": -306.556,
+                    "y": 352.7333,
+                    "z": -110.723
+                },
+                {
+                    "x": -344.659,
+                    "y": 352.7333,
+                    "z": -23.526
+                },
+                {
+                    "x": -347.751,
+                    "y": 352.7333,
+                    "z": 108.307
+                },
+                {
+                    "x": -317.403,
+                    "y": 352.7333,
+                    "z": 195.3931
+                },
+                {
+                    "x": -279.138,
+                    "y": 352.7333,
+                    "z": 284.4584
+                },
+                {
+                    "x": -151.808,
+                    "y": 352.7333,
+                    "z": 413.108
+                },
+                {
+                    "x": 27.7111,
+                    "y": 352.7333,
+                    "z": 476.353
+                },
+                {
+                    "x": 234.211,
+                    "y": 352.7333,
+                    "z": 487.569
+                },
+                {
+                    "x": 399.51,
+                    "y": 352.7333,
+                    "z": 442.217
+                },
+                {
+                    "x": 522.25,
+                    "y": 352.7333,
+                    "z": 390.18
+                },
+                {
+                    "x": 577.54,
+                    "y": 352.7333,
+                    "z": 329.5031
+                },
+                {
+                    "x": 594.442,
+                    "y": 352.7333,
+                    "z": 192.6837
+                },
+                {
+                    "x": 507.336,
+                    "y": 352.7333,
+                    "z": 20.734
+                },
+                {
+                    "x": 363.114,
+                    "y": 352.7333,
+                    "z": -147.42
+                },
+                {
+                    "x": 176.089,
+                    "y": 352.7333,
+                    "z": -264.165
+                },
+                {
+                    "x": -15.6573,
+                    "y": 352.7333,
+                    "z": -322.99
+                },
+                {
+                    "x": -112.704,
+                    "y": 352.7333,
+                    "z": -304.963
+                },
+                {
+                    "x": -208.102,
+                    "y": 352.7333,
+                    "z": -239.213
+                }
+            ]
+        },
+        {
+            "name": "Sector - Combat area and Objectives",
+            "CapturePoints": [
+                "Objectives/CapturePointA",
+                "Objectives/CapturePointB",
+                "Objectives/CapturePointC",
+                "Objectives/CapturePointD",
+                "Objectives/CapturePointE",
+                "Objectives/CapturePointF"
+            ],
+            "SectorArea": "Play Area/CombatArea/Infantry Area",
+            "type": "Sector",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 103.577,
+                "y": 442.058,
+                "z": 73.5485
+            },
+            "id": "Play Area/Sector - Combat area and Objectives",
+            "linked": [
+                "SectorArea",
+                "CapturePoints"
+            ]
         },
         {
             "name": "TEAM_1_HQ",
@@ -568,371 +756,6 @@
             "id": "HQs/TEAM_2_HQ/SpawnPoint_2_4"
         },
         {
-            "name": "AreaTrigger - Team 1 Spawn Protection",
-            "ObjId": 1100,
-            "Area": "HQs/TEAM_1_HQ/HQ_Team1",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 128.076,
-                "y": 453.34,
-                "z": 88.9863
-            },
-            "id": "Area Triggers/AreaTrigger - Team 1 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger - Team 2 Spawn Protection",
-            "ObjId": 1200,
-            "Area": "HQs/TEAM_2_HQ/HQ_Team2",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 128.076,
-                "y": 453.34,
-                "z": 88.9863
-            },
-            "id": "Area Triggers/AreaTrigger - Team 2 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger - Combat Area",
-            "ObjId": 1400,
-            "Area": "Area Triggers/AreaTrigger - Combat Area/Infantry Area",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 113.121,
-                "y": 444.103,
-                "z": 69.9086
-            },
-            "id": "Area Triggers/AreaTrigger - Combat Area",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "Infantry Area",
-            "type": "PolygonVolume",
-            "id": "Area Triggers/AreaTrigger - Combat Area/Infantry Area",
-            "height": 300,
-            "points": [
-                {
-                    "x": -124.0185,
-                    "y": 283.914,
-                    "z": -18.386
-                },
-                {
-                    "x": -142.5595,
-                    "y": 283.914,
-                    "z": -29.928
-                },
-                {
-                    "x": -176.4725,
-                    "y": 283.914,
-                    "z": -41.424
-                },
-                {
-                    "x": -196.8085,
-                    "y": 283.914,
-                    "z": -7.652
-                },
-                {
-                    "x": -204.0285,
-                    "y": 283.914,
-                    "z": 13.648
-                },
-                {
-                    "x": -206.5235,
-                    "y": 283.914,
-                    "z": 50.2402
-                },
-                {
-                    "x": -188.2675,
-                    "y": 283.914,
-                    "z": 97.1316
-                },
-                {
-                    "x": -149.4905,
-                    "y": 283.914,
-                    "z": 158.7269
-                },
-                {
-                    "x": -99.1865,
-                    "y": 283.914,
-                    "z": 210.92
-                },
-                {
-                    "x": -21.8502,
-                    "y": 283.914,
-                    "z": 267.001
-                },
-                {
-                    "x": 60.0951,
-                    "y": 283.914,
-                    "z": 301.828
-                },
-                {
-                    "x": 132.0534,
-                    "y": 283.914,
-                    "z": 309.767
-                },
-                {
-                    "x": 229.0825,
-                    "y": 283.914,
-                    "z": 303.349
-                },
-                {
-                    "x": 291.2755,
-                    "y": 283.914,
-                    "z": 290.722
-                },
-                {
-                    "x": 304.1795,
-                    "y": 283.914,
-                    "z": 220.0662
-                },
-                {
-                    "x": 349.5725,
-                    "y": 283.914,
-                    "z": 177.2072
-                },
-                {
-                    "x": 365.4325,
-                    "y": 283.914,
-                    "z": 143.92016
-                },
-                {
-                    "x": 365.1735,
-                    "y": 283.914,
-                    "z": 106.385
-                },
-                {
-                    "x": 395.3915,
-                    "y": 283.914,
-                    "z": 39.485
-                },
-                {
-                    "x": 352.5205,
-                    "y": 283.914,
-                    "z": 0.898
-                },
-                {
-                    "x": 284.4795,
-                    "y": 283.914,
-                    "z": -54.112
-                },
-                {
-                    "x": 197.7385,
-                    "y": 283.914,
-                    "z": -95.83
-                },
-                {
-                    "x": 114.4829,
-                    "y": 283.914,
-                    "z": -124.717
-                },
-                {
-                    "x": 46.31554,
-                    "y": 283.914,
-                    "z": -126.392
-                },
-                {
-                    "x": 16.8723,
-                    "y": 283.914,
-                    "z": -85.014
-                },
-                {
-                    "x": -31.6807,
-                    "y": 283.914,
-                    "z": -16.307
-                },
-                {
-                    "x": -74.7005,
-                    "y": 283.914,
-                    "z": -31.452
-                },
-                {
-                    "x": -108.8885,
-                    "y": 283.914,
-                    "z": -14.535
-                }
-            ]
-        },
-        {
-            "name": "Sector - Combat area and Objectives",
-            "CapturePoints": [
-                "Objectives/CapturePointA",
-                "Objectives/CapturePointB",
-                "Objectives/CapturePointC",
-                "Objectives/CapturePointD",
-                "Objectives/CapturePointE",
-                "Objectives/CapturePointF"
-            ],
-            "SectorArea": "Area Triggers/AreaTrigger - Combat Area/Infantry Area",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 103.577,
-                "y": 442.058,
-                "z": 73.5485
-            },
-            "id": "Sector - Combat area and Objectives",
-            "linked": [
-                "SectorArea",
-                "CapturePoints"
-            ]
-        },
-        {
-            "name": "Sector - Draw Team1",
-            "SectorArea": "HQs/TEAM_1_HQ/HQ_Team1",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 100.208,
-                "y": 443.631,
-                "z": 70.2174
-            },
-            "id": "Sector - Draw Team1",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "Sector - Draw Team2",
-            "ObjId": 3,
-            "SectorArea": "HQs/TEAM_2_HQ/HQ_Team2",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 100.208,
-                "y": 443.631,
-                "z": 70.2174
-            },
-            "id": "Sector - Draw Team2",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "Sector - Draw Air Space",
-            "ObjId": 4,
-            "SectorArea": "CombatArea/CombatVolume",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 100.208,
-                "y": 443.631,
-                "z": 70.2174
-            },
-            "id": "Sector - Draw Air Space",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
             "name": "CapturePointA",
             "ObjId": 200,
             "InfantrySpawnPoints_Team1": [
@@ -1243,7 +1066,7 @@
         },
         {
             "name": "CapturePointB",
-            "ObjId": 206,
+            "ObjId": 201,
             "InfantrySpawnPoints_Team1": [
                 "Objectives/CapturePointB/Spawners/Team1/SpawnPoint",
                 "Objectives/CapturePointB/Spawners/Team1/SpawnPoint2",
@@ -2973,7 +2796,7 @@
         },
         {
             "name": "VehicleSpawner-UH60",
-            "VehicleType": "UH60",
+            "VehicleType": "AH6M",
             "P_AutoSpawnEnabled": true,
             "P_DefaultRespawnTime": 25,
             "type": "VehicleSpawner",
@@ -3223,7 +3046,7 @@
         },
         {
             "name": "VehicleSpawner-UH-60",
-            "VehicleType": "UH60_Pax",
+            "VehicleType": "AH6M",
             "P_AutoSpawnEnabled": true,
             "P_DefaultRespawnTime": 25,
             "type": "VehicleSpawner",

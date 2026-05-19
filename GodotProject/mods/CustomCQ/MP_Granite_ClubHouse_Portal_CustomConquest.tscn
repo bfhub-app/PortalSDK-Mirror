@@ -1,18 +1,19 @@
-[gd_scene load_steps=38 format=3 uid="uid://d418xgd2f2ne"]
+[gd_scene load_steps=42 format=3 uid="uid://d418xgd2f2ne"]
 
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/HQ_PlayerSpawner.tscn" id="1_efgbi"]
 [ext_resource type="PackedScene" uid="uid://jv31so3xcr7p" path="res://addons/bf_portal/portal_tools/types/PolygonVolume/PolygonVolume.tscn" id="2_xscjq"]
 [ext_resource type="PackedScene" path="res://objects/entities/SpawnPoint.tscn" id="3_s6383"]
-[ext_resource type="PackedScene" path="res://objects/Gameplay/Common/CombatArea.tscn" id="4_mqjgo"]
+[ext_resource type="PackedScene" path="res://objects/gameplay/common/CombatArea.tscn" id="4_g06ux"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/DeployCam.tscn" id="5_f43xl"]
 [ext_resource type="PackedScene" path="res://static/MP_Granite_ClubHouse_Portal_Terrain.tscn" id="6_taoca"]
 [ext_resource type="PackedScene" path="res://static/MP_Granite_ClubHouse_Portal_Assets.tscn" id="7_xwq2u"]
-[ext_resource type="PackedScene" uid="uid://bgva3omvxelw4" path="res://objects/gameplay/common/VehicleSpawner.tscn" id="8_j1wgj"]
+[ext_resource type="PackedScene" path="res://objects/gameplay/common/VehicleSpawner.tscn" id="8_j1wgj"]
+[ext_resource type="PackedScene" path="res://objects/nature/BroadleafUrban_01_L_A.tscn" id="9_iq31d"]
 [ext_resource type="PackedScene" path="res://objects/architecture/HighwayOverpass_Bridge_01.tscn" id="9_puf4x"]
+[ext_resource type="PackedScene" path="res://objects/nature/BroadleafUrban_01_L_B.tscn" id="10_3mbvs"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Conquest/CapturePoint.tscn" id="10_puf4x"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/Sector.tscn" id="11_7cj57"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/AI/AI_Spawner.tscn" id="12_i2o72"]
-[ext_resource type="PackedScene" path="res://objects/Gameplay/Common/AreaTrigger.tscn" id="13_m41tv"]
 [ext_resource type="PackedScene" path="res://objects/props/MannequinRotation_01.tscn" id="14_vdj4f"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/InteractPoint.tscn" id="15_swi70"]
 [ext_resource type="PackedScene" path="res://objects/props/CommandPost_01_A.tscn" id="16_dqon4"]
@@ -37,6 +38,9 @@
 [ext_resource type="PackedScene" path="res://objects/props/CarSUV_01_Wreck.tscn" id="35_8nhsx"]
 [ext_resource type="PackedScene" path="res://objects/uncategorized/GCarSUV_01_PoliceUS.tscn" id="36_iq31d"]
 [ext_resource type="PackedScene" path="res://objects/props/BarrierPlastic_01.tscn" id="37_3mbvs"]
+[ext_resource type="PackedScene" path="res://objects/nature/BroadleafUrban_01_M_B.tscn" id="40_fhgs6"]
+[ext_resource type="PackedScene" path="res://objects/nature/BroadleafUrban_01_M_A.tscn" id="41_b8bgh"]
+[ext_resource type="PackedScene" path="res://objects/nature/LemonadeBerry_01_L.tscn" id="42_khkpx"]
 
 [node name="MP_Granite_ClubHouse_Portal" type="Node3D"]
 
@@ -45,28 +49,35 @@ transform = Transform3D(1, 0, 0, 0, 0.101056, 0.994881, 0, -0.994881, 0.101056, 
 
 [node name="DeployCam" parent="Camera3D" instance=ExtResource("5_f43xl")]
 
-[node name="Sector - This manages the CapturePoint Names" parent="." node_paths=PackedStringArray("SectorArea", "CapturePoints") instance=ExtResource("11_7cj57")]
+[node name="Static" type="Node3D" parent="."]
+
+[node name="MP_Granite_ClubHouse_Portal_Terrain" parent="Static" instance=ExtResource("6_taoca")]
+metadata/_edit_lock_ = true
+
+[node name="MP_Granite_ClubHouse_Portal_Assets" parent="Static" instance=ExtResource("7_xwq2u")]
+metadata/_edit_lock_ = true
+
+[node name="Play Area" type="Node3D" parent="."]
+
+[node name="CombatArea" parent="Play Area" node_paths=PackedStringArray("CombatVolume", "SurroundingVolume") instance=ExtResource("4_g06ux")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.2776, 447.787, 140.54)
+CombatVolume = NodePath("CombatVolume")
+SurroundingVolume = NodePath("AirCombatArea")
+
+[node name="CombatVolume" parent="Play Area/CombatArea" instance=ExtResource("2_xscjq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -58.5321, -264.898, -141.922)
+points = PackedVector2Array(-580.225, -962.206, -571.304, -879.105, -692.424, -822.47, -803.687, -787.323, -866.002, -532.977, -871.69, -361.294, -804.982, -273.384, -606.631, -182.136, -473.732, -174.896, -329.885, -178.971, -172.635, -206.191, -78.7402, -310.133, -31.3389, -394.586, -0.406088, -490.271, 20.7445, -566.827, -67.5501, -586.018, -118.862, -639.305, -120.677, -707.463, -127.142, -812.361, -22.3846, -916.057, -131.759, -973.337, -274.816, -991.586, -444.27, -984.743)
+height = 10.0
+
+[node name="AirCombatArea" parent="Play Area/CombatArea" instance=ExtResource("2_xscjq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05379, -347.957, 106.016)
+points = PackedVector2Array(-1145.17, -823.926, -1011.54, -321.628, -506.627, -178.737, -9.1455, -321.516, 132.647, -821.573, -11.997, -1321.86, -506.582, -1444.31, -1006.91, -1321.7)
+height = 400.0
+
+[node name="Sector - This manages the CapturePoint Names" parent="Play Area" node_paths=PackedStringArray("SectorArea", "CapturePoints") instance=ExtResource("11_7cj57")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -423.688, 196.109, -643.189)
 SectorArea = NodePath("../CombatArea/CombatVolume")
-CapturePoints = [NodePath("../Objectives/CapturePointA"), NodePath("../Objectives/CapturePointB"), NodePath("../Objectives/CapturePointC"), NodePath("../Objectives/CapturePointD"), NodePath("../Objectives/CapturePointE"), NodePath("../Objectives/CapturePointF")]
-
-[node name="Sector - Displays Team1 HQ Area On Map" parent="." node_paths=PackedStringArray("SectorArea") instance=ExtResource("11_7cj57")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -847.375, 392.217, -1286.38)
-SectorArea = NodePath("../TEAM_1_HQ/HQ_Team1")
-
-[node name="Sector - Displays Team2 HQ Area On Map" parent="." node_paths=PackedStringArray("SectorArea") instance=ExtResource("11_7cj57")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1694.75, 784.435, -2572.76)
-SectorArea = NodePath("../TEAM_2_HQ/HQ_Team2")
-
-[node name="AreaTrigger- Team1 Spawn Protection" parent="." node_paths=PackedStringArray("Area") instance=ExtResource("13_m41tv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -197.82, -209.199, 640.623)
-ObjId = 1100
-Area = NodePath("../TEAM_1_HQ/HQ_Team1")
-
-[node name="AreaTrigger- Team2 Spawn Protection" parent="." node_paths=PackedStringArray("Area") instance=ExtResource("13_m41tv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -111.436, 169.325, 53.9104)
-ObjId = 1200
-Area = NodePath("../TEAM_2_HQ/HQ_Team2")
+CapturePoints = [NodePath("../../Objectives/CapturePointA"), NodePath("../../Objectives/CapturePointB"), NodePath("../../Objectives/CapturePointC"), NodePath("../../Objectives/CapturePointD"), NodePath("../../Objectives/CapturePointE"), NodePath("../../Objectives/CapturePointF")]
 
 [node name="TEAM_1_HQ" parent="." node_paths=PackedStringArray("HQArea", "InfantrySpawns") instance=ExtResource("1_efgbi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -809.237, 141.569, -901.103)
@@ -119,22 +130,6 @@ transform = Transform3D(-0.682917, 0, -0.730496, 0, 1, 0, 0.730496, 0, -0.682917
 [node name="SpawnPoint_2_4" parent="TEAM_2_HQ" instance=ExtResource("3_s6383")]
 transform = Transform3D(-0.165771, 0, -0.986164, 0, 1, 0, 0.986164, 0, -0.165771, -25.7727, -6.43445, -3.42798)
 
-[node name="CombatArea" parent="." node_paths=PackedStringArray("CombatVolume") instance=ExtResource("4_mqjgo")]
-CombatVolume = NodePath("CombatVolume")
-
-[node name="CombatVolume" parent="CombatArea" instance=ExtResource("2_xscjq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.254494, 182.889, -1.38208)
-points = PackedVector2Array(-580.225, -962.206, -571.304, -879.105, -692.424, -822.47, -803.687, -787.323, -866.002, -532.977, -871.69, -361.294, -804.982, -273.384, -606.631, -182.136, -473.732, -174.896, -329.885, -178.971, -172.635, -206.191, -78.7402, -310.133, -31.3389, -394.586, -0.406088, -490.271, 20.7445, -566.827, -67.5501, -586.018, -118.862, -639.305, -120.677, -707.463, -127.142, -812.361, -22.3846, -916.057, -131.759, -973.337, -274.816, -991.586, -444.27, -984.743)
-height = 10.0
-
-[node name="Static" type="Node3D" parent="."]
-
-[node name="MP_Granite_ClubHouse_Portal_Terrain" parent="Static" instance=ExtResource("6_taoca")]
-metadata/_edit_lock_ = true
-
-[node name="MP_Granite_ClubHouse_Portal_Assets" parent="Static" instance=ExtResource("7_xwq2u")]
-metadata/_edit_lock_ = true
-
 [node name="Vehicles" type="Node3D" parent="."]
 
 [node name="Team1" type="Node3D" parent="Vehicles"]
@@ -158,37 +153,37 @@ P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner5" parent="Vehicles/Team1" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -828.313, 145.283, -874.921)
-VehicleType = 12
+VehicleType = 13
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner6" parent="Vehicles/Team1" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -840.302, 145.283, -863.569)
-VehicleType = 12
+VehicleType = 13
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner7" parent="Vehicles/Team1" instance=ExtResource("8_j1wgj")]
-transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -769.213, 153.351, -896.642)
-VehicleType = 9
+transform = Transform3D(0.448337, 0, 0.893865, 0, 1, 0, -0.893865, 0, 0.448337, -711.741, 159.663, -935.543)
+VehicleType = 7
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner8" parent="Vehicles/Team1" instance=ExtResource("8_j1wgj")]
-transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -693.735, 164.022, -896.547)
-VehicleType = 9
+transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -688.724, 164.022, -899.668)
+VehicleType = 10
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner9" parent="Vehicles/Team1" instance=ExtResource("8_j1wgj")]
-transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -688.222, 164.022, -901.767)
-VehicleType = 9
+transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -678.91, 163.961, -906.859)
+VehicleType = 10
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner10" parent="Vehicles/Team1" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -782.596, 147.738, -871.302)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner11" parent="Vehicles/Team1" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.726155, 0, 0.687531, 0, 1, 0, -0.687531, 0, 0.726155, -788.887, 147.738, -865.346)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 
 [node name="Team2" type="Node3D" parent="Vehicles"]
@@ -225,116 +220,108 @@ P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner7" parent="Vehicles/Team2" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.469487, 0, -0.882939, 0, 1, 0, 0.882939, 0, -0.469487, -66.0899, 191.232, -643.576)
-VehicleType = 12
+VehicleType = 13
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner8" parent="Vehicles/Team2" instance=ExtResource("8_j1wgj")]
-transform = Transform3D(-0.469487, 0, -0.882939, 0, 1, 0, 0.882939, 0, -0.469487, -61.2021, 191.232, -652.347)
-VehicleType = 9
+transform = Transform3D(-0.469487, 0, -0.882939, 0, 1, 0, 0.882939, 0, -0.469487, -23.9826, 190.655, -675.903)
+VehicleType = 10
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner9" parent="Vehicles/Team2" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.469487, 0, -0.882939, 0, 1, 0, 0.882939, 0, -0.469487, -56.245, 191.232, -661.927)
-VehicleType = 12
+VehicleType = 13
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner10" parent="Vehicles/Team2" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.156952, 0, -0.987606, 0, 1, 0, 0.987606, 0, 0.156952, -88.0853, 191.232, -741.772)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 
 [node name="VehicleSpawner11" parent="Vehicles/Team2" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.156952, 0, -0.987606, 0, 1, 0, 0.987606, 0, 0.156952, -90.4588, 191.232, -749.48)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 
 [node name="Neutral" type="Node3D" parent="Vehicles"]
 
 [node name="VehicleSpawner12" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.690024, 0, -0.723787, 0, 1, 0, 0.723787, 0, -0.690024, -292.536, 193.812, -682.375)
-VehicleType = 10
+VehicleType = 11
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner13" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.443713, 0, 0.896169, 0, 1, 0, -0.896169, 0, -0.443713, -377.843, 193.812, -696.714)
-VehicleType = 10
+VehicleType = 11
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner14" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.957133, 0, 0.28965, 0, 1, 0, -0.28965, 0, -0.957133, -364.593, 193.812, -673.784)
-VehicleType = 10
+VehicleType = 11
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner15" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.848122, 0, 0.529801, 0, 1, 0, -0.529801, 0, -0.848122, -316.226, 193.812, -657.845)
-VehicleType = 10
+VehicleType = 11
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner16" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.443681, 0, -0.896185, 0, 1, 0, 0.896185, 0, 0.443681, -379.836, 191.011, -564.133)
-VehicleType = 10
+VehicleType = 11
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner17" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.443681, 0, -0.896185, 0, 1, 0, 0.896185, 0, 0.443681, -392.805, 191.011, -578.096)
-VehicleType = 10
+VehicleType = 11
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner18" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.443681, 0, -0.896185, 0, 1, 0, 0.896185, 0, 0.443681, -414.907, 188.061, -598.324)
-VehicleType = 10
+VehicleType = 11
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner19" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.998947, 0, 0.0458861, 0, 1, 0, -0.0458861, 0, -0.998947, -451.162, 174.511, -344.338)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner20" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.998947, 0, 0.0458861, 0, 1, 0, -0.0458861, 0, -0.998947, -440.494, 174.511, -336.537)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner21" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.998947, 0, 0.0458861, 0, 1, 0, -0.0458861, 0, -0.998947, -429.278, 174.511, -329.879)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner23" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(0.986251, 0, -0.165254, 0, 1, 0, 0.165254, 0, 0.986251, -773.557, 142.712, -434.162)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner24" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.220119, 0, 0.975473, 0, 1, 0, -0.975473, 0, -0.220119, -711.671, 145.385, -474.868)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
 
 [node name="VehicleSpawner25" parent="Vehicles/Neutral" instance=ExtResource("8_j1wgj")]
 transform = Transform3D(-0.220119, 0, 0.975473, 0, 1, 0, -0.975473, 0, -0.220119, -735.55, 146.699, -503.572)
-VehicleType = 9
+VehicleType = 10
 P_AutoSpawnEnabled = true
 P_DefaultRespawnTime = 20
-
-[node name="MapObjects" type="Node3D" parent="."]
-
-[node name="HighwayOverpass_Bridge_01" parent="MapObjects" instance=ExtResource("9_puf4x")]
-transform = Transform3D(0.79986, 0.0149671, 0, 0.0149671, -0.79986, 1.20797e-07, 2.25996e-09, -1.20775e-07, -0.8, -310.783, 169.584, -304.802)
-
-[node name="HighwayOverpass_Bridge_02" parent="MapObjects" instance=ExtResource("9_puf4x")]
-transform = Transform3D(0.570186, 0.0988882, -0.552367, 0.126962, -0.789793, -0.0103359, -0.546597, -0.0802955, -0.578605, -210.424, 175.528, -351.842)
 
 [node name="Objectives" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -222.282, 65.075, -828.227)
@@ -1104,3 +1091,325 @@ transform = Transform3D(0.761402, 0, 0.648279, 0, 1, 0, -0.648279, 0, 0.761402, 
 
 [node name="BarrierPlastic_03" parent="Map Details/Construction" instance=ExtResource("37_3mbvs")]
 transform = Transform3D(0.614161, 0, 0.789181, 0, 1, 0, -0.789181, 0, 0.614161, -750.918, 141.961, -544.482)
+
+[node name="HQ Defences" type="Node3D" parent="Map Details"]
+
+[node name="BarrierStoneBlock_01_A11" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(0.442946, 0, -0.896548, 0, 1, 0, 0.896548, 0, 0.442946, -662.74, 161.738, -908.821)
+
+[node name="BarrierStoneBlock_01_A12" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(0.442946, 0, -0.896548, 0, 1, 0, 0.896548, 0, 0.442946, -672.024, 161.68, -910.598)
+
+[node name="BarrierStoneBlock_01_A13" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(-0.00713818, 0, -0.999974, 0, 1, 0, 0.999974, 0, -0.00713818, -670.491, 161.68, -910.831)
+
+[node name="BarrierStoneBlock_01_A14" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(0.829272, 0, -0.558845, 0, 1, 0, 0.558845, 0, 0.829272, -671.019, 162.15, -909.278)
+
+[node name="BarrierStoneBlock_01_A15" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(-0.333988, 0, -0.942578, 0, 1, 0, 0.942578, 0, -0.333988, -661.168, 161.625, -909.547)
+
+[node name="BarrierStoneBlock_01_A16" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(-0.669623, 0, -0.742701, 0, 1, 0, 0.742701, 0, -0.669623, -667.32, 162.69, -897.81)
+
+[node name="BarrierStoneBlock_01_A17" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(-0.669623, 0, -0.742701, 0, 1, 0, 0.742701, 0, -0.669623, -665.467, 162.359, -903.227)
+
+[node name="BarrierStoneBlock_01_A18" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(-0.669623, 0, -0.742701, 0, 1, 0, 0.742701, 0, -0.669623, -662.88, 164.296, -906.685)
+
+[node name="BarrierStoneBlock_01_A19" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(-0.0688339, 0, -0.997628, 0, 1, 0, 0.997628, 0, -0.0688339, -673.787, 163.134, -886.806)
+
+[node name="BarrierStoneBlock_01_A20" parent="Map Details/HQ Defences" instance=ExtResource("21_si1g4")]
+transform = Transform3D(0.673206, 0, -0.739455, 0, 1, 0, 0.739455, 0, 0.673206, -671.08, 162.947, -891.835)
+
+[node name="BarrierStoneBlock_01_E4" parent="Map Details/HQ Defences" instance=ExtResource("22_hfjnu")]
+transform = Transform3D(-0.439579, 0, -0.898204, 0.0763626, 0.996379, -0.0373716, 0.894952, -0.085017, -0.437987, -663.064, 161.923, -907.035)
+
+[node name="BarrierStoneBlock_01_E5" parent="Map Details/HQ Defences" instance=ExtResource("22_hfjnu")]
+transform = Transform3D(-0.439579, 0, -0.898204, 0.0763626, 0.996379, -0.0373716, 0.894952, -0.085017, -0.437987, -663.702, 162.023, -905.87)
+
+[node name="BarrierStoneBlock_01_E6" parent="Map Details/HQ Defences" instance=ExtResource("22_hfjnu")]
+transform = Transform3D(0.653896, 0, 0.756585, -0.0643225, 0.996379, 0.0555923, -0.753846, -0.085017, 0.651529, -664.421, 162.134, -904.56)
+
+[node name="BarrierStoneBlock_01_G3" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.881542, 0, -0.472105, 0, 1, 0, 0.472105, 0, 0.881542, -669.13, 162.796, -894.804)
+
+[node name="BarrierStoneBlock_01_G4" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.881542, 0, -0.472105, 0, 1, 0, 0.472105, 0, 0.881542, -675.341, 163.2, -883.65)
+
+[node name="BarrierStoneBlock_01_G7" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.87311, 0.0742708, -0.481832, 0.0108908, 0.98511, 0.171582, 0.487401, -0.155058, 0.859301, -770.154, 146.95, -851.731)
+
+[node name="BarrierStoneBlock_01_G8" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.87311, 0.0742708, -0.481832, 0.0108908, 0.98511, 0.171582, 0.487401, -0.155058, 0.859301, -772.85, 147.859, -847.245)
+
+[node name="BarrierStoneBlock_01_G9" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.87311, 0.0113817, -0.487389, 0.0108909, 0.999023, 0.0428395, 0.487401, -0.0427118, 0.872133, -777.338, 148.994, -839.678)
+
+[node name="BarrierStoneBlock_01_G10" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.87311, 0.0113817, -0.487389, 0.0108909, 0.999023, 0.0428395, 0.487401, -0.0427118, 0.872133, -777.362, 146.749, -839.584)
+
+[node name="BarrierStoneBlock_01_G11" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.87311, 0.0113817, -0.487389, 0.0108909, 0.999023, 0.0428395, 0.487401, -0.0427118, 0.872133, -779.888, 148.132, -835.091)
+
+[node name="BarrierStoneBlock_01_G5" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.634245, 0, -0.773132, 0, 1, 0, 0.773132, 0, 0.634245, -655.81, 160.995, -915.713)
+
+[node name="BarrierStoneBlock_01_G6" parent="Map Details/HQ Defences" instance=ExtResource("24_47erv")]
+transform = Transform3D(0.835404, 0.044434, -0.547836, 0, 0.996727, 0.0808426, 0.549636, -0.0675363, 0.83267, -652.569, 160.878, -919.561)
+
+[node name="ContainerStandard_01_1282" parent="Map Details/HQ Defences" instance=ExtResource("25_xv77m")]
+transform = Transform3D(0.536026, -0.0384164, 0.843327, 0.0241549, 0.999253, 0.0301663, -0.843856, 0.00420051, 0.536553, -688.076, 162.498, -890.237)
+
+[node name="ContainerStandard_01_1283" parent="Map Details/HQ Defences" instance=ExtResource("25_xv77m")]
+transform = Transform3D(-0.923291, 0.0348055, -0.382522, 0, 0.995886, 0.0906152, 0.384102, 0.0836642, -0.919492, -661.758, 161.959, -946.975)
+
+[node name="SandBags_01_C90_B15" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.93974, 0, 0.341889, 0, 1, 0, -0.341889, 0, 0.93974, -704.061, 161.922, -892.986)
+
+[node name="SandBags_01_C90_B16" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.228753, 0.00123071, -0.973483, 0.00431336, 0.999988, 0.00227779, 0.973475, -0.00472003, 0.228745, -707.022, 161.922, -894.864)
+
+[node name="SandBags_01_C90_B25" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.93035, -0.276415, 0.240922, 0.19861, 0.932202, 0.302577, -0.308225, -0.233653, 0.922173, -784.102, 148.266, -829.804)
+
+[node name="SandBags_01_C90_B26" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.128405, -0.274801, -0.952888, 0.28108, 0.931527, -0.230764, 0.951056, -0.238207, 0.196854, -786.763, 147, -831.705)
+
+[node name="SandBags_01_C90_B17" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.318017, 0, 0.948085, 0, 1, 0, -0.948085, 0, 0.318017, -644.944, 161.42, -913.664)
+
+[node name="SandBags_01_C90_B18" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.959141, 0, -0.282927, 0, 1, 0, 0.282927, 0, 0.959141, -648.041, 161.42, -912.073)
+
+[node name="SandBags_01_C90_B19" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.778189, 0, 0.628031, 0, 1, 0, -0.628031, 0, 0.778189, -651.537, 161.42, -903.305)
+
+[node name="SandBags_01_C90_B20" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.656231, 0, -0.75456, 0, 1, 0, 0.75456, 0, 0.656231, -655.003, 161.42, -903.63)
+
+[node name="SandBags_01_C90_B21" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.778189, 0, 0.628031, 0, 1, 0, -0.628031, 0, 0.778189, -664.534, 162.753, -884.393)
+
+[node name="SandBags_01_C90_B22" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.656231, 0, -0.75456, 0, 1, 0, 0.75456, 0, 0.656231, -668.001, 162.753, -884.719)
+
+[node name="SandBags_01_C90_B23" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.90759, -0.0774737, 0.412647, 0.143265, 0.980986, -0.130924, -0.394658, 0.177944, 0.901433, -765.736, 149.763, -880.48)
+
+[node name="SandBags_01_C90_B24" parent="Map Details/HQ Defences" instance=ExtResource("26_g5535")]
+transform = Transform3D(0.445753, -0.0774737, -0.891798, -0.125566, 0.980986, -0.147984, 0.886306, 0.177944, 0.427549, -769.002, 149.724, -881.686)
+
+[node name="CommandPost_01_A" parent="Map Details/HQ Defences" instance=ExtResource("16_dqon4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -693.616, 159.108, -915.847)
+
+[node name="Trees" type="Node3D" parent="Map Details"]
+
+[node name="BroadleafUrban_01_L_B" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -733.268, 151.441, -888.554)
+
+[node name="BroadleafUrban_01_L_B2" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -719.533, 153.848, -884.973)
+
+[node name="BroadleafUrban_01_M_B" parent="Map Details/Trees" instance=ExtResource("40_fhgs6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -687.564, 155.694, -860.49)
+
+[node name="BroadleafUrban_01_M_A" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -708.442, 153.829, -858.282)
+
+[node name="BroadleafUrban_01_M_A2" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -700.177, 152.844, -862.497)
+
+[node name="BroadleafUrban_01_M_A3" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -693.307, 154.154, -870.562)
+
+[node name="BroadleafUrban_01_L_A" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -705.721, 151.549, -870.391)
+
+[node name="BroadleafUrban_01_L_A2" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -732.188, 153.53, -831.296)
+
+[node name="BroadleafUrban_01_L_A3" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(-0.357455, 0, -0.93393, 0, 1, 0, 0.93393, 0, -0.357455, -743.172, 155.109, -821.693)
+
+[node name="BroadleafUrban_01_M_B2" parent="Map Details/Trees" instance=ExtResource("40_fhgs6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -746.857, 149.868, -837.96)
+
+[node name="BroadleafUrban_01_L_A4" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -791.911, 148.15, -814.927)
+
+[node name="BroadleafUrban_01_M_A4" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -800.535, 145.636, -805.489)
+
+[node name="BroadleafUrban_01_M_B3" parent="Map Details/Trees" instance=ExtResource("40_fhgs6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -799.174, 145.463, -811.541)
+
+[node name="BroadleafUrban_01_L_A5" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -809.877, 144.664, -799.958)
+
+[node name="BroadleafUrban_01_L_B3" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -800.457, 147.747, -794.771)
+
+[node name="BroadleafUrban_01_M_A5" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -774.86, 151.191, -809.628)
+
+[node name="BroadleafUrban_01_M_A6" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -783.835, 150.741, -812.134)
+
+[node name="BroadleafUrban_01_M_A7" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -779.493, 151.294, -814.461)
+
+[node name="BroadleafUrban_01_L_A6" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -586.551, 166.265, -951.245)
+
+[node name="BroadleafUrban_01_L_A7" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -583.174, 165.046, -902.234)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A8" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(-0.973435, 0, -0.228963, 0, 1, 0, 0.228963, 0, -0.973435, -588.889, 166.201, -933.194)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A9" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -586.781, 165.984, -917.495)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A10" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -584.103, 167.878, -882.174)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A11" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -595.855, 162.474, -903.038)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A12" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -588.526, 169.815, -860.65)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A13" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(-0.946531, 0, 0.322613, 0, 1, 0, -0.322613, 0, -0.946531, -606.428, 166.361, -864.381)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A14" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -620.95, 169.493, -840.391)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A15" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.533673, 0, 0.845691, 0, 1, 0, -0.845691, 0, 0.533673, -623.699, 166.383, -851.545)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A16" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -600.016, 165.345, -882.691)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A17" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -623.216, 161.626, -875.226)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A18" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.365462, 0, -0.930826, 0, 1, 0, 0.930826, 0, 0.365462, -642.57, 164.997, -835.363)
+metadata/_edit_group_ = true
+
+[node name="BroadleafUrban_01_L_A19" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -810.496, 144.277, -841.955)
+
+[node name="BroadleafUrban_01_L_B4" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -818.274, 142.183, -834.171)
+
+[node name="BroadleafUrban_01_L_B5" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -817.706, 142.593, -845.122)
+
+[node name="BroadleafUrban_01_L_B6" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -805.559, 144.429, -850.636)
+
+[node name="BroadleafUrban_01_L_B7" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -752.249, 156.236, -925.25)
+
+[node name="BroadleafUrban_01_L_B8" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -757.382, 154.312, -915.85)
+
+[node name="BroadleafUrban_01_L_A20" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4721, 185.504, -581.388)
+
+[node name="BroadleafUrban_01_L_A21" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.955, 187.887, -590.451)
+
+[node name="BroadleafUrban_01_L_B9" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.5708, 184.758, -584.774)
+
+[node name="BroadleafUrban_01_L_B10" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.906, 186.736, -587.741)
+
+[node name="BroadleafUrban_01_L_B11" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64.3703, 186.83, -600.904)
+
+[node name="BroadleafUrban_01_L_A22" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -87.3355, 187.681, -619.443)
+
+[node name="BroadleafUrban_01_L_A23" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.509192, 0, 0.860653, 0, 1, 0, -0.860653, 0, 0.509192, -91.3569, 187.906, -630.554)
+
+[node name="BroadleafUrban_01_L_A24" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(-0.124606, 0, -0.992206, 0, 1, 0, 0.992206, 0, -0.124606, -106.015, 187.314, -627.161)
+
+[node name="BroadleafUrban_01_L_A25" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -107.279, 188.996, -720.04)
+
+[node name="BroadleafUrban_01_L_A26" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(-0.600937, 0, -0.799297, 0, 1, 0, 0.799297, 0, -0.600937, -111.805, 188.587, -736.628)
+
+[node name="BroadleafUrban_01_M_A8" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.729, 188.825, -753.108)
+
+[node name="BroadleafUrban_01_M_A9" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -111.313, 188.49, -726.155)
+
+[node name="BroadleafUrban_01_M_A10" parent="Map Details/Trees" instance=ExtResource("41_b8bgh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -112.404, 188.509, -712.17)
+
+[node name="LemonadeBerry_01_L" parent="Map Details/Trees" instance=ExtResource("42_khkpx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -108.558, 188.589, -692.129)
+
+[node name="LemonadeBerry_01_L2" parent="Map Details/Trees" instance=ExtResource("42_khkpx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -106.905, 189.088, -697.558)
+
+[node name="LemonadeBerry_01_L3" parent="Map Details/Trees" instance=ExtResource("42_khkpx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -105.66, 189.191, -702.151)
+
+[node name="LemonadeBerry_01_L4" parent="Map Details/Trees" instance=ExtResource("42_khkpx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119.595, 187.611, -657.057)
+
+[node name="LemonadeBerry_01_L5" parent="Map Details/Trees" instance=ExtResource("42_khkpx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.426, 187.509, -659.689)
+
+[node name="LemonadeBerry_01_L6" parent="Map Details/Trees" instance=ExtResource("42_khkpx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119.636, 187.695, -661.451)
+
+[node name="LemonadeBerry_01_L7" parent="Map Details/Trees" instance=ExtResource("42_khkpx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.857, 187.867, -663.474)
+
+[node name="BroadleafUrban_01_L_A27" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -747.361, 147.815, -882.813)
+
+[node name="BroadleafUrban_01_L_A28" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -745.447, 149.848, -893.199)
+
+[node name="BroadleafUrban_01_L_A29" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -732.512, 154.819, -879.767)
+
+[node name="BroadleafUrban_01_L_A30" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -742.095, 146.597, -875.115)
+
+[node name="BroadleafUrban_01_L_A31" parent="Map Details/Trees" instance=ExtResource("9_iq31d")]
+transform = Transform3D(0.218011, -0.0827219, -0.972434, -0.00352163, 0.996328, -0.085544, 0.97594, 0.0220741, 0.216919, -723.41, 150.936, -876.28)
+
+[node name="BroadleafUrban_01_L_B12" parent="Map Details/Trees" instance=ExtResource("10_3mbvs")]
+transform = Transform3D(0.236601, 0, 0.971607, 0, 1, 0, -0.971607, 0, 0.236601, -734.853, 147.512, -877.496)
+
+[node name="HighwayOverpass_Bridge_01" parent="Map Details" instance=ExtResource("9_puf4x")]
+transform = Transform3D(0.79986, 0.0149671, 0, 0.0149671, -0.79986, 1.20797e-07, 2.25996e-09, -1.20775e-07, -0.8, -310.783, 169.584, -304.802)
+
+[node name="HighwayOverpass_Bridge_02" parent="Map Details" instance=ExtResource("9_puf4x")]
+transform = Transform3D(0.570186, 0.0988882, -0.552367, 0.126962, -0.789793, -0.0103359, -0.546597, -0.0802955, -0.578605, -210.424, 175.528, -351.842)

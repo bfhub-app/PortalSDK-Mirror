@@ -1,6 +1,148 @@
 {
     "Portal_Dynamic": [
         {
+            "name": "DeployCam",
+            "type": "DeployCam",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 0.101056,
+                "z": -0.994881
+            },
+            "front": {
+                "x": 0,
+                "y": 0.994881,
+                "z": 0.101056
+            },
+            "position": {
+                "x": -600.903,
+                "y": 264.669,
+                "z": 16.8177
+            },
+            "id": "Camera3D/DeployCam"
+        },
+        {
+            "name": "CombatArea",
+            "CombatVolume": "Play Area/CombatArea/CombatVolume",
+            "type": "CombatArea",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": -616.801,
+                "y": 150.283,
+                "z": -55.6144
+            },
+            "id": "Play Area/CombatArea",
+            "linked": [
+                "CombatVolume"
+            ]
+        },
+        {
+            "name": "CombatVolume",
+            "type": "PolygonVolume",
+            "id": "Play Area/CombatArea/CombatVolume",
+            "height": 100,
+            "points": [
+                {
+                    "x": -641.1642,
+                    "y": 10.886,
+                    "z": -127.7737
+                },
+                {
+                    "x": -667.293,
+                    "y": 10.886,
+                    "z": -103.0387
+                },
+                {
+                    "x": -694.6691,
+                    "y": 10.886,
+                    "z": -98.0817
+                },
+                {
+                    "x": -709.2154,
+                    "y": 10.886,
+                    "z": -50.9809
+                },
+                {
+                    "x": -708.2584,
+                    "y": 10.886,
+                    "z": 28.7791
+                },
+                {
+                    "x": -690.9223,
+                    "y": 10.886,
+                    "z": 140.8803
+                },
+                {
+                    "x": -628.0984,
+                    "y": 10.886,
+                    "z": 144.3163
+                },
+                {
+                    "x": -568.7765,
+                    "y": 10.886,
+                    "z": 93.878
+                },
+                {
+                    "x": -589.6448,
+                    "y": 10.886,
+                    "z": 80.1947
+                },
+                {
+                    "x": -560.2219,
+                    "y": 10.886,
+                    "z": 29.9099
+                },
+                {
+                    "x": -536.461,
+                    "y": 10.886,
+                    "z": 9.425879
+                },
+                {
+                    "x": -512.8641,
+                    "y": 10.886,
+                    "z": -10.7382
+                },
+                {
+                    "x": -512.999,
+                    "y": 10.886,
+                    "z": -52.1449
+                },
+                {
+                    "x": -512.5325,
+                    "y": 10.886,
+                    "z": -143.4437
+                },
+                {
+                    "x": -570.6113,
+                    "y": 10.886,
+                    "z": -177.6657
+                },
+                {
+                    "x": -624.0884,
+                    "y": 10.886,
+                    "z": -195.3617
+                }
+            ]
+        },
+        {
             "name": "Sector - This manages the CapturePoint Names",
             "CapturePoints": [
                 "Objectives/CapturePointA",
@@ -9,7 +151,6 @@
                 "Objectives/CapturePointD",
                 "Objectives/CapturePointE"
             ],
-            "SectorArea": "CombatArea/CombatVolume",
             "type": "Sector",
             "right": {
                 "x": 1,
@@ -31,181 +172,10 @@
                 "y": 312.298,
                 "z": -653.785
             },
-            "id": "Sector - This manages the CapturePoint Names",
+            "id": "Play Area/Sector - This manages the CapturePoint Names",
             "linked": [
-                "SectorArea",
                 "CapturePoints"
             ]
-        },
-        {
-            "name": "Sector - Displays Team1 HQ Area On Map",
-            "SectorArea": "TEAM_1_HQ/HQ_Team1",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -579.777,
-                "y": 198.944,
-                "z": -150.731
-            },
-            "id": "Sector - Displays Team1 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "Sector - Displays Team2 HQ Area On Map",
-            "SectorArea": "TEAM_2_HQ/HQ_Team2",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -642.104,
-                "y": 173.91,
-                "z": 84.5996
-            },
-            "id": "Sector - Displays Team2 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "AreaTrigger- Team1 Spawn Protection",
-            "ObjId": 1100,
-            "Area": "TEAM_1_HQ/HQ_Team1",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -568.98,
-                "y": 199.002,
-                "z": -123.943
-            },
-            "id": "AreaTrigger- Team1 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger- Team2 Spawn Protection",
-            "ObjId": 1200,
-            "Area": "TEAM_2_HQ/HQ_Team2",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": -625.865,
-                "y": 172.157,
-                "z": 68.0758
-            },
-            "id": "AreaTrigger- Team2 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AI_Spawner_Team1",
-            "ObjId": 901,
-            "type": "AI_Spawner",
-            "right": {
-                "x": 0.792267,
-                "y": 0,
-                "z": -0.610172
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0.610172,
-                "y": 0,
-                "z": 0.792267
-            },
-            "position": {
-                "x": -693.9524,
-                "y": 55.4882,
-                "z": -169.37048
-            },
-            "id": "AI_Spawners (Temporary workaround for AI to play objective)/AI_Spawner_Team1"
-        },
-        {
-            "name": "AI_Spawner_Team2",
-            "ObjId": 902,
-            "type": "AI_Spawner",
-            "right": {
-                "x": -0.876045,
-                "y": 0,
-                "z": 0.482228
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": -0.482228,
-                "y": 0,
-                "z": -0.876045
-            },
-            "position": {
-                "x": -543.2831,
-                "y": 65.3998,
-                "z": 62.86202
-            },
-            "id": "AI_Spawners (Temporary workaround for AI to play objective)/AI_Spawner_Team2"
         },
         {
             "name": "TEAM_1_HQ",
@@ -666,148 +636,6 @@
                 "z": 34.029
             },
             "id": "TEAM_2_HQ/SpawnPoint_2_4"
-        },
-        {
-            "name": "CombatArea",
-            "CombatVolume": "CombatArea/CombatVolume",
-            "type": "CombatArea",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "id": "CombatArea",
-            "linked": [
-                "CombatVolume"
-            ]
-        },
-        {
-            "name": "CombatVolume",
-            "type": "PolygonVolume",
-            "id": "CombatArea/CombatVolume",
-            "height": 100,
-            "points": [
-                {
-                    "x": -641.1638,
-                    "y": 10.8862,
-                    "z": -127.77374
-                },
-                {
-                    "x": -667.2926,
-                    "y": 10.8862,
-                    "z": -103.03874
-                },
-                {
-                    "x": -694.6687,
-                    "y": 10.8862,
-                    "z": -98.08174
-                },
-                {
-                    "x": -709.215,
-                    "y": 10.8862,
-                    "z": -50.98094
-                },
-                {
-                    "x": -708.258,
-                    "y": 10.8862,
-                    "z": 28.77906
-                },
-                {
-                    "x": -690.9219,
-                    "y": 10.8862,
-                    "z": 140.88026
-                },
-                {
-                    "x": -628.098,
-                    "y": 10.8862,
-                    "z": 144.31626
-                },
-                {
-                    "x": -568.7761,
-                    "y": 10.8862,
-                    "z": 93.87796
-                },
-                {
-                    "x": -589.6444,
-                    "y": 10.8862,
-                    "z": 80.19466
-                },
-                {
-                    "x": -560.2215,
-                    "y": 10.8862,
-                    "z": 29.90986
-                },
-                {
-                    "x": -536.4606,
-                    "y": 10.8862,
-                    "z": 9.425839
-                },
-                {
-                    "x": -512.8637,
-                    "y": 10.8862,
-                    "z": -10.73824
-                },
-                {
-                    "x": -512.9986,
-                    "y": 10.8862,
-                    "z": -52.14494
-                },
-                {
-                    "x": -512.5321,
-                    "y": 10.8862,
-                    "z": -143.44374
-                },
-                {
-                    "x": -570.6109,
-                    "y": 10.8862,
-                    "z": -177.66574
-                },
-                {
-                    "x": -624.088,
-                    "y": 10.8862,
-                    "z": -195.36174
-                }
-            ]
-        },
-        {
-            "name": "DeployCam",
-            "type": "DeployCam",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 0.101056,
-                "z": -0.994881
-            },
-            "front": {
-                "x": 0,
-                "y": 0.994881,
-                "z": 0.101056
-            },
-            "position": {
-                "x": -600.903,
-                "y": 264.669,
-                "z": 16.8177
-            },
-            "id": "Camera3D/DeployCam"
         },
         {
             "name": "CapturePointA",
@@ -2525,6 +2353,58 @@
                 "z": 74.20809
             },
             "id": "Objectives/CapturePointE/Spawns/Team2/SpawnPoint_10"
+        },
+        {
+            "name": "AI_Spawner_Team1",
+            "ObjId": 901,
+            "type": "AI_Spawner",
+            "right": {
+                "x": 0.792267,
+                "y": 0,
+                "z": -0.610172
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0.610172,
+                "y": 0,
+                "z": 0.792267
+            },
+            "position": {
+                "x": -693.9524,
+                "y": 55.4882,
+                "z": -169.37048
+            },
+            "id": "AI_Spawners (Temporary workaround for AI to play objective)/AI_Spawner_Team1"
+        },
+        {
+            "name": "AI_Spawner_Team2",
+            "ObjId": 902,
+            "type": "AI_Spawner",
+            "right": {
+                "x": -0.876045,
+                "y": 0,
+                "z": 0.482228
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": -0.482228,
+                "y": 0,
+                "z": -0.876045
+            },
+            "position": {
+                "x": -543.2831,
+                "y": 65.3998,
+                "z": 62.86202
+            },
+            "id": "AI_Spawners (Temporary workaround for AI to play objective)/AI_Spawner_Team2"
         },
         {
             "name": "MannequinRotation_01",

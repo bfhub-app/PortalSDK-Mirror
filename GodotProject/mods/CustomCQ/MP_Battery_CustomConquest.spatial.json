@@ -26,163 +26,8 @@
             "id": "DeployCam"
         },
         {
-            "name": "Sector - This manages the CapturePoint Names",
-            "CapturePoints": [
-                "Objectives/CapturePointA",
-                "Objectives/CapturePointB",
-                "Objectives/CapturePointC",
-                "Objectives/CapturePointD",
-                "Objectives/CapturePointE"
-            ],
-            "SectorArea": "CombatArea/CollisionPolygon3D",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 754.503,
-                "y": 242.131,
-                "z": 134.37
-            },
-            "id": "Sector - This manages the CapturePoint Names",
-            "linked": [
-                "SectorArea",
-                "CapturePoints"
-            ]
-        },
-        {
-            "name": "Sector - Displays Team1 HQ Area On Map",
-            "SectorArea": "TEAM_1_HQ/HQ_Team1",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 585.531,
-                "y": 243.445,
-                "z": 126.441
-            },
-            "id": "Sector - Displays Team1 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "Sector - Displays Team2 HQ Area On Map",
-            "SectorArea": "TEAM_2_HQ/HQ_Team2",
-            "type": "Sector",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 916.857,
-                "y": 231.453,
-                "z": 134.921
-            },
-            "id": "Sector - Displays Team2 HQ Area On Map",
-            "linked": [
-                "SectorArea"
-            ]
-        },
-        {
-            "name": "AreaTrigger - Team1 Spawn Protection",
-            "ObjId": 1100,
-            "Area": "TEAM_1_HQ/HQ_Team1",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 586.443,
-                "y": 83.8798,
-                "z": 120.364
-            },
-            "id": "AreaTrigger - Team1 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
-            "name": "AreaTrigger - Team2 Spawn Protection",
-            "ObjId": 1200,
-            "Area": "TEAM_2_HQ/HQ_Team2",
-            "type": "AreaTrigger",
-            "right": {
-                "x": 1,
-                "y": 0,
-                "z": 0
-            },
-            "up": {
-                "x": 0,
-                "y": 1,
-                "z": 0
-            },
-            "front": {
-                "x": 0,
-                "y": 0,
-                "z": 1
-            },
-            "position": {
-                "x": 909.183,
-                "y": 83.948,
-                "z": 135.617
-            },
-            "id": "AreaTrigger - Team2 Spawn Protection",
-            "linked": [
-                "Area"
-            ]
-        },
-        {
             "name": "CombatArea",
-            "CombatVolume": "CombatArea/CollisionPolygon3D",
+            "CombatVolume": "Play Area/CombatArea/CollisionPolygon3D",
             "type": "CombatArea",
             "right": {
                 "x": 1,
@@ -204,7 +49,7 @@
                 "y": 33.5003,
                 "z": 0
             },
-            "id": "CombatArea",
+            "id": "Play Area/CombatArea",
             "linked": [
                 "CombatVolume"
             ]
@@ -212,7 +57,7 @@
         {
             "name": "CollisionPolygon3D",
             "type": "PolygonVolume",
-            "id": "CombatArea/CollisionPolygon3D",
+            "id": "Play Area/CombatArea/CollisionPolygon3D",
             "height": 100,
             "points": [
                 {
@@ -475,6 +320,41 @@
                     "y": 55.6106,
                     "z": 0.816
                 }
+            ]
+        },
+        {
+            "name": "Sector - This manages the CapturePoint Names",
+            "CapturePoints": [
+                "Objectives/CapturePointA",
+                "Objectives/CapturePointB",
+                "Objectives/CapturePointC",
+                "Objectives/CapturePointD",
+                "Objectives/CapturePointE"
+            ],
+            "type": "Sector",
+            "right": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+            },
+            "up": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "front": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
+            "position": {
+                "x": 754.503,
+                "y": 242.131,
+                "z": 134.37
+            },
+            "id": "Play Area/Sector - This manages the CapturePoint Names",
+            "linked": [
+                "CapturePoints"
             ]
         },
         {
@@ -2687,9 +2567,9 @@
             "P_AutoSpawnEnabled": true,
             "type": "VehicleSpawner",
             "right": {
-                "x": 1,
+                "x": 0.155331,
                 "y": 0,
-                "z": 0
+                "z": -0.987862
             },
             "up": {
                 "x": 0,
@@ -2697,14 +2577,14 @@
                 "z": 0
             },
             "front": {
-                "x": 0,
+                "x": 0.987862,
                 "y": 0,
-                "z": 1
+                "z": 0.155331
             },
             "position": {
-                "x": 586.507,
-                "y": 72.9384,
-                "z": 134.893
+                "x": 583.407,
+                "y": 71.1489,
+                "z": 120.569
             },
             "id": "Vehicles/Team1/Abrams"
         },
@@ -2714,9 +2594,9 @@
             "P_AutoSpawnEnabled": true,
             "type": "VehicleSpawner",
             "right": {
-                "x": -0.0373588,
+                "x": 0.996939,
                 "y": 0,
-                "z": -0.999302
+                "z": -0.0781807
             },
             "up": {
                 "x": 0,
@@ -2724,14 +2604,14 @@
                 "z": 0
             },
             "front": {
-                "x": 0.999302,
+                "x": 0.0781807,
                 "y": 0,
-                "z": -0.0373588
+                "z": 0.996939
             },
             "position": {
-                "x": 582.753,
-                "y": 72.9384,
-                "z": 120.292
+                "x": 586.087,
+                "y": 71.0004,
+                "z": 135.023
             },
             "id": "Vehicles/Team1/Bradly"
         },

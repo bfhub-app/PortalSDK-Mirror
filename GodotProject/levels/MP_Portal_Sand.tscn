@@ -72,5 +72,7 @@ transform = Transform3D(1, 0, 0, 0, 0.101056, 0.994881, 0, -0.994881, 0.101056, 
 [node name="Static" type="Node3D" parent="."]
 
 [node name="MP_Portal_Sand_Terrain" parent="Static" instance=ExtResource("0")]
+metadata/_edit_lock_ = true
 
 [node name="MP_Portal_Sand_Assets" parent="Static" instance=ExtResource("1")]
+metadata/_edit_lock_ = true

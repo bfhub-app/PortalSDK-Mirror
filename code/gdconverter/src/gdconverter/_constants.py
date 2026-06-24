@@ -167,6 +167,7 @@ ATTR_KEY_IGNORE = [
     "script",
     "transform",
     "shape",
+    "unique_id",
 ]
 
 TYPE_EXTRES = "ext_resource"

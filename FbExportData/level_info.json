@@ -103,5 +103,10 @@
         "budget": {
             "physicsCostMax": 0
         }
+    },
+    "MP_GolmudRailway": {
+        "budget": {
+            "physicsCostMax": 0
+        }
     }
 }

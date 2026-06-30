@@ -1,0 +1,18 @@
+model = "gpt-5.5"
+approval_policy = "on-request"
+web_search = "live"
+personality = "pragmatic"
+model_supports_reasoning_summaries = true
+network_access = true
+experimental_use_profile = true
+
+[features]
+shell_snapshot = true
+codex_hooks = true
+undo = true
+memories = true
+goals = true
+
+[shell_environment_policy]
+inherit = "all"
+set = { TERM_PROGRAM = "code_vscode" }

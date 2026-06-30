@@ -59,7 +59,7 @@ RE_ATTR_OBJ_CLOSE_PATTERN = r" *\}"
 re_attr_obj_close = re.compile(RE_ATTR_OBJ_CLOSE_PATTERN)
 
 # "<data_name>": <data_value>
-RE_ATTR_OBJ_DATA_PATTERN = r'"(?P<name>\w+)" ?: ?(?P<value>.+)'
+RE_ATTR_OBJ_DATA_PATTERN = r'&?"(?P<name>\w+)" ?: ?(?P<value>.+)'
 re_attr_obj_data = re.compile(RE_ATTR_OBJ_DATA_PATTERN)
 
 # "obj_property": .*

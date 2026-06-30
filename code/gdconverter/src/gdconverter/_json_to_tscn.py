@@ -134,6 +134,15 @@ def add_levels_to_assets(assets: jstype.Assets, levels: jstype.Levels, dst_dir: 
 
         assets_asset = create_asset_from_level(f"{filename}_Assets")
         assets[assets_asset.id.lower()] = assets_asset
+
+        # Also register static mesh types referenced directly in the level instances,
+        # in case the spatial filename does not match the map name.
+        for layer in level.layers:
+            for inst in layer.insts:
+                inst_type = inst.inst_type
+                if inst_type.lower() not in assets and (inst_type.endswith("_Terrain") or inst_type.endswith("_Assets")):
+                    extra_asset = create_asset_from_level(inst_type)
+                    assets[inst_type.lower()] = extra_asset
     return assets
 
 

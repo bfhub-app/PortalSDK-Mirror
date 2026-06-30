@@ -4,6 +4,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from gdconverter import _compatibility_utils as compatibility
 from gdconverter import _constants as const
 from gdconverter import _json_scene_types as jstype
 from gdconverter import _json_types as jtype
@@ -155,6 +156,8 @@ def _create_layers(scene: ttype.Scene, assets: jstype.Assets) -> None:
         if str(node["type"]).lower() not in assets:
             continue  # empty node
 
+        # Backward compatibility fixes
+        compatibility.fix_asset_tscn_to_json(node)
         layers["Portal_Dynamic"].append(node)
 
     for node in scene.flattened_list:

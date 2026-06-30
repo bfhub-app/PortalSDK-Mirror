@@ -3,6 +3,7 @@ import json
 from collections.abc import Callable
 from typing import Any
 
+from gdconverter import _compatibility_utils as compatibility
 from gdconverter import _constants as const
 from gdconverter import _json_scene_types as jstype
 from gdconverter import _json_types as jtype
@@ -40,6 +41,9 @@ def parse_asset_data(asset_data: dict[str, Any], custom_types: set[str], error_c
     inst_id_prop = jtype.create_property("string")
     inst_id_prop.id = const.ASSET_KEY_INST_ID
     new_asset.props[inst_id_prop.id] = inst_id_prop
+
+    # Backward compatibility fixes
+    compatibility.fix_asset_json_to_tscn(new_asset)
     return new_asset
 
 

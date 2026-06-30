@@ -1,0 +1,482 @@
+{
+  "timestamp": "2026-06-30T20:23:39Z",
+  "base_ref": "origin/main",
+  "summary": {
+    "new_file_count": 375,
+    "added_count": 29,
+    "modified_count": 14,
+    "deleted_count": 1,
+    "renamed_count": 0
+  },
+  "files": {
+    "added": [
+      "FbExportData/levels/MP_Aftermath_Portal.spatial.json",
+      "FbExportData/levels/MP_Plaza.spatial.json",
+      "GodotProject/levels/MP_Aftermath_Portal.tscn",
+      "GodotProject/levels/MP_Plaza.tscn",
+      "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.strings.json",
+      "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.ts",
+      "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.tscn",
+      "GodotProject/mods/MovingPlatformExample/README_MovingPlatformExample.ts",
+      "GodotProject/mods/MovingPlatformExample/tsconfig.json",
+      "GodotProject/mods/ObliterationExample/ObliterationExample.strings.json",
+      "GodotProject/mods/ObliterationExample/ObliterationExample.ts",
+      "GodotProject/mods/ObliterationExample/ObliterationExample.tscn",
+      "GodotProject/mods/ObliterationExample/README_ObliterationExample.ts",
+      "GodotProject/mods/ObliterationExample/tsconfig.json",
+      "GodotProject/mods/PhysicsImpulse_Gym/PhysicsImpulseExample.ts",
+      "GodotProject/mods/PhysicsImpulse_Gym/PhysicsImpulseExample.tscn",
+      "GodotProject/mods/PhysicsImpulse_Gym/README_PhysicsImpulse.ts",
+      "GodotProject/mods/PhysicsImpulse_Gym/tsconfig.json",
+      "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.strings.json",
+      "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.ts",
+      "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.tscn",
+      "GodotProject/mods/PortalPerformanceExample/README_PortalPerformanceExample.ts",
+      "GodotProject/mods/PortalPerformanceExample/tsconfig.json",
+      "GodotProject/static/MP_Aftermath_Portal_Assets.tscn",
+      "GodotProject/static/MP_Aftermath_Portal_Terrain.tscn",
+      "GodotProject/static/MP_Plaza_Assets.tscn",
+      "GodotProject/static/MP_Plaza_Terrain.tscn",
+      "Godot_v4.6.3-stable_win64.version",
+      "code/gdconverter/src/gdconverter/_compatibility_utils.py"
+    ],
+    "modified": [
+      "FbExportData/asset_types.json",
+      "FbExportData/level_info.json",
+      "code/gdconverter/src/gdconverter/_json_parser.py",
+      "code/gdconverter/src/gdconverter/_json_to_tscn.py",
+      "code/gdconverter/src/gdconverter/_tscn_parser.py",
+      "code/gdconverter/src/gdconverter/_tscn_regex.py",
+      "code/gdconverter/src/gdconverter/_tscn_to_json.py",
+      "code/gdconverter/src/gdconverter/convert_paths.py",
+      "code/gdconverter/src/gdconverter/create_godot.py",
+      "code/types/mod/index.d.ts",
+      "docs/pages/gameplay_logic.html",
+      "docs/pages/spatial_editor.html",
+      "docs/searchindex.js",
+      "sdk.version.json"
+    ],
+    "deleted": [
+      "Godot_v4.6.1-stable_win64.version"
+    ],
+    "renamed": []
+  },
+  "new_files": [
+    {
+      "status": "changed",
+      "path": "FbExportData/asset_types.json"
+    },
+    {
+      "status": "changed",
+      "path": "FbExportData/level_info.json"
+    },
+    {
+      "status": "new",
+      "path": "FbExportData/levels/MP_Aftermath_Portal.spatial.json"
+    },
+    {
+      "status": "new",
+      "path": "FbExportData/levels/MP_Plaza.spatial.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/levels/MP_Aftermath_Portal.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/levels/MP_Plaza.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.strings.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/MovingPlatformExample/README_MovingPlatformExample.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/MovingPlatformExample/tsconfig.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/ObliterationExample/ObliterationExample.strings.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/ObliterationExample/ObliterationExample.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/ObliterationExample/ObliterationExample.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/ObliterationExample/README_ObliterationExample.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/ObliterationExample/tsconfig.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PhysicsImpulse_Gym/PhysicsImpulseExample.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PhysicsImpulse_Gym/PhysicsImpulseExample.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PhysicsImpulse_Gym/README_PhysicsImpulse.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PhysicsImpulse_Gym/tsconfig.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.strings.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PortalPerformanceExample/README_PortalPerformanceExample.ts"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/mods/PortalPerformanceExample/tsconfig.json"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/static/MP_Aftermath_Portal_Assets.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/static/MP_Aftermath_Portal_Terrain.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/static/MP_Plaza_Assets.tscn"
+    },
+    {
+      "status": "new",
+      "path": "GodotProject/static/MP_Plaza_Terrain.tscn"
+    },
+    {
+      "status": "new",
+      "path": "Godot_v4.6.3-stable_win64.version"
+    },
+    {
+      "status": "new",
+      "path": "code/gdconverter/src/gdconverter/_compatibility_utils.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/gdconverter/src/gdconverter/_json_parser.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/gdconverter/src/gdconverter/_json_to_tscn.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/gdconverter/src/gdconverter/_tscn_parser.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/gdconverter/src/gdconverter/_tscn_regex.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/gdconverter/src/gdconverter/_tscn_to_json.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/gdconverter/src/gdconverter/convert_paths.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/gdconverter/src/gdconverter/create_godot.py"
+    },
+    {
+      "status": "changed",
+      "path": "code/types/mod/index.d.ts"
+    },
+    {
+      "status": "changed",
+      "path": "docs/pages/gameplay_logic.html"
+    },
+    {
+      "status": "changed",
+      "path": "docs/pages/spatial_editor.html"
+    },
+    {
+      "status": "changed",
+      "path": "docs/searchindex.js"
+    },
+    {
+      "status": "changed",
+      "path": "sdk.version.json"
+    }
+  ],
+  "important_files": [
+    {
+      "status": "modified",
+      "path": "FbExportData/asset_types.json",
+      "reason": "asset type export changed"
+    },
+    {
+      "status": "modified",
+      "path": "code/types/mod/index.d.ts",
+      "reason": "TypeScript API declarations changed"
+    }
+  ],
+  "map_names": {
+    "MP_Abbasid": "Siege of Cairo",
+    "MP_Aftermath": "Empire State",
+    "MP_Aftermath_Portal": "Bellum1988's Operation Metro",
+    "MP_Badlands": "Blackwell Fields",
+    "MP_Battery": "Iberian Offensive",
+    "MP_Capstone": "Liberation Peak",
+    "MP_Contaminated": "Contaminated",
+    "MP_Dumbo": "Manhattan Bridge",
+    "MP_Eastwood": "Eastwood",
+    "MP_FireStorm": "Operation Firestorm",
+    "MP_Limestone": "Saints Quarter",
+    "MP_Outskirts": "New Sobek City",
+    "MP_Plaza": "Cairo Bazaar",
+    "MP_Tungsten": "Mirak Valley",
+    "MP_Granite_ClubHouse_Portal": "Golf Course",
+    "MP_Granite_TechCampus_Portal": "Defense Nexus",
+    "MP_Granite_MainStreet_Portal": "Downtown",
+    "MP_Granite_Marina_Portal": "Marina",
+    "MP_Portal_Sand": "Portal Sandbox",
+    "MP_Granite_MilitaryRnD_Portal": "Area 22B",
+    "MP_Granite_MilitaryStorage_Portal": "Redline Storage",
+    "MP_Granite_Underground_Portal": "Complex 3",
+    "MP_Subsurface": "Hagental Base",
+    "MP_GolmudRailway": "Railway to Golmud"
+  },
+  "groups": {
+    "Core SDK data: asset types": [
+      {
+        "status": "Modified",
+        "path": "FbExportData/asset_types.json"
+      }
+    ],
+    "Folder: FbExportData": [
+      {
+        "status": "Modified",
+        "path": "FbExportData/level_info.json"
+      }
+    ],
+    "Folder: docs": [
+      {
+        "status": "Modified",
+        "path": "docs/searchindex.js"
+      }
+    ],
+    "Folder: gdconverter": [
+      {
+        "status": "Added",
+        "path": "code/gdconverter/src/gdconverter/_compatibility_utils.py"
+      },
+      {
+        "status": "Modified",
+        "path": "code/gdconverter/src/gdconverter/_json_parser.py"
+      },
+      {
+        "status": "Modified",
+        "path": "code/gdconverter/src/gdconverter/_json_to_tscn.py"
+      },
+      {
+        "status": "Modified",
+        "path": "code/gdconverter/src/gdconverter/_tscn_parser.py"
+      },
+      {
+        "status": "Modified",
+        "path": "code/gdconverter/src/gdconverter/_tscn_regex.py"
+      },
+      {
+        "status": "Modified",
+        "path": "code/gdconverter/src/gdconverter/_tscn_to_json.py"
+      },
+      {
+        "status": "Modified",
+        "path": "code/gdconverter/src/gdconverter/convert_paths.py"
+      },
+      {
+        "status": "Modified",
+        "path": "code/gdconverter/src/gdconverter/create_godot.py"
+      }
+    ],
+    "Folder: mod": [
+      {
+        "status": "Modified",
+        "path": "code/types/mod/index.d.ts"
+      }
+    ],
+    "Folder: pages": [
+      {
+        "status": "Modified",
+        "path": "docs/pages/gameplay_logic.html"
+      },
+      {
+        "status": "Modified",
+        "path": "docs/pages/spatial_editor.html"
+      }
+    ],
+    "Map: MP_Aftermath_Portal / Bellum1988's Operation Metro": [
+      {
+        "status": "Added",
+        "path": "FbExportData/levels/MP_Aftermath_Portal.spatial.json"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/levels/MP_Aftermath_Portal.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/static/MP_Aftermath_Portal_Assets.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/static/MP_Aftermath_Portal_Terrain.tscn"
+      }
+    ],
+    "Map: MP_Plaza / Cairo Bazaar": [
+      {
+        "status": "Added",
+        "path": "FbExportData/levels/MP_Plaza.spatial.json"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/levels/MP_Plaza.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/static/MP_Plaza_Assets.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/static/MP_Plaza_Terrain.tscn"
+      }
+    ],
+    "Mod: MovingPlatformExample": [
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.strings.json"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/MovingPlatformExample/MovingPlatformExample.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/MovingPlatformExample/README_MovingPlatformExample.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/MovingPlatformExample/tsconfig.json"
+      }
+    ],
+    "Mod: ObliterationExample": [
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/ObliterationExample/ObliterationExample.strings.json"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/ObliterationExample/ObliterationExample.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/ObliterationExample/ObliterationExample.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/ObliterationExample/README_ObliterationExample.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/ObliterationExample/tsconfig.json"
+      }
+    ],
+    "Mod: PhysicsImpulse_Gym": [
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PhysicsImpulse_Gym/PhysicsImpulseExample.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PhysicsImpulse_Gym/PhysicsImpulseExample.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PhysicsImpulse_Gym/README_PhysicsImpulse.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PhysicsImpulse_Gym/tsconfig.json"
+      }
+    ],
+    "Mod: PortalPerformanceExample": [
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.strings.json"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PortalPerformanceExample/PortalPerformanceExample.tscn"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PortalPerformanceExample/README_PortalPerformanceExample.ts"
+      },
+      {
+        "status": "Added",
+        "path": "GodotProject/mods/PortalPerformanceExample/tsconfig.json"
+      }
+    ],
+    "Repository root": [
+      {
+        "status": "Added",
+        "path": "Godot_v4.6.3-stable_win64.version"
+      },
+      {
+        "status": "Modified",
+        "path": "sdk.version.json"
+      },
+      {
+        "status": "Deleted",
+        "path": "Godot_v4.6.1-stable_win64.version"
+      }
+    ]
+  },
+  "old_version": "unknown",
+  "new_version": "1.3.3.0"
+}

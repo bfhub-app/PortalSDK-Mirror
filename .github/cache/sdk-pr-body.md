@@ -7,6 +7,11 @@
 - **Download date**: 2026-06-30 14:07:26 BRT
 - **ZIP size**: 3.6 GB
 
+### Official Game Update Notes
+- Matching official post found: [BATTLEFIELD 6 GAME UPDATE 1.3.3.0](https://www.ea.com/games/battlefield/battlefield-6/news/battlefield-6-game-update-1-3-3-0).
+- The official update frames this as a broader Battlefield 6 update with Portal changes alongside Tactical Obliteration, Casual Battle Royale, Wet Work, and other gameplay/system fixes.
+- The Portal notes align with this SDK diff: new moving-platform tooling, Tactical Obliteration/Bomb and M-COM support, Operation Metro and Cairo Bazaar map support, physics impulse examples, Portal performance tools, map-image updates, vehicle resupply support, and removal/replacement of older spatial-object enablement behavior.
+
 ### Developer-Relevant Changes
 - Adds SDK data for two new or newly exposed maps: `MP_Aftermath_Portal / Bellum1988's Operation Metro` and `MP_Plaza / Cairo Bazaar`, including level scenes, static terrain/assets scenes, export spatial JSON, and `level_info.json` budget entries.
 - Adds four example mods: `MovingPlatformExample`, `ObliterationExample`, `PhysicsImpulse_Gym`, and `PortalPerformanceExample`. These look like practical samples for moving objects, bomb/objective gameplay, physics impulse usage, and performance measurement.
@@ -14,6 +19,16 @@
 - `FbExportData/asset_types.json` changed heavily. This can affect runtime-spawn availability and map-specific object restrictions, especially because many asset `levelRestrictions` now include `MP_Plaza` and/or `MP_Aftermath_Portal`.
 - The Godot converter gained compatibility logic for `ObjId` handling on `Bomb`, `CapturePoint`, `DeployCam`, `RingOfFire`, `MCOM`, and `Sector`, plus fixes for direct level static mesh references and TSCN parsing of `&"name"` attributes.
 - Documentation updates remove an old rank-up stinger bug note, refresh radio queue wording, and add the new map IDs to the Spatial Editor map table.
+
+### TypeScript API Changes
+- `code/types/mod/index.d.ts` version changed from `1.3.2.0` to `1.3.3.0`.
+- New opaque object/API type: `Bomb`, now included in the general object union and event/object API surface.
+- New enums and enum values include `BombState`, `GameModeTicker`, `MCOMArmType`, `ScoreCriteria`, `Map.Plaza`, `RuntimeSpawn_Plaza`, `InputRestrictions.HasBomb`, `ValueType.Bomb`, and enum metadata entries for the new API groups.
+- New objective and Bomb APIs include `GetBomb`, `ForceBombDrop`, `ForceBombReset`, `ForceBombSpawn`, `ForceBombUnspawn`, `GiveBombToPlayer`, `SetBombDropFuseTime`, `SetBombTeam`, `SetBombWorldIconGlobalVisibility`, and `SetMCOMArmType`.
+- New event handler signatures include `OngoingBomb`, `OnBombDropped`, `OnBombPickedUp`, and `OnBombStateChanged`, which unlock Tactical Obliteration-style scripted experiences.
+- New camera, scoring, performance, and physics helpers include free-camera collision toggles, third-person camera positioning, `SetGameModeCriteria`, `SetGameModeInitialScore`, `SetHUDTicker`, `ApplyAreaImpulseAndDamage`, `ApplyImpulse`, `IsUndefined`, `IsValid`, `GetPortalAverageFrameTime`, and `GetServerAverageFrameTime`.
+- Runtime spawn declarations now add `RuntimeSpawn_Plaza` and wire it into runtime spawn unions, while the old `RuntimeSpawn_Sand` block remains present after the new Plaza block.
+- Potential script impact: creator code can now reference Bomb/M-COM-specific APIs and Plaza runtime spawns, but any code relying on removed or renamed spawn/object enum values should be checked during migration.
 
 ### File Statistics
 - **Files in new SDK**: 375

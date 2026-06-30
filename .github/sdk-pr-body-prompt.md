@@ -25,6 +25,11 @@ Then include:
 - Download date, when available
 - ZIP size, when available
 
+### Official Game Update Notes
+Check `https://www.ea.com/games/battlefield/battlefield-6/news` for a game update post with the same version number as the new SDK version. If a matching post exists, open it and inspect the `PORTAL` section, usually near the end of the page. Summarize the official Portal changes and use them to guide the PR summary together with the file comparison.
+
+If no matching post is found or the page cannot be reached, say that official notes were not found or were not checked.
+
 ### Developer-Relevant Changes
 Write 3 to 6 bullets focused on likely impact for Mod and Map creators. Be explicit when something is inferred from file paths.
 

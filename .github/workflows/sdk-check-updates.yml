@@ -329,6 +329,90 @@ jobs:
           else
             echo "No Godot executable found"
           fi
+
+      - name: Generate README from docs home
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
+        run: |
+          echo "Generating README.md from docs/index.html..."
+          rm -f README.html
+
+          python - << 'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          docs_index = Path("docs/index.html")
+          readme = Path("README.md")
+
+          class DocsHomeParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.in_h1 = False
+                  self.in_link = False
+                  self.current_href = ""
+                  self.current_text = []
+                  self.title = "Battlefield Portal Documentation"
+                  self.links = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == "h1":
+                      self.in_h1 = True
+                  elif tag == "a" and attrs.get("href", "").startswith("pages/"):
+                      self.in_link = True
+                      self.current_href = attrs["href"]
+                      self.current_text = []
+
+              def handle_data(self, data):
+                  text = data.strip()
+                  if not text:
+                      return
+                  if self.in_h1:
+                      self.title = text.replace("¶", "").strip()
+                  elif self.in_link:
+                      self.current_text.append(text)
+
+              def handle_endtag(self, tag):
+                  if tag == "h1":
+                      self.in_h1 = False
+                  elif tag == "a" and self.in_link:
+                      label = " ".join(self.current_text).replace("¶", "").strip()
+                      href = self.current_href.split("#", 1)[0]
+                      if label and (label, href) not in self.links:
+                          self.links.append((label, href))
+                      self.in_link = False
+                      self.current_href = ""
+                      self.current_text = []
+
+          if docs_index.exists():
+              parser = DocsHomeParser()
+              parser.feed(docs_index.read_text(encoding="utf-8", errors="ignore"))
+              links = parser.links
+              title = parser.title
+          else:
+              links = []
+              title = "Battlefield Portal Documentation"
+
+          lines = [
+              f"# {title}",
+              "",
+              "This repository mirrors the Battlefield Portal SDK and its generated documentation.",
+              "",
+              "## Documentation",
+              "",
+          ]
+          if links:
+              lines.extend(f"- [{label}](docs/{href})" for label, href in links)
+          else:
+              lines.append("- [Documentation Home](docs/index.html)")
+          lines.extend([
+              "",
+              "Open [docs/index.html](docs/index.html) for the full local documentation home.",
+              "",
+          ])
+          readme.write_text("\n".join(lines), encoding="utf-8")
+          PY
+
+          echo "README.md generated"
       
       - name: Generate file comparison
         if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'

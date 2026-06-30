@@ -11,7 +11,7 @@ from gdconverter import _json_to_tscn as j2t
 from gdconverter import _logging, _meta, _utils
 
 
-def create_godot(fb_export_data_dir: str, output_dir: str, overwrite_levels: bool = False) -> bool:
+def create_godot(fb_export_data_dir: str, output_dir: str, overwrite_levels: bool = False, allow_missing_meshes: bool = False) -> bool:
     """Create a godot project using level json and types"""
     if not os.path.exists(fb_export_data_dir):
         _logging.log_error(f"Path does not exist {fb_export_data_dir}")
@@ -58,7 +58,7 @@ def create_godot(fb_export_data_dir: str, output_dir: str, overwrite_levels: boo
             _logging.log_error(f"Cannot remove path (is it being used by another process?): {config.dst_scripts}")
             return False
 
-    if not j2t.create_godot_files_from_assets(assets, raw_resources, asset_resources, output_dir, config):
+    if not j2t.create_godot_files_from_assets(assets, raw_resources, asset_resources, output_dir, config, allow_missing_meshes=allow_missing_meshes):
         _logging.log_error("Error encountered while creating godot files from assets")
         return False
     jparser.resolve_property_types_levels(levels, assets)

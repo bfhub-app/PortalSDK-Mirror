@@ -216,6 +216,6 @@ def _parse_struct_data(attr_list: str, curr_struct: ttype.Struct | None) -> tupl
             curr_struct.data[attr_name] = attr_value
             attr_list = _consume_attr_list(attr_list, attr_match)
         else:
-            _logging.log_error("\t" + "ERROR: Failed to parse attribute list from struct")
+            _logging.log_error("\t" + f"ERROR: Failed to parse attribute list from struct: {curr_struct.name} {attr_list}")
             break
     return (curr_struct, True)

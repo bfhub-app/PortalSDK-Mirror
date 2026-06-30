@@ -64,6 +64,8 @@ def convert_paths(args: ConvertPathsArgs) -> bool:
         if type_name not in assets:
             if "_terrain" in type_name or "_assets" in type_name:
                 continue
+            if ext_resource.path.startswith("addons") and "volume" not in type_name:
+                continue
             # type is simply gone
             _logging.log_error(f"{args.tscn_file.name}: Type does not exist: {type_name}")
             has_missing_types = True

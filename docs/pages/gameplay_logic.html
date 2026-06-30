@@ -206,7 +206,7 @@ Spawnable objects are restricted by map to objects that already exist in that ma
 <li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicParams.Core_Sector</span></code>: Different track for non-sector gamemodes 0 and sector gamemodes 1, 2, and 3 (same music for all three sectors).</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicEvents.Core_Stinger_RankUp</span></code>: Stinger played at the end of a match when you rank up. There is currently a known bug where this stinger will not play unless another stinger is also currently playing. This bug will be patched in a future update.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicEvents.Core_Stinger_RankUp</span></code>: Stinger played at the end of a match when you rank up.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicEvents.Core_Stinger_Positive</span></code>: A stinger that is played mid-match.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicEvents.Core_Stinger_Negative</span></code>: A stinger that is played mid-match.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicEvents.Core_PauseMenu_Loop</span></code>: Quiet and ambient looping track. In core gamemodes, this plays in the pause menu only when there isn’t some other higher-priority music track being played, such as <strong>Core_PhaseEnded</strong>.</p></li>
@@ -256,7 +256,7 @@ Spawnable objects are restricted by map to objects that already exist in that ma
 <li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicParams.Radio_LoopQueuedTracks</span></code></p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicEvents.Radio_NextQueuedTrack</span></code>: Clears the queue of tracks. This is the only way to do so. Note, playing a track does not clear it out of the queue, as you may want to loop your queued tracks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicEvents.Radio_ClearQueue</span></code>: Clears the queue of tracks. This is the only way to do so. Note, playing a track does not clear it out of the queue, as you may want to loop your queued tracks.</p></li>
 </ul>
 </section>
 <section id="musicparams">
@@ -293,7 +293,7 @@ Spawnable objects are restricted by map to objects that already exist in that ma
 <li><p><code class="docutils literal notranslate"><span class="pre">6</span></code>: Turkmenistan</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicParams.QueueTrackNumber</span></code>: Select which track to add next in the queue. The queue is empty by default, and no track will play until you queue up tracks. Here are the track lengths of each station (a station that has 17 tracks are indexed 0 through 16):</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">mod.MusicParams.QueueTrackNumber</span></code>: Select which track to add next in the queue. The queue is empty by default, and no track will play until you queue up tracks. Here are the track lengths of each station as of Season 3 (a station that has 17 tracks are indexed 0 through 16):</p>
 <ul>
 <li><p>Channel 0: 17 tracks</p></li>
 <li><p>Channel 1: 18 tracks</p></li>

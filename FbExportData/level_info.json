@@ -108,5 +108,15 @@
         "budget": {
             "physicsCostMax": 0
         }
+    },
+    "MP_Aftermath_Portal": {
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
+    "MP_Plaza": {
+        "budget": {
+            "physicsCostMax": 0
+        }
     }
 }

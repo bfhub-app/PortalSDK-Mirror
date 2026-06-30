@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   create-release:
@@ -16,7 +17,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
       
@@ -48,6 +49,52 @@ jobs:
           
           echo "✅ Stable release created"
       
+      - name: Close related update issue
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const prNumber = pr.number;
+            const prUrl = pr.html_url;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'sdk-update',
+              per_page: 100
+            });
+            const relatedIssue = issues.find(issue => {
+              if (issue.pull_request) {
+                return false;
+              }
+              const body = issue.body || '';
+              return body.includes(`[#${prNumber}](${prUrl})`) ||
+                body.includes(`Pull Request #${prNumber}`) ||
+                body.includes(`/pull/${prNumber}`);
+            });
+
+            if (!relatedIssue) {
+              core.info(`No open sdk-update issue found for PR #${prNumber}.`);
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: relatedIssue.number,
+              body: `Closing automatically because SDK update PR #${prNumber} was merged.`
+            });
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: relatedIssue.number,
+              state: 'closed',
+              state_reason: 'completed'
+            });
+
+            core.info(`Closed related issue #${relatedIssue.number}.`);
+
       - name: Summary
         run: |
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"

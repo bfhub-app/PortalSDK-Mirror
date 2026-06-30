@@ -16,7 +16,7 @@ jobs:
     
     steps:
       - name: Trigger workflow in target repository
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           TARGET_REPO: ${{ secrets.TARGET_REPO }}
         with:

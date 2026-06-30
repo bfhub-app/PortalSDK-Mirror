@@ -1,35 +1,17 @@
 {
   "schedule": {
-    "monday": {
-      "interval_hours": 1,
+    "regular": {
+      "interval_hours": 4,
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+    },
+    "tuesday_accelerated": {
+      "interval_minutes": 10,
       "work_hours": {
-        "start": 8,
-        "end": 20
+        "start": 7,
+        "end": 15
       },
-      "timezone": "UTC"
-    },
-    "tuesday": {
-      "interval_hours": 1,
-      "work_hours": {
-        "start": 8,
-        "end": 20
-      },
-      "timezone": "UTC"
-    },
-    "wednesday": {
-      "interval_hours": 4
-    },
-    "thursday": {
-      "interval_hours": 4
-    },
-    "friday": {
-      "interval_hours": 4
-    },
-    "saturday": {
-      "interval_hours": 6
-    },
-    "sunday": {
-      "interval_hours": 6
+      "timezone": "GMT-3",
+      "until": "open sdk-update PR exists for the latest checked SDK version"
     }
   },
   "urls": {

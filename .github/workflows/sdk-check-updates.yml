@@ -1,8 +1,6 @@
 name: SDK Update - Release check
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       reason:
@@ -10,19 +8,14 @@ on:
         required: false
         default: 'Force check'
         type: string
-  
-  repository_dispatch:
-    types: [check-sdk-updates]
 
   schedule:
-    # Monday: Every hour 8-20 UTC
-    - cron: '0 8-20 * * 1'
-    # Tuesday: Every hour 8-20 UTC
-    - cron: '0 8-20 * * 2'
-    # Wednesday-Friday: Every 4 hours
-    - cron: '0 */4 * * 3-5'
-    # Saturday-Sunday: Every 6 hours
-    - cron: '0 */6 * * 0,6'
+    # Regular cadence: every 4 hours, every day
+    - cron: '0 */4 * * *'
+    # Tuesday accelerated window: every 10 minutes from 07:00-14:50 GMT-3
+    - cron: '*/10 10-17 * * 2'
+    # Tuesday accelerated window final run: 15:00 GMT-3
+    - cron: '0 18 * * 2'
 
 permissions:
   contents: write
@@ -40,12 +33,12 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       
       - name: Restore circuit breaker cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v5
         with:
           path: .github/cache/failure-tracker.json
           key: circuit-breaker-${{ github.run_id }}
@@ -117,194 +110,39 @@ jobs:
             echo "should_run=true" >> $GITHUB_OUTPUT
           fi
       
-      - name: Check for recent game updates (Tiered)
-        if: steps.circuit_breaker.outputs.should_run == 'true' && steps.trigger.outputs.is_manual == 'false'
-        id: game_update
-        run: |
-          echo "Checking for recent Battlefield game updates (Tiered Detection)..."
-          
-          mkdir -p .github/cache
-          CACHE_FILE=".github/cache/game-update-tracker.json"
-          STEAMDB_URL="https://steamdb.info/app/2807960/history/"
-          EA_NEWS_URL="https://www.ea.com/games/battlefield/battlefield-6/news?page=1&type=game-updates"
-          
-          BOOST_MODE="none"
-          BOOST_LEVEL="none"
-          BOOST_REASON="No recent game update detected"
-          CURRENT_TIME=$(date -u +%s)
-          
-          # Initialize cache if not exists
-          if [ ! -f "$CACHE_FILE" ]; then
-            cat > "$CACHE_FILE" << 'EOF'
-          {
-            "steamdb": {
-              "last_update_date": "2000-01-01T00:00:00Z",
-              "game_version": "unknown",
-              "build_id": "unknown",
-              "manual_trigger": false
-            },
-            "ea_blog": {
-              "last_update_date": "2000-01-01T00:00:00Z",
-              "title": "unknown"
-            },
-            "sdk": {
-              "last_update_date": "2000-01-01T00:00:00Z",
-              "version": "unknown",
-              "matched_game_version": "unknown"
-            },
-            "last_check_date": "2000-01-01T00:00:00Z"
-          }
-          EOF
-          fi
-          
-          # Load cached data
-          STEAMDB_LAST=$(jq -r '.steamdb.last_update_date // "2000-01-01T00:00:00Z"' "$CACHE_FILE")
-          EA_LAST=$(jq -r '.ea_blog.last_update_date // "2000-01-01T00:00:00Z"' "$CACHE_FILE")
-          GAME_VERSION=$(jq -r '.steamdb.game_version // "unknown"' "$CACHE_FILE")
-          
-          # === TIER 1: SteamDB Check (Aggressive Boost - 8 hours) ===
-          echo "Tier 1: Checking SteamDB update timestamp..."
-          STEAMDB_TIME=$(date -d "$STEAMDB_LAST" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$STEAMDB_LAST" +%s 2>/dev/null || echo "0")
-          
-          if [ "$STEAMDB_TIME" != "0" ]; then
-            HOURS_SINCE_STEAMDB=$((($CURRENT_TIME - $STEAMDB_TIME) / 3600))
-            echo "   Hours since SteamDB update: $HOURS_SINCE_STEAMDB"
-            
-            if [ "$HOURS_SINCE_STEAMDB" -lt 8 ]; then
-              BOOST_MODE="active"
-              BOOST_LEVEL="aggressive"
-              BOOST_REASON="SteamDB game update $HOURS_SINCE_STEAMDB hours ago (v$GAME_VERSION)"
-            fi
-          fi
-          
-          # Try to fetch SteamDB (may be blocked - 403)
-          STEAMDB_HTML=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" "$STEAMDB_URL" 2>/dev/null || echo "")
-          if [ -n "$STEAMDB_HTML" ] && ! echo "$STEAMDB_HTML" | grep -qi "403\|forbidden\|access denied"; then
-            # Look for recent version updates (basic pattern matching)
-            TODAY=$(date -u +%Y-%m-%d)
-            YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d 2>/dev/null)
-            
-            if echo "$STEAMDB_HTML" | grep -E "$TODAY|$YESTERDAY" | grep -qi "version\|build\|update"; then
-              BOOST_MODE="active"
-              BOOST_LEVEL="aggressive"
-              BOOST_REASON="New SteamDB update detected"
-              
-              # Update cache with new detection
-              jq ".steamdb.last_update_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" | .steamdb.manual_trigger = false" "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
-            fi
-          else
-            echo "   WARNING: SteamDB blocked or inaccessible (using cached data)"
-          fi
-          
-          # === TIER 2: EA Blog Check (Normal Boost - 72 hours) ===
-          if [ "$BOOST_LEVEL" != "aggressive" ]; then
-            echo "Tier 2: Checking EA blog update timestamp..."
-            EA_TIME=$(date -d "$EA_LAST" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$EA_LAST" +%s 2>/dev/null || echo "0")
-            
-            if [ "$EA_TIME" != "0" ]; then
-              HOURS_SINCE_EA=$((($CURRENT_TIME - $EA_TIME) / 3600))
-              echo "   Hours since EA blog update: $HOURS_SINCE_EA"
-              
-              if [ "$HOURS_SINCE_EA" -lt 72 ]; then
-                BOOST_MODE="active"
-                BOOST_LEVEL="normal"
-                BOOST_REASON="EA blog update $HOURS_SINCE_EA hours ago"
-                echo "   NORMAL BOOST ACTIVE (EA Blog)"
-              fi
-            fi
-            
-            # Try to fetch EA news page
-            EA_HTML=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" "$EA_NEWS_URL" 2>/dev/null || echo "")
-            
-            if [ -n "$EA_HTML" ]; then
-              # Look for portal/sdk mentions with recent dates
-              if echo "$EA_HTML" | grep -qi "portal\|sdk"; then
-                TODAY=$(date -u +%Y-%m-%d)
-                YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d 2>/dev/null)
-                
-                if echo "$EA_HTML" | grep -qi "$TODAY\|$YESTERDAY"; then
-
-                  BOOST_LEVEL="normal"
-                  BOOST_REASON="New EA blog update detected"
-                  
-                  # Update cache
-                  jq ".ea_blog.last_update_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"" "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
-                fi
-              fi
-            fi
-          fi
-          
-          # Update last check time
-          jq ".last_check_date = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"" "$CACHE_FILE" > "$CACHE_FILE.tmp" && mv "$CACHE_FILE.tmp" "$CACHE_FILE"
-          
-          # Output results
-          echo "boost_mode=$BOOST_MODE" >> $GITHUB_OUTPUT
-          echo "boost_level=$BOOST_LEVEL" >> $GITHUB_OUTPUT
-          echo "boost_reason=$BOOST_REASON" >> $GITHUB_OUTPUT
-          echo "game_version=$GAME_VERSION" >> $GITHUB_OUTPUT
-          
-          echo ""
-          echo "=========================================="
-          echo "Boost Status: $BOOST_MODE"
-          echo "Boost Level: $BOOST_LEVEL"
-          echo "Reason: $BOOST_REASON"
-          echo "Game Version: $GAME_VERSION"
-          echo "=========================================="
-      
-      - name: Set default game update outputs (manual trigger)
-        if: steps.trigger.outputs.is_manual == 'true'
-        id: game_update_defaults
-        run: |
-          echo "boost_mode=none" >> $GITHUB_OUTPUT
-          echo "boost_level=none" >> $GITHUB_OUTPUT
-          echo "boost_reason=Manual trigger" >> $GITHUB_OUTPUT
-          echo "game_version=unknown" >> $GITHUB_OUTPUT
-      
-      - name: Check work hours (Mon/Tue only)
+      - name: Check schedule gate
         if: steps.circuit_breaker.outputs.should_run == 'true'
-        id: work_hours
-        run: |
-          IS_MANUAL="${{ steps.trigger.outputs.is_manual }}"
-          
-          # Manual trigger: Always run immediately
-          if [ "$IS_MANUAL" = "true" ]; then
-            echo "Manual trigger - bypassing all schedule checks"
-            echo "should_run=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          HOUR=$(date -u +%H | sed 's/^0//')
-          DAY=$(date -u +%u)
-          BOOST_MODE="${{ steps.game_update.outputs.boost_mode || 'none' }}"
-          BOOST_LEVEL="${{ steps.game_update.outputs.boost_level || 'none' }}"
-          
-          echo "Current hour (UTC): $HOUR"
-          echo "Day of week: $DAY (1=Mon, 7=Sun)"
-          echo "Boost mode: $BOOST_MODE"
-          echo "Boost level: $BOOST_LEVEL"
-          
-          SHOULD_RUN="true"
-          
-          # Aggressive boost: Always run on weekdays (SteamDB update within 8h)
-          if [ "$BOOST_LEVEL" = "aggressive" ] && [ "$DAY" -ge 1 ] && [ "$DAY" -le 5 ]; then
-            echo "Aggressive boost active - running regardless of time"
-            SHOULD_RUN="true"
-          # Normal boost: Run hourly on weekdays (EA blog update within 72h)
-          elif [ "$BOOST_LEVEL" = "normal" ] && [ "$DAY" -ge 1 ] && [ "$DAY" -le 5 ]; then
-            echo "Normal boost active - running hourly on weekday"
-            SHOULD_RUN="true"
-          # Regular schedule: Check Mon/Tue work hours (8-20)
-          elif [ "$DAY" = "1" ] || [ "$DAY" = "2" ]; then
-            if [ "$HOUR" -lt 8 ] || [ "$HOUR" -gt 20 ]; then
-              SHOULD_RUN="false"
-              echo "Outside work hours (8-20 UTC)"
-            fi
-          fi
-          
-          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
+        id: schedule_gate
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const isManual = '${{ steps.trigger.outputs.is_manual }}' === 'true';
+            const schedule = context.payload.schedule || '';
+            const isTuesdayFastRun = schedule === '*/10 10-17 * * 2' || schedule === '0 18 * * 2';
+
+            if (isManual) {
+              core.info('Manual trigger - running immediately.');
+              core.setOutput('should_run', 'true');
+              return;
+            }
+
+            if (context.eventName !== 'schedule') {
+              core.info(`Non-scheduled trigger (${context.eventName}) - running.`);
+              core.setOutput('should_run', 'true');
+              return;
+            }
+
+            if (!isTuesdayFastRun) {
+              core.info(`Regular 4-hour schedule (${schedule}) - running.`);
+              core.setOutput('should_run', 'true');
+              return;
+            }
+
+            core.info('Tuesday accelerated check window active (07:00-15:00 GMT-3).');
+            core.setOutput('should_run', 'true');
       
       - name: Check for SDK updates
-        if: steps.work_hours.outputs.should_run == 'true'
+        if: steps.schedule_gate.outputs.should_run == 'true'
         id: check
         env:
           SDK_VERSIONS_URL: ${{ vars.SDK_VERSIONS_URL || 'https://download.portal.battlefield.com/versions.json' }}
@@ -375,40 +213,37 @@ jobs:
             echo "$UPDATE_NEEDED: $UPDATE_REASON"
           fi
       
-      - name: Create archive release of current state
-        if: steps.check.outputs.update_needed == 'true' && steps.check.outputs.old_version != '0'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          OLD_VERSION="${{ steps.check.outputs.old_version }}"
-          
-          echo "Creating archive release for v${OLD_VERSION}..."
-          
-          mkdir -p /tmp/sdk-archive
-          
-          rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-archive/ || echo "No files to archive yet"
-          
-          cd /tmp/sdk-archive
-          if [ "$(ls -A .)" ]; then
-            zip -r "../portal-sdk_v${OLD_VERSION}-archive.zip" . > /dev/null
-            cd -
-            
-            git tag "portal-sdk_v${OLD_VERSION}-archive" || echo "Tag already exists"
-            git push origin "portal-sdk_v${OLD_VERSION}-archive" || echo "Tag push failed or already exists"
-            
-            gh release create "portal-sdk_v${OLD_VERSION}-archive" \
-              "/tmp/portal-sdk_v${OLD_VERSION}-archive.zip" \
-              --title "Portal SDK v${OLD_VERSION} (Archive)" \
-              --notes "Portal SDK version ${OLD_VERSION} - Archive snapshot before update to ${{ steps.check.outputs.new_version }}" \
-              || echo "Release already exists"
-            
-            echo "Archive release created"
-          else
-            echo "No content to release"
-          fi
-      
-      - name: Download SDK
+      - name: Check for existing SDK update PR
         if: steps.check.outputs.update_needed == 'true'
+        id: existing_update_pr
+        uses: actions/github-script@v9
+        env:
+          NEW_VERSION: ${{ steps.check.outputs.new_version }}
+        with:
+          script: |
+            const newVersion = process.env.NEW_VERSION;
+            const branchName = `sdk-update-v${newVersion}`;
+            const openPrs = await github.paginate(github.rest.pulls.list, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+            const existingPr = openPrs.find(pr => pr.head.ref === branchName);
+
+            if (existingPr) {
+              core.info(`SDK update v${newVersion} already found in open PR #${existingPr.number}.`);
+              core.setOutput('should_create_update', 'false');
+              core.setOutput('pull_request_number', String(existingPr.number));
+              core.setOutput('pull_request_url', existingPr.html_url);
+              return;
+            }
+
+            core.info(`No open SDK update PR found for v${newVersion}.`);
+            core.setOutput('should_create_update', 'true');
+
+      - name: Download SDK
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         id: download
         env:
           SDK_DOWNLOAD_URL: ${{ vars.SDK_DOWNLOAD_URL || 'https://download.portal.battlefield.com/PortalSDK.zip' }}
@@ -445,7 +280,7 @@ jobs:
           echo "Downloaded: ${ZIP_SIZE_DISPLAY}"
       
       - name: Extract SDK
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         run: |
           echo "Extracting new SDK to temporary location..."
           mkdir -p /tmp/sdk-new
@@ -474,7 +309,7 @@ jobs:
           echo "SDK updated (only changed files written, large assets excluded)"
       
       - name: Track Godot executable version
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         run: |
           echo "Detecting Godot executable..."
           
@@ -496,7 +331,7 @@ jobs:
           fi
       
       - name: Generate file comparison
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         id: compare
         run: |
           echo "Generating detailed comparison using git..."
@@ -554,10 +389,10 @@ jobs:
           cp .github/cache/comparison.json .github/cache/comparison-raw.json
       
       - name: Generate changelog
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         continue-on-error: true
         id: changelog
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
@@ -663,11 +498,11 @@ jobs:
             }
       
       - name: Update game-SDK version tracker
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         run: |
           CACHE_FILE=".github/cache/game-update-tracker.json"
           NEW_VERSION="${{ steps.check.outputs.new_version }}"
-          GAME_VERSION="${{ steps.game_update.outputs.game_version || 'unknown' }}"
+          GAME_VERSION="unknown"
           
           if [ -f "$CACHE_FILE" ]; then
             echo "Updating game-SDK version mapping..."
@@ -681,9 +516,9 @@ jobs:
           fi
       
       - name: Create Pull Request
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         id: create_pr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ github.token }}
           branch: sdk-update-v${{ steps.check.outputs.new_version }}
@@ -716,9 +551,9 @@ jobs:
           draft: false
       
       - name: Create GitHub issue for update
-        if: steps.check.outputs.update_needed == 'true' && steps.create_pr.outputs.pull-request-number
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true' && steps.create_pr.outputs.pull-request-number
         id: create_issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
@@ -779,7 +614,7 @@ jobs:
             **Next Steps:**
             1. Review the [Pull Request #${prNumber}](${prUrl})
             2. Merge the PR to update main branch
-            3. Download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${oldVersion})
+            3. After merge, download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${newVersion}-release)
             4. Check dependent repositories for triggered workflows
             
             *This issue was automatically created by the SDK update workflow.*
@@ -822,8 +657,8 @@ jobs:
             }
       
       - name: Trigger workflow in target repository
-        if: steps.check.outputs.update_needed == 'true' && steps.create_pr.outputs.pull-request-number
-        uses: actions/github-script@v7
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true' && steps.create_pr.outputs.pull-request-number
+        uses: actions/github-script@v9
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
@@ -879,7 +714,7 @@ jobs:
             }
       
       - name: Summary
-        if: steps.check.outputs.update_needed == 'true'
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         run: |
           echo "SDK Update Branch Created"
           
@@ -897,7 +732,7 @@ jobs:
           echo "Next: Review and merge PR #${{ steps.create_pr.outputs.pull-request-number }}"
       
       - name: Reset failure counter on success
-        if: steps.check.outputs.update_needed == 'true' && success()
+        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true' && success()
         run: |
           mkdir -p .github/cache
           FAILURE_FILE=".github/cache/failure-tracker.json"
@@ -914,7 +749,7 @@ jobs:
       
       - name: Save circuit breaker cache (success)
         if: always()
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v5
         with:
           path: .github/cache/failure-tracker.json
           key: circuit-breaker-${{ github.run_id }}

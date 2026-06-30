@@ -33,12 +33,12 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       
       - name: Restore circuit breaker cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v5
         with:
           path: .github/cache/failure-tracker.json
           key: circuit-breaker-${{ github.run_id }}
@@ -113,7 +113,7 @@ jobs:
       - name: Check schedule gate
         if: steps.circuit_breaker.outputs.should_run == 'true'
         id: schedule_gate
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const isManual = '${{ steps.trigger.outputs.is_manual }}' === 'true';
@@ -216,7 +216,7 @@ jobs:
       - name: Check for existing SDK update PR
         if: steps.check.outputs.update_needed == 'true'
         id: existing_update_pr
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
         with:
@@ -242,38 +242,6 @@ jobs:
             core.info(`No open SDK update PR found for v${newVersion}.`);
             core.setOutput('should_create_update', 'true');
 
-      - name: Create archive release of current state
-        if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true' && steps.check.outputs.old_version != '0'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          OLD_VERSION="${{ steps.check.outputs.old_version }}"
-          
-          echo "Creating archive release for v${OLD_VERSION}..."
-          
-          mkdir -p /tmp/sdk-archive
-          
-          rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-archive/ || echo "No files to archive yet"
-          
-          cd /tmp/sdk-archive
-          if [ "$(ls -A .)" ]; then
-            zip -r "../portal-sdk_v${OLD_VERSION}-archive.zip" . > /dev/null
-            cd -
-            
-            git tag "portal-sdk_v${OLD_VERSION}-archive" || echo "Tag already exists"
-            git push origin "portal-sdk_v${OLD_VERSION}-archive" || echo "Tag push failed or already exists"
-            
-            gh release create "portal-sdk_v${OLD_VERSION}-archive" \
-              "/tmp/portal-sdk_v${OLD_VERSION}-archive.zip" \
-              --title "Portal SDK v${OLD_VERSION} (Archive)" \
-              --notes "Portal SDK version ${OLD_VERSION} - Archive snapshot before update to ${{ steps.check.outputs.new_version }}" \
-              || echo "Release already exists"
-            
-            echo "Archive release created"
-          else
-            echo "No content to release"
-          fi
-      
       - name: Download SDK
         if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         id: download
@@ -424,7 +392,7 @@ jobs:
         if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         continue-on-error: true
         id: changelog
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
@@ -550,7 +518,7 @@ jobs:
       - name: Create Pull Request
         if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true'
         id: create_pr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ github.token }}
           branch: sdk-update-v${{ steps.check.outputs.new_version }}
@@ -585,7 +553,7 @@ jobs:
       - name: Create GitHub issue for update
         if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true' && steps.create_pr.outputs.pull-request-number
         id: create_issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
@@ -646,7 +614,7 @@ jobs:
             **Next Steps:**
             1. Review the [Pull Request #${prNumber}](${prUrl})
             2. Merge the PR to update main branch
-            3. Download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${oldVersion})
+            3. After merge, download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${newVersion}-release)
             4. Check dependent repositories for triggered workflows
             
             *This issue was automatically created by the SDK update workflow.*
@@ -690,7 +658,7 @@ jobs:
       
       - name: Trigger workflow in target repository
         if: steps.check.outputs.update_needed == 'true' && steps.existing_update_pr.outputs.should_create_update == 'true' && steps.create_pr.outputs.pull-request-number
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           OLD_VERSION: ${{ steps.check.outputs.old_version }}
           NEW_VERSION: ${{ steps.check.outputs.new_version }}
@@ -781,7 +749,7 @@ jobs:
       
       - name: Save circuit breaker cache (success)
         if: always()
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v5
         with:
           path: .github/cache/failure-tracker.json
           key: circuit-breaker-${{ github.run_id }}

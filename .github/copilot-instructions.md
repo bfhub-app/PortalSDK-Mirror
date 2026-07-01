@@ -298,18 +298,7 @@ The workflow checks boost conditions on each scheduled run and decides whether t
      * File counts (added/deleted/modified)
    - Uses native `fetch` API in GitHub Actions environment
 
-7. **Archive Release Creation (Before Update)**
-   - Creates a release/tag of the CURRENT state before updating
-   - Tag format: `portal-sdk_v{current_version}-archive`
-   - ZIP filename: `portal-sdk_v{current_version}-archive.zip`
-   - ZIP contains only SDK files from root (excludes .github/, .git/)
-   - Release notes include:
-     * Current version number
-     * Marked as "Archive" snapshot
-     * Reference to version being updated to
-   - Preserves history of each version before changes
-
-8. **GitHub Issue Creation**
+7. **GitHub Issue Creation**
    - Automatically creates issue with title: "SDK Update: v{old} → v{new}"
    - Issue body includes:
      * Version information (old → new)
@@ -349,11 +338,11 @@ The workflow checks boost conditions on each scheduled run and decides whether t
    - **NEVER uses force push** - always respects remote state
    - Workflow completes (merge is manual or via auto-merge)
 
-11. **Stable Release Creation (After Merge)**
+10. **Stable Release Creation (After Merge)**
    - Triggered by `sdk-create-release.yml` workflow when PR is merged to main
    - Creates a release/tag of the NEW stable version
-   - Tag format: `portal-sdk_v{new_version}-release`
-   - ZIP filename: `portal-sdk_v{new_version}-release.zip`
+   - Tag format: `portal-sdk_v{new_version}`
+   - ZIP filename: `portal-sdk_v{new_version}.zip`
    - ZIP contains only SDK files from root (excludes .github/, .git/)
    - Release notes marked as "Release" (stable version)
    - This is always the current production-ready SDK
@@ -391,10 +380,7 @@ The workflow checks boost conditions on each scheduled run and decides whether t
     "trigger_workflow": "sdk-updated.yml"
   },
   "release": {
-    "archive_tag_prefix": "portal-sdk_v",
-    "archive_tag_suffix": "-archive",
-    "release_tag_prefix": "portal-sdk_v",
-    "release_tag_suffix": "-release",
+    "tag_prefix": "portal-sdk_v",
     "create_github_release": true
   }
 }
@@ -554,8 +540,7 @@ When asked to:
 - Read `.github/cache/comparison.json`
 - Look at latest GitHub issue with `sdk-update` label
 - Check git log for latest commit message
-- Check latest release (look for `-release` tag for current stable)
-- Check archive releases (look for `-archive` tags for historical snapshots)
+- Check latest release (tag format: `portal-sdk_v{version}`)
 
 **"Add files to the SDK"**
 - DO NOT do this! Root is for SDK files only
@@ -569,22 +554,16 @@ When asked to:
 - Both must stay synchronized
 
 **"See version history"**
-- Check git tags (format: `portal-sdk_v{version}-archive` for snapshots, `portal-sdk_v{version}-release` for stable)
+- Check git tags (format: `portal-sdk_v{version}`)
 - Look at GitHub releases:
-  * `-archive` releases: Historical snapshots before updates
-  * `-release` releases: Current stable versions (production-ready)
-- Each version has two releases:
-  * Archive: Created when update detected (old version snapshot)
-  * Release: Created after PR merged (new stable version)
+  * `portal-sdk_v{version}` releases: Current stable versions (production-ready)
+- Each version has one release created after PR merge
 
 **"Compare two versions"**
-- Each version has two git tags:
-  * `portal-sdk_v{version}-archive`: Snapshot before update
-  * `portal-sdk_v{version}-release`: Stable version after merge
-- Each version has two releases with ZIPs
+- Each version has one git tag: `portal-sdk_v{version}`
+- Each version has one release with a ZIP
 - Comparison JSON includes file sizes and line changes
-- To get current stable: Look for latest `-release` tag
-- To get historical snapshot: Look for corresponding `-archive` tag
+- To get current stable: Look for the latest `portal-sdk_v{version}` tag
 
 **"Fix the workflow" or "Update automation"**
 - Edit workflow file in `.github/workflows/` directory
@@ -807,13 +786,10 @@ The workflow is designed to be resilient:
      - Compares version and filesize
      - Outputs: update_needed, old_version, new_version, old_filesize, new_filesize, update_reason
   4. Skip if no update needed
-  5. Create release/tag of current version
-  6. Download SDK ZIP, capture size and date
-  7. Create backup of current files
-  8. Remove old SDK files from root
-  9. Extract new SDK ZIP to root
-  10. Generate detailed file comparison with sizes/lines
-  11. **Changelog generation** (`actions/github-script@v7`):
+  5. Download SDK ZIP, capture size and date
+  6. Extract new SDK ZIP to root
+  7. Generate detailed file comparison with sizes/lines
+  8. **Changelog generation** (`actions/github-script@v9`):
       - Calls Gemini 1.5-flash API directly via `fetch()`
       - Comprehensive prompt with SDK context
       - Falls back to basic changelog if no API key
@@ -885,6 +861,6 @@ size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
 
 **Last Updated**: 2026-02-18
 **Repository**: Battlefield Portal SDK Mirror
-**Structure Version**: 3.6 (Three-workflow system: detection/archive → notification → release)
+**Structure Version**: 3.7 (Three-workflow system: detection → notification → release)
 **Implementation**: Inline bash + actions/github-script (no external scripts)
 **AI Provider**: Google Gemini 1.5-flash

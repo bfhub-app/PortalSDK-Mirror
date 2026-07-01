@@ -698,7 +698,7 @@ jobs:
             **Next Steps:**
             1. Review the [Pull Request #${prNumber}](${prUrl})
             2. Merge the PR to update main branch
-            3. After merge, download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${newVersion}-release)
+            3. After merge, download SDK from [releases](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/portal-sdk_v${newVersion})
             4. Check dependent repositories for triggered workflows
             
             *This issue was automatically created by the SDK update workflow.*

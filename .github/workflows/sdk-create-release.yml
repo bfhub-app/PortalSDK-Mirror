@@ -49,17 +49,17 @@ jobs:
           rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ /tmp/sdk-release/
           
           cd /tmp/sdk-release
-          zip -r "../portal-sdk_v${SDK_VERSION}-release.zip" . > /dev/null
+          zip -r "../portal-sdk_v${SDK_VERSION}.zip" . > /dev/null
           cd -
           
-          git tag "portal-sdk_v${SDK_VERSION}-release" || echo "Tag already exists"
-          git push origin "portal-sdk_v${SDK_VERSION}-release" || echo "Tag push failed or already exists"
+          git tag "portal-sdk_v${SDK_VERSION}" || echo "Tag already exists"
+          git push origin "portal-sdk_v${SDK_VERSION}" || echo "Tag push failed or already exists"
           
-          gh release create "portal-sdk_v${SDK_VERSION}-release" \
-            "/tmp/portal-sdk_v${SDK_VERSION}-release.zip" \
+          gh release create "portal-sdk_v${SDK_VERSION}" \
+            "/tmp/portal-sdk_v${SDK_VERSION}.zip" \
             --title "Portal SDK v${SDK_VERSION} (Release)" \
             --notes-file "/tmp/portal-sdk-release-notes.md" \
-            || gh release edit "portal-sdk_v${SDK_VERSION}-release" \
+            || gh release edit "portal-sdk_v${SDK_VERSION}" \
               --title "Portal SDK v${SDK_VERSION} (Release)" \
               --notes-file "/tmp/portal-sdk-release-notes.md"
           
@@ -118,5 +118,5 @@ jobs:
           
           echo "✅ Stable Release Created"
           echo "Version: $SDK_VERSION"
-          echo "Tag: portal-sdk_v${SDK_VERSION}-release"
+          echo "Tag: portal-sdk_v${SDK_VERSION}"
           echo "PR: #${{ github.event.pull_request.number }}"

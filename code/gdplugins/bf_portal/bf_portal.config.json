@@ -14,6 +14,7 @@
   ],
   "modExportDir": "../export",
   "dataVersion": "",
-  "modelsUrl": "https://download.portal.battlefield.com/PortalSDKModels.zip",
+  "downloadUrl": "https://download.portal.battlefield.com/",
+  "sdkModels": "PortalSDKModels.zip",
   "portalUrl": "https://portal.battlefield.com/bf6/"
 }

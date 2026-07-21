@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 //
 // Generated automatically. Do *NOT* modify the contents of this file.
-// Version: 1.3.3.0
+// Version: 1.4.1.0
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -291,6 +291,7 @@ declare namespace mod {
         CallIn_UAV_Overwatch,
         CallIn_Weapon_Drop,
         Class_Adrenaline_Injector,
+        Class_Handheld_Jammer,
         Class_Motion_Sensor,
         Class_Repair_Tool,
         Class_Supply_Bag,
@@ -27978,6 +27979,7 @@ declare namespace mod {
         IsBeingRevived,
         IsCrouching,
         IsDead,
+        IsDiving,
         IsFiring,
         IsInAir,
         IsInteracting,
@@ -28324,6 +28326,9 @@ declare namespace mod {
         Ammo_Match_Grade,
         Ammo_Polymer_Case,
         Ammo_Slugs,
+        Ammo_Subsonic,
+        Ammo_Subsonic_Frangible,
+        Ammo_Subsonic_HP,
         Ammo_Synthetic_Tip,
         Ammo_Tungsten_Core,
         Barrel_10_Factory,
@@ -28353,6 +28358,7 @@ declare namespace mod {
         Barrel_145_Factory,
         Barrel_145_Standard,
         Barrel_16_Custom,
+        Barrel_16_Dissipator,
         Barrel_16_Factory,
         Barrel_16_Pencil,
         Barrel_16_Rifle,
@@ -28365,16 +28371,22 @@ declare namespace mod {
         Barrel_17_Cut,
         Barrel_17_Factory,
         Barrel_17_Fluted,
+        Barrel_18_Cryogenic,
         Barrel_18_Custom,
         Barrel_18_EBR,
         Barrel_18_Extended,
+        Barrel_18_Govt,
+        Barrel_18_Pencil,
+        Barrel_18_SPR,
         Barrel_18_US_LB,
         Barrel_180mm_Prototype,
         Barrel_180mm_Standard,
         Barrel_185_Factory,
         Barrel_189_Factory,
         Barrel_189_Prototype,
+        Barrel_20_Custom_Covert,
         Barrel_20_Factory,
+        Barrel_20_HBAR,
         Barrel_20_LE,
         Barrel_20_Lima,
         Barrel_20_Long,
@@ -28389,6 +28401,9 @@ declare namespace mod {
         Barrel_22_E3_Long,
         Barrel_22_Factory,
         Barrel_225mm_Factory,
+        Barrel_238mm_Cryogenic,
+        Barrel_238mm_Factory,
+        Barrel_238mm_Pencil,
         Barrel_24_Bravo,
         Barrel_24_Extended,
         Barrel_24_Fluted,
@@ -28401,6 +28416,8 @@ declare namespace mod {
         Barrel_264mm_Factory,
         Barrel_264mm_Fluted,
         Barrel_264mm_Prototype,
+        Barrel_27_Factory,
+        Barrel_27_Full,
         Barrel_27_MK22,
         Barrel_303mm_LB,
         Barrel_305mm_Custom,
@@ -28408,9 +28425,11 @@ declare namespace mod {
         Barrel_314mm_Factory,
         Barrel_314mm_Fluted,
         Barrel_314mm_Prototype,
+        Barrel_32_Custom,
         Barrel_330mm_Mk3,
         Barrel_349mm_Fluted,
         Barrel_349mm_SB,
+        Barrel_367mm_Civ,
         Barrel_370mm_Compact,
         Barrel_39_Factory,
         Barrel_39_Pencil,
@@ -28491,6 +28510,7 @@ declare namespace mod {
         Bottom_Alloy_Vertical,
         Bottom_Bipod,
         Bottom_Canted_Stubby,
+        Bottom_Canted_Vertical,
         Bottom_Classic_Grip_Pod,
         Bottom_Classic_Vertical,
         Bottom_Compact_Handstop,
@@ -28511,6 +28531,8 @@ declare namespace mod {
         Bottom_Stippled_Stubby,
         Bottom_Underslung_Mount,
         Bottom_VIS_IR_Light,
+        Ergonomic_A3_Receiver,
+        Ergonomic_Aftermarket_Buffer,
         Ergonomic_DLC_Bolt,
         Ergonomic_Improved_Mag_Catch,
         Ergonomic_Magwell_Flare,
@@ -28523,6 +28545,7 @@ declare namespace mod {
         Left_50_mW_Green,
         Left_Flashlight,
         Left_Range_Finder,
+        Left_Taclight__Aimed,
         Left_VIS_IR_Light,
         Magazine_100rnd_Belt_Box,
         Magazine_100rnd_Belt_Pouch,
@@ -28545,6 +28568,7 @@ declare namespace mod {
         Magazine_27rnd_Magazine,
         Magazine_30rnd_Fast_Mag,
         Magazine_30rnd_Magazine,
+        Magazine_35rnd_Magazine,
         Magazine_36rnd_Magazine,
         Magazine_4_Shell_Tube,
         Magazine_40rnd_Fast_Mag,
@@ -28558,6 +28582,7 @@ declare namespace mod {
         Magazine_50rnd_Belt_Pouch,
         Magazine_50rnd_Loose_Belt,
         Magazine_50rnd_Magazine,
+        Magazine_53rnd_Drum,
         Magazine_5rnd_Fast_Mag,
         Magazine_5rnd_Magazine,
         Magazine_6_Shell_Tube,
@@ -28568,15 +28593,23 @@ declare namespace mod {
         Magazine_7_Shell_Tube,
         Magazine_75rnd_Belt_Box,
         Magazine_75rnd_Drum,
+        Magazine_7rnd_Fast_Mag,
         Magazine_7rnd_Magazine,
         Magazine_8rnd_Fast_Mag,
         Magazine_8rnd_Magazine,
         Magazine_8rnd_Moon_Clip,
         Magazine_8rnd_Speedloader,
+        Magazine_95rnd_Drum,
         Muzzle_Compensated_Brake,
+        Muzzle_Compensator,
         Muzzle_CQB_Suppressor,
         Muzzle_Double_port_Brake,
+        Muzzle_Double_Port_Brake,
+        Muzzle_Flash_Comp,
         Muzzle_Flash_Hider,
+        Muzzle_Hybrid_Suppressor_K,
+        Muzzle_Hybrid_Suppressor_L,
+        Muzzle_Hybrid_Suppressor_S,
         Muzzle_Lightened_Suppressor,
         Muzzle_Linear_Comp,
         Muzzle_Long_Suppressor,
@@ -28590,11 +28623,14 @@ declare namespace mod {
         Right_5_mW_Red,
         Right_50_mW_Blue,
         Right_50_mW_Green,
+        Right_50_MW_Violet,
         Right_Flashlight,
         Right_Laser_Light_Combo_Green,
         Right_Laser_Light_Combo_Red,
         Right_Range_Finder,
+        Right_Taclight__Aimed,
         Right_VIS_IR_Light,
+        Scope_1P86_LPVO,
         Scope_1p87_150x,
         Scope_1p88_Variable,
         Scope_2Pro_125x,
@@ -28608,14 +28644,19 @@ declare namespace mod {
         Scope_Baker_300x,
         Scope_BF_2M_250x,
         Scope_Canted_Iron_Sights,
+        Scope_Canted_Reflex,
+        Scope_Carry_Handle_Irons,
         Scope_CCO_200x,
         Scope_CQ_RDS_125x,
         Scope_CQB_Sights,
         Scope_DVO_LPVO,
+        Scope_Flip_Up_Irons,
         Scope_GRIM_150x,
         Scope_Iron_Sights,
         Scope_LDS_450x,
         Scope_LERT_800x,
+        Scope_M145_MGO_350x,
+        Scope_Magnifier,
         Scope_Mars_F_LPVO,
         Scope_MC_CO_LPVO,
         Scope_Mini_Flex_100x,
@@ -28625,6 +28666,7 @@ declare namespace mod {
         Scope_PAS_35_300x,
         Scope_Piggyback_Reflex,
         Scope_PVQ_31_400x,
+        Scope_QMK_171A_300x,
         Scope_R_MR_100x,
         Scope_R_VPS_1000x,
         Scope_R4T_200x,
@@ -28639,18 +28681,21 @@ declare namespace mod {
         Scope_ST_Prism_500x,
         Scope_SU_123_150x,
         Scope_SU_230_LPVO,
+        Scope_TH_RDS_100x,
         Scope_TS_HD_600x,
         Top_120_mW_Blue,
         Top_5_mW_Green,
         Top_5_mW_Red,
         Top_50_mW_Blue,
         Top_50_mW_Green,
+        Top_50_MW_Violet,
     }
     export enum Weapons {
         AssaultRifle_AK4D,
         AssaultRifle_B36A4,
         AssaultRifle_KORD_6P67,
         AssaultRifle_L85A3,
+        AssaultRifle_M16A4,
         AssaultRifle_M433,
         AssaultRifle_NVO_228E,
         AssaultRifle_SOR_556_Mk2,
@@ -28679,6 +28724,7 @@ declare namespace mod {
         LMG_M123K,
         LMG_M240L,
         LMG_M250,
+        LMG_RPK_74M,
         LMG_RPKM,
         Shotgun__185KS_K,
         Shotgun_DB_12,
@@ -28693,6 +28739,7 @@ declare namespace mod {
         Sidearm_VZ_61,
         SMG_CZ3A1,
         SMG_KV9,
+        SMG_PP_19,
         SMG_PW5A3,
         SMG_PW7A2,
         SMG_SCW_10,
@@ -28700,6 +28747,7 @@ declare namespace mod {
         SMG_SL9,
         SMG_UMG_40,
         SMG_USG_90,
+        Sniper_L115,
         Sniper_M2010_ESR,
         Sniper_Mini_Scout,
         Sniper_PSR,
@@ -29008,7 +29056,7 @@ declare namespace mod {
     // Enables or disables a visual effect.
     export function EnableVFX(vfx: VFX, enable: boolean): void;
 
-    // Move a VFX to a new coordinate. May have become redundant with the creation of the universal MoveObject action.
+    // Move a VFX to a new coordinate.
     export function MoveVFX(vfxID: VFX, position: Vector, rotation: Vector): void;
 
     // Changes the color of a visual effect.
@@ -29414,14 +29462,60 @@ declare namespace mod {
     export function SkipManDown(player: Player, skipManDown: boolean): void;
 
     // Move the Object provided, Euler rotation optional
-    export function MoveObject(object: mod.Object, positionDelta: Vector): void;
+    export function MoveObject(
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
+        positionDelta: Vector
+    ): void;
 
     // Move the Object provided, Euler rotation optional
-    export function MoveObject(object: mod.Object, positionDelta: Vector, rotationDelta: Vector): void;
+    export function MoveObject(
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
+        positionDelta: Vector,
+        rotationDelta: Vector
+    ): void;
 
     // Moves the Object by the delta position and rotation over the time provided. Options to loop indefinitely and reverse
     export function MoveObjectOverTime(
-        object: mod.Object,
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
         positionDelta: Vector,
         rotationDelta: Vector,
         timeInSeconds: number,
@@ -29431,7 +29525,20 @@ declare namespace mod {
 
     // Orbits the Object around the provided transform over time. Optional orbitAxis otherwise transform's up vector is used
     export function OrbitObjectOverTime(
-        object: mod.Object,
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
         orbitTransform: Transform,
         timeInSeconds: number,
         radius: number,
@@ -29442,7 +29549,20 @@ declare namespace mod {
 
     // Orbits the Object around the provided transform over time. Optional orbitAxis otherwise transform's up vector is used
     export function OrbitObjectOverTime(
-        object: mod.Object,
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
         orbitTransform: Transform,
         timeInSeconds: number,
         radius: number,
@@ -29453,14 +29573,59 @@ declare namespace mod {
     ): void;
 
     // Rotate the Object provided using Euler angles
-    export function RotateObject(object: mod.Object, rotationDelta: Vector): void;
+    export function RotateObject(
+        arg0:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
+        rotationDelta: Vector
+    ): void;
 
     // Sets the transform of the Object provided
-    export function SetObjectTransform(object: mod.Object, transform: Transform): void;
+    export function SetObjectTransform(
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
+        transform: Transform
+    ): void;
 
     // Sets the transform of the Object provided over the time provided. Options to loop indefinitely and reverse
     export function SetObjectTransformOverTime(
-        object: mod.Object,
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon,
         transform: Transform,
         timeInSeconds: number,
         shouldLoop: boolean,
@@ -29468,7 +29633,22 @@ declare namespace mod {
     ): void;
 
     // Stops the Over Time movement for the provided Object if one is active
-    export function StopActiveMovementForObject(object: mod.Object): void;
+    export function StopActiveMovementForObject(
+        object:
+            | Bomb
+            | EmplacementSpawner
+            | FixedCamera
+            | InteractPoint
+            | LootSpawner
+            | MCOM
+            | SFX
+            | SpatialObject
+            | Spawner
+            | VehicleSpawner
+            | VL7Cloud
+            | VO
+            | WorldIcon
+    ): void;
 
     // Sets the type of HUD ticker to use.
     export function SetHUDTicker(ticker: GameModeTicker): void;
@@ -29516,7 +29696,10 @@ declare namespace mod {
     // Restricts a world icon to be visible only to a specific Player or Team.
     export function SetWorldIconOwner(worldIcon: WorldIcon, newPlayerOwner: Player): void;
 
-    // Changes the location of a world icon.
+    // Deprecated. Please use SetObjectTransform instead.. Changes the location of a world icon.
+    /**
+     * @deprecated The method should not be used
+     */
     export function SetWorldIconPosition(worldIcon: WorldIcon, newPosition: Vector): void;
 
     // Changes the text appearing above a world icon.
@@ -30303,8 +30486,8 @@ declare namespace mod {
     // Returns the variable specified by an object.
     export function ObjectVariable(ownerObject: mod.Object, variableIndex: number): Variable;
 
-    // Returns the waypoint path object corresponding to the provided id.
-    export function GetWaypointPath(waypointPathNumber: number): WaypointPath;
+    // Returns the WaypointPath corresponding to the provided id.
+    export function GetWaypointPath(objId: number): WaypointPath;
 
     // Returns a copy of an array with the provided value appended to the end.  Note: It is not possible for an array to contain arrays. Attempting to append an array to an array will concatenate them instead.
     export function AppendToArray(array: Array, value: Any): Array;
@@ -30336,20 +30519,20 @@ declare namespace mod {
     // Returns the value found at a provided index of an array.
     export function ValueInArray(array: Array, index: number): Any;
 
-    // Returns the SFX object corresponding to the provided id.
-    export function GetSFX(number: number): SFX;
+    // Returns the SFX corresponding to the provided id.
+    export function GetSFX(objId: number): SFX;
 
-    // Returns the VO object corresponding to the provided id.
-    export function GetVO(number: number): VO;
+    // Returns the VO corresponding to the provided id.
+    export function GetVO(objId: number): VO;
 
-    // Returns a Fixed Camera.
-    export function GetFixedCamera(number: number): FixedCamera;
+    // Returns the FixedCamera corresponding to the provided id.
+    export function GetFixedCamera(objId: number): FixedCamera;
 
-    // Returns the VFX object corresponding to the provided id.
-    export function GetVFX(vfxNumber: number): VFX;
+    // Returns the VFX corresponding to the provided id.
+    export function GetVFX(objId: number): VFX;
 
-    // Returns the spawn point object corresponding to the provided id.
-    export function GetSpawnPoint(number: number): SpawnPoint;
+    // Returns the SpawnPoint corresponding to the provided id.
+    export function GetSpawnPoint(objId: number): SpawnPoint;
 
     // Returns the current gamemode score of the provided player or team.
     export function GetGameModeScore(player: Player): number;
@@ -30363,8 +30546,8 @@ declare namespace mod {
     // Returns the amount of time left (in seconds) in the current gamemode.
     export function GetMatchTimeRemaining(): number;
 
-    // Returns the ring of fire object corresponding to the provided id.
-    export function GetRingOfFire(number: number): RingOfFire;
+    // Returns the RingOfFire corresponding to the provided id.
+    export function GetRingOfFire(objId: number): RingOfFire;
 
     // Returns the time limit set for the gamemode (in seconds).
     export function GetRoundTime(): number;
@@ -30375,20 +30558,20 @@ declare namespace mod {
     // Returns true if the provided team is using soldiers from the specified faction.
     export function IsFaction(team: Team, factions: Factions): boolean;
 
-    // Returns the area trigger object corresponding to the provided id.
-    export function GetAreaTrigger(areaTriggerNumber: number): AreaTrigger;
+    // Returns the AreaTrigger corresponding to the provided id.
+    export function GetAreaTrigger(objId: number): AreaTrigger;
 
-    // Returns the emplacement spawner object corresponding to the provided id.
-    export function GetEmplacementSpawner(number: number): EmplacementSpawner;
+    // Returns the EmplacementSpawner corresponding to the provided id.
+    export function GetEmplacementSpawner(objId: number): EmplacementSpawner;
 
     // Returns the World Position of the Golmud Moving Train. (Only on Golmud Railway map)
     export function GetGolmudTrainLocation(): Vector;
 
-    // Returns the interact point object corresponding to the provided id.
-    export function GetInteractPoint(interactPointNumber: number): InteractPoint;
+    // Returns the InteractPoint corresponding to the provided id.
+    export function GetInteractPoint(objId: number): InteractPoint;
 
-    // Returns the loot spawner object corresponding to the provided id.
-    export function GetLootSpawner(number: number): LootSpawner;
+    // Returns the LootSpawner corresponding to the provided id.
+    export function GetLootSpawner(objId: number): LootSpawner;
 
     // Returns the id corresponding to the provided object.
     export function GetObjId(object: mod.Object): number;
@@ -30396,14 +30579,14 @@ declare namespace mod {
     // Returns the spatial object corresponding to the provided id.
     export function GetSpatialObject(spatialObjectNumber: number): SpatialObject;
 
-    // Returns the spawner object corresponding to the provided id.
-    export function GetSpawner(number: number): Spawner;
+    // Returns the Spawner corresponding to the provided id.
+    export function GetSpawner(objId: number): Spawner;
 
-    // Returns the VL7Cloud object corresponding to the provided id.
-    export function GetVL7Cloud(vl7CloudId: number): VL7Cloud;
+    // Returns the VL7Cloud corresponding to the provided id.
+    export function GetVL7Cloud(objId: number): VL7Cloud;
 
-    // Returns the vehicle spawner object corresponding to the provided id.
-    export function GetVehicleSpawner(number: number): VehicleSpawner;
+    // Returns the VehicleSpawner corresponding to the provided id.
+    export function GetVehicleSpawner(objId: number): VehicleSpawner;
 
     // Returns true if the provided map is the name of the current map.
     export function IsCurrentMap(maps: Maps): boolean;
@@ -30471,12 +30654,6 @@ declare namespace mod {
         rotation: Vector
     ): Any;
 
-    // Returns whether a value is undefined, such as when a function cannot return a valid value.
-    export function IsUndefined(value: Any): boolean;
-
-    // Returns whether a value is defined and if object reference is valid for object values.
-    export function IsValid(value: Any): boolean;
-
     // Returns a boolean value based on whether both of the provided inputs return true.
     export function And(boolean0: boolean, boolean1: boolean): boolean;
 
@@ -30494,6 +30671,12 @@ declare namespace mod {
 
     // Returns true if the provided value is equal to the specified type.
     export function IsType(value: Any, type: Types): boolean;
+
+    // Returns whether a value is undefined, such as when a function cannot return a valid value.
+    export function IsUndefined(value: Any): boolean;
+
+    // Returns whether a value is defined and if object reference is valid for object values.
+    export function IsValid(value: Any): boolean;
 
     // Calls a javascript value function.
     export function JsValue(valueName: string, valueArg0: Any, valueArg1: Any): Any;
@@ -30648,8 +30831,8 @@ declare namespace mod {
     // Returns an array of all capture points within a game.
     export function AllCapturePoints(): Array;
 
-    // Returns the capture point corresponding to the provided id.
-    export function GetCapturePoint(id: number): CapturePoint;
+    // Returns the CapturePoint corresponding to the provided id.
+    export function GetCapturePoint(objId: number): CapturePoint;
 
     // Returns a number from zero to one corresponding to the capture progress of the provided capture point.
     export function GetCaptureProgress(capturePoint: CapturePoint): number;
@@ -30666,17 +30849,17 @@ declare namespace mod {
     // Returns the previous owner team corresponding to the provided capture point.
     export function GetPreviousOwnerTeam(capturePoint: CapturePoint): Team;
 
-    // Returns the HQ object corresponding to the provided id.
-    export function GetHQ(number: number): HQ;
+    // Returns the HQ corresponding to the provided id.
+    export function GetHQ(objId: number): HQ;
 
-    // Returns the Bomb object corresponding to the provided id.
-    export function GetBomb(number: number): Bomb;
+    // Returns the Bomb corresponding to the provided id.
+    export function GetBomb(objId: number): Bomb;
 
-    // Returns the MCOM object corresponding to the provided id.
-    export function GetMCOM(number: number): MCOM;
+    // Returns the MCOM corresponding to the provided id.
+    export function GetMCOM(objId: number): MCOM;
 
-    // Returns the sector object corresponding to the provided id.
-    export function GetSector(number: number): Sector;
+    // Returns the Sector corresponding to the provided id.
+    export function GetSector(objId: number): Sector;
 
     // Return the average  Portal processing frame time
     export function GetPortalAverageFrameTime(): number;
@@ -30698,6 +30881,9 @@ declare namespace mod {
 
     // Returns the farthest alive player from a provided position. Can be filtered using a team. Note: If no players are alive when this block is called, the returned player will be invalid.
     export function FarthestPlayerFrom(vector: Vector, team: Team): Player;
+
+    // Returns the Player corresponding to the provided id.
+    export function GetPlayer(objId: number): Player;
 
     // Returns the total amount of deaths for the target player.
     export function GetPlayerDeaths(player: Player): number;
@@ -30825,8 +31011,8 @@ declare namespace mod {
     // Returns the 'Z' component of a provided vector.
     export function ZComponentOf(vector: Vector): number;
 
-    // Returns the world icon object corresponding to the provided id.
-    export function GetWorldIcon(worldIconNumber: number): WorldIcon;
+    // Returns the WorldIcon corresponding to the provided id.
+    export function GetWorldIcon(objId: number): WorldIcon;
 
     // Returns a constructed message object which can be used with event game mode message, notification message, highlighted game mode message, and custom notification message. The message object is created by providing a number, player, or format string (which can take up to 3 format items).
     export function Message(
@@ -30957,6 +31143,9 @@ declare namespace mod {
     // Returns a boolean indicating if the target vehicle has the same name as the provided vehicle or if it is the same type as the provided vehicle type.
     export function CompareVehicleName(vehicle: Vehicle, vehicleList: VehicleList): boolean;
 
+    // Returns the Vehicle corresponding to the provided id.
+    export function GetVehicle(objId: number): Vehicle;
+
     // Returns the vehicle used by a player.
     export function GetVehicleFromPlayer(player: Player): Vehicle;
 
@@ -30981,7 +31170,7 @@ declare namespace mod {
     // Returns the player currently occupying the provided seat index number of the provided vehicle. Note: If no players are in the vehicle seat when this block is called, the returned player will be invalid.
     export function GetPlayerFromVehicleSeat(vehicle: Vehicle, number: number): Player;
 
-    // Returns the seat index number for the target player if they are in a vehicle, otherwise returns -1.
+    // Returns the seat index number for the target player if they are in a vehicle.
     export function GetPlayerVehicleSeat(player: Player): number;
 
     //------------------------

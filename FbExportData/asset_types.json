@@ -9792,7 +9792,8 @@
         },
         {
           "name": "ObjId",
-          "type": "int"
+          "type": "int",
+          "default": -1
         },
         {
           "name": "OwnerTeam",
@@ -23759,7 +23760,8 @@
       "properties": [
         {
           "name": "ObjId",
-          "type": "int"
+          "type": "int",
+          "default": -1
         },
         {
           "name": "Attacker_TeamID",
@@ -40923,7 +40925,8 @@
         },
         {
           "name": "ObjId",
-          "type": "int"
+          "type": "int",
+          "default": -1
         },
         {
           "name": "OutlineSetting",
@@ -81596,7 +81599,8 @@
         },
         {
           "name": "ObjId",
-          "type": "int"
+          "type": "int",
+          "default": -1
         }
       ],
       "levelRestrictions": []
@@ -114459,7 +114463,8 @@
         },
         {
           "name": "ObjId",
-          "type": "int"
+          "type": "int",
+          "default": -1
         },
         {
           "name": "PortalStableTime",
@@ -142245,7 +142250,8 @@
         },
         {
           "name": "ObjId",
-          "type": "int"
+          "type": "int",
+          "default": -1
         },
         {
           "name": "TacticalAdviceLandVehicleFriendly",
@@ -227818,7 +227824,8 @@
         },
         {
           "name": "ObjId",
-          "type": "int"
+          "type": "int",
+          "default": -1
         },
         {
           "name": "AutoEnableVehicles",
@@ -317177,6 +317184,11 @@
           "name": "points",
           "type": "vector[]",
           "default": []
+        },
+        {
+          "name": "isClosed",
+          "type": "bool",
+          "default": false
         }
       ]
     },
@@ -317195,13 +317207,7 @@
           "value": "spatial"
         }
       ],
-      "properties": [
-        {
-          "name": "ObjId",
-          "type": "int",
-          "default": -1
-        }
-      ]
+      "properties": []
     },
     {
       "type": "OBBVolume",
@@ -317216,8 +317222,49 @@
       "properties": [
         {
           "name": "size",
+          "type": "vector",
+          "default": []
+        }
+      ]
+    },
+    {
+      "type": "ShadowVolume",
+      "directory": "entities",
+      "constants": [
+        {
+          "name": "category",
+          "type": "string",
+          "value": "shadowvolume"
+        }
+      ],
+      "properties": [
+        {
+          "name": "size",
+          "type": "vector",
+          "default": []
+        }
+      ]
+    },
+    {
+      "type": "InteriorVolume",
+      "directory": "entities",
+      "constants": [
+        {
+          "name": "category",
+          "type": "string",
+          "value": "interiorvolume"
+        }
+      ],
+      "properties": [
+        {
+          "name": "points",
           "type": "vector[]",
           "default": []
+        },
+        {
+          "name": "height",
+          "type": "float",
+          "default": 0
         }
       ]
     }

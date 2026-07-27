@@ -119,6 +119,9 @@ def _process_waypointpath(node: dict[str, Any], scene: ttype.Scene) -> bool:
         fb_points.append(putils.vector3_to_json(points[i : i + 3]))
     node["points"] = fb_points
     node["type"] = "WaypointPath"
+    isClosed = node.pop("closed", False)
+    if isClosed:
+        node["isClosed"] = True
     # transform points into parent space
     parents = scene.referencing_node_props.get(node["name"], None)
     if not parents or len(parents) == 0:

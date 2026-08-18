@@ -8,7 +8,8 @@ re_val_str = re.compile(RE_VAL_STR_PATTERN)
 RE_VAL_INT_PATTERN = r"(?P<value>-?\d+)(?:, *|$| +)"
 re_val_int = re.compile(RE_VAL_INT_PATTERN)
 # 123.456 => num
-RE_VAL_NUM_PATTERN = r"(?P<value>-?\d+(\.\d*)?)"
+# https://regex101.com/?regex=%28%3FP%3Cvalue%3E-%3F%5Cd%2B%28%3F%3A%5C.%3F%5Cd*e%3F-%3F%5Cd%2B%29%3F%29&testString=11234.059%0A1.89563e-05%0A1.89563e-05%0A1234%0A10000%0A-5.03%0A-4%0A-4.05%0A10e5%0A1e5%0A-1e5%0A1e-5%0A-1e-5&flags=gm&flavor=pcre2&delimiter=%2F
+RE_VAL_NUM_PATTERN = r"(?P<value>-?\d+(?:\.?\d*e?-?\d+)?)"
 re_val_num = re.compile(RE_VAL_NUM_PATTERN)
 # true => boolean
 RE_VAL_BTRUE_PATTERN = "true"

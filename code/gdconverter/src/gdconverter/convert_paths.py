@@ -58,8 +58,8 @@ def convert_paths(args: ConvertPathsArgs) -> bool:
     has_missing_types = False
 
     for ext_resource in scene_data.ext_resources.values():
-        if ".glb" in Path(ext_resource.path).suffix:
-            continue  # don't handle glb files
+        if Path(ext_resource.path).suffix in [".glb", ".jpg"]:
+            continue
         type_name = Path(ext_resource.path).stem.lower()
         if type_name not in assets:
             if "_terrain" in type_name or "_assets" in type_name:
@@ -81,6 +81,10 @@ def convert_paths(args: ConvertPathsArgs) -> bool:
         actual_path = "res://" + str(Path(ext_resource.path).with_suffix("")).replace("\\", "/")
 
         path_mismatch = expected_path != actual_path if not args.ignore_case else expected_path.lower() != actual_path.lower()
+        if path_mismatch:
+            # allow for scripts prefix
+            expected_path_alt = expected_path.replace("res://objects", "res://scripts")
+            path_mismatch = expected_path_alt != actual_path if not args.ignore_case else expected_path_alt.lower() != actual_path.lower()
         if path_mismatch:
             _logging.log_warning(f"{args.tscn_file.name}: Type does not use correct path:\n" + f"\tCorrect: {expected_path}\n" + f"\tFound:   {actual_path}")
             fixes[actual_path] = expected_path

@@ -118,5 +118,10 @@
         "budget": {
             "physicsCostMax": 0
         }
+    },
+    "MP_Isolated": {
+        "budget": {
+            "physicsCostMax": 0
+        }
     }
 }

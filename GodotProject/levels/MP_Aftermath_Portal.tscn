@@ -173,7 +173,6 @@ id = "CombatArea"
 [node name="CombatVolume" parent="PlayArea/CombatArea" unique_id=90306154 instance=ExtResource("3_6ovst")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -87.63013, -158.025, -7.2669983)
 points = PackedVector2Array(35.355824, 31.8715, 35.642426, 5.5107, 206.60612, 3.057, 208.41013, -65.163, -27.464815, -61.931, -27.479645, -104.245, -118.84647, -107.162, -118.10227, 57.3966, -80.003174, 57.8313, -72.26648, 29.8477, -22.232965, 29.457, -21.020815, 48.1888, 0.19492428, 48.4428, 1.2072242, 26.8976)
-height = 10.0
 
 [node name="Sector - This manages the CapturePoint Names" parent="PlayArea" unique_id=1542210811 node_paths=PackedStringArray("SectorArea", "CapturePoints") instance=ExtResource("8_3r7mr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -117.279, 220.967, -2.29178)

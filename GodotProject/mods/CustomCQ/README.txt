@@ -1,8 +1,9 @@
-Custom Conquest by andy6170 Version 10.0
+Custom Conquest by andy6170 Version 12
 ================================================================================================================
 Just want to play?
-Conquest Template: j51w
-Winter Offensive: zsekg
+Conquest Template: J51W
+Winter Offensive: ZSEKG
+Night Ops: 1XVU6
 
 Included is the full package to get you started.
 The 3 folders contain the full content for Custom Conquest.
@@ -27,6 +28,7 @@ ObjID Assignment:
 1100-1199 Area Trigger for Team 1 Spawn Protection
 1200-1299 Area Trigger for Team 2 Spawn Protection
 1300-1399 Area Trigger for Out of Bounds for Everyone
+1500 - Area Trigger pushes players back like an invisible wall
 901 - AI Spawner for Team 1
 902 - AI Spawner for Team 2
 998 - Team Switcher 1
@@ -34,6 +36,7 @@ ObjID Assignment:
 700-749 - Repel Trigger
 750-799 - Repel Target
 2000-2999 - VFX
+950 - End Game Fixed Camera
 
 As map detection is not working. I have set ranges based on the flag for capturepoint vehicle spawner ObjIDs: 
 A 200 = 600-609
@@ -46,24 +49,95 @@ As of game version 1.1.3 Default AI (Backfill and static) will now play the obje
 Currently Backfill bots only fill 12 slots. However using the Custom AI instead will allow you to backfill to a default of 60 if there are enough slots. This number can be increased however runs the risk of performance impact.
 
 Notes about AI:
-Turn off backfill and static AI.
 If you set the teams to 32v32 and you set this to 100, then 36 bots will join. 
 If you set the teams to 1v1 then 98 bots will join. 
 Recommended maximum 60 for server performance.
 
+Conquest Assault Notes:
+It's recommended to turn off TotalControlTicketBleed.
+Conquest Assault will disable HQ with ObjID 2 as this is the default for Team 2.
+Team2 custom bots will stop spawning if there are no valid positions. However Backfill/Static ignore this and deploy on disabled HQs.
+If using Conquest Assault I recommend having a Spatial version without the Team 2 HQs to get around these issues or use Custom Bots.
 
-Knows Issues:
+
+Known Issues:
 Scoreboard at the end of round may break.
 Backfill/Static AI pathfinding may have issues in Redsec maps.
 When hosting locally the scoreboard will break when changing team. If hosted on a server it will work correctly.
 Vehicles spawn on the map and cannot be selected from the spawn menu.
 AI will not drive/fly on some maps.
+If bots despawn while on an objective it may not update the number of players on the capture point.
+Custom bots may show more than once on the scoreboard. This is due to the pool of names rotating.
 
 
 ================================================================================================================
 ================================================================================================================
 
 Changes in this update:
+
+V12.0
+- Now uses the official ticket UI
+- New toggle to enable/disable timer UI
+- New end screen UI
+- Added percentage control for random Day/Night
+- Maps updated for 1.4.2.0
+- Spatials and prefab now come with AA defence for HQs
+- Custom Bots are less likely to unpawn unnecessarily
+- Custom Bots more likely to fire back when shot
+- Custom Bots now have score tracking for the scoreboard
+
+New Maps:
+- Operation Metro (bellum1988)
+- Gulf of Lyndon (kurtinthegrind)
+- Cairo Bazaar
+- Golmud Railway
+- Blackwell Fields (stellaxnova)
+- Eastwood (ty_ger07)
+- New Sobek City (ty_ger07)
+- Mirak Valley (ty_ger07)
+- Mirak Valley Winter Version
+
+
+Note About Golmud Railway:
+For the train objective to move, go into the Gameplay Modifiers and set the "Golmud Train Variant" to "Moving Train"
+
+Special thanks to these map contributors to the template:
+Martstok, Mancour, ty_ger007, stellaxnova, kurtinthegrind, bellum1988
+
+
+================================================================================================================
+================================================================================================================
+
+Previous Update Changes:
+
+V11.0
+- New "NightMode" toggle to make all maps have night
+- New "RandomDayNight" toggle added to randomly choose time of day
+- New "EnableHeaderUI" toggle to turn off UI at the top for hardcore servers
+- Added toggle to give players Gas Masks
+- Player capture UI update rate changed from 0.1 to .015 to reduce performance impact when high number of players are on points
+- Added safety to prevent Conquest Assault ending early if players do not deploy
+- Fixed Conquest Assault ending incorrectly
+- New "invisible wall" Area Trigger 1500 will push players back (INFANTRY ONLY)
+- New near end music logic to match the original which intensifies over time
+- Fixed bug where AI could trigger score to -1 at the end of the game
+- New end game Fixed Camera ObjID 950
+- Updated Spatials to include end game camera
+- Updated player scoring to reflect more accurately on the scoreboard
+- Added objective neutralisation sound
+- You can now safely mix custom and default bots together
+- Custom AI instructions only apply to custom bots
+- Mixing default and custom bots no longer gives default bots double health
+- Custom Bots will now only pathfind to objectives within 500m to reduce pathfinding failures
+- Custom Bots failing to reach a target will now defend an area and then attempt to scout again
+- Custom bots will have longer time to move when spawning in vehicles so they have enough time to take off in helis
+- Custom bots will scout if they reach an objective that has moved (train objective for example)
+- Bots will equip torches when night is enabled (except recon)
+- Map Update: Redline Storage forest has been expanded and has a new objective
+- Map Update: Area 22B now has a forest added providing more cover in the centre of the map
+
+
+
 
 V10.0
 - Updated Spatial maps for new HQ and Surrounding Combat Area logic
@@ -83,24 +157,11 @@ V10.0
 - AI will leave vehicles if they forget how to drive
 - Dirt Bikes have been added to some maps
 
-New Maps:
+New Maps Added:
 - Hagental Base
 - Complex 3 (Special thanks to Mancour)
 
-Conquest Assault Notes:
-It's recommended to turn off TotalControlTicketBleed.
-Conquest Assault will disable HQ with ObjID 2 as this is the default for Team 2. 
-In update 1.2.3.0 HQs now draw on the map however disabling HQs does not remove them from the map.
-Team2 custom bots will stop spawning if there are no valid positions. However Backfill/Static ignore this and deploy on disabled HQs.
-If using Conquest Assault I recommend having a Spatial version without the Team 2 HQs to get around these issues or use Custom Bots.
 
-
-
-
-================================================================================================================
-================================================================================================================
-
-Previous Update Changes:
 
 V9.6
 

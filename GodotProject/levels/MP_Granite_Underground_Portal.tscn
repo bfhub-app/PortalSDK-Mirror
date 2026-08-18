@@ -63,7 +63,6 @@ CombatVolume = NodePath("CombatVolume")
 [node name="CombatVolume" parent="CombatArea" instance=ExtResource("2_a4sqy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 684.538, 381.691, -421.208)
 points = PackedVector2Array(94.5128, -298.009, -73.0737, -256.346, -309.156, -146.17, -345.098, -41.2253, -227.33, 170.608, -195.481, 273.562, -77.7133, 363.925, 174.857, 407.884, 254.11, 353.074, 311.142, 110.132, 373.748, -13.5894, 371.526, -150.615, 302.751, -233.57, 280.602, -317.89)
-height = 100.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.101056, 0.994881, 0, -0.994881, 0.101056, 729.154, 687.668, -321.723)

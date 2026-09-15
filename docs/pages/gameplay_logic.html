@@ -344,17 +344,17 @@ Spawnable objects are restricted by map to objects that already exist in that ma
 </ul>
 <div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="c1">// strings.json</span>
 <span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;scoreboard&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Custom Scoreboard&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"scoreboard"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Custom Scoreboard"</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1">// script.ts</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">msg1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mod</span><span class="p">.</span><span class="nx">Message</span><span class="p">(</span><span class="nx">mod</span><span class="p">.</span><span class="nx">stringkeys</span><span class="p">.</span><span class="nx">scoreboard</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">msg2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mod</span><span class="p">.</span><span class="nx">Message</span><span class="p">(</span><span class="s2">&quot;scoreboard&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">msg3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mod</span><span class="p">.</span><span class="nx">Message</span><span class="p">(</span><span class="s2">&quot;Custom Scoreboard&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">msg2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mod</span><span class="p">.</span><span class="nx">Message</span><span class="p">(</span><span class="s2">"scoreboard"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">msg3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mod</span><span class="p">.</span><span class="nx">Message</span><span class="p">(</span><span class="s2">"Custom Scoreboard"</span><span class="p">);</span>
 
 <span class="c1">// String literals require generating strings json from web editor</span>
 <span class="c1">// if not defined in strings.json</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">playerRank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Player Rank&quot;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">playerRank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Player Rank"</span><span class="p">;</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">rankMsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mod</span><span class="p">.</span><span class="nx">Message</span><span class="p">(</span><span class="nx">playerRank</span><span class="p">);</span>
 </pre></div>
 </div>

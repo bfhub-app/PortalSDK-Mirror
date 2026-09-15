@@ -71,6 +71,7 @@ HQArea = NodePath("HQ_Team1")
 InfantrySpawns = [NodePath("SpawnPoint_1_1"), NodePath("SpawnPoint_1_2"), NodePath("SpawnPoint_1_3"), NodePath("SpawnPoint_1_4")]
 
 [node name="HQ_Team1" parent="Conquest/TEAM_1_HQ" unique_id=1747708596 instance=ExtResource("3_g38ow")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 points = PackedVector2Array(-38.57112, -2.9980922, -36.69316, 49.081505, 9.480392, 83.511765, 23.868057, 83.62927, 23.455704, 4.564319, 28.941101, -7.5752096, 30.260147, -29.329098, 22.756638, -39.85906, 24.948822, -74.70566, 15.391251, -74.72998, -24.68309, -46.00725)
 height = 50.0
 color = Color(0.0621983, 0.524847, 1, 0.42)
@@ -386,10 +387,7 @@ transform = Transform3D(-0.70820415, 0, 0.7060075, 0, 1, 0, -0.7060075, 0, -0.70
 transform = Transform3D(-0.7060075, 0, -0.7082042, 0, 1, 0, 0.7082042, 0, -0.7060075, -35.278477, 220.70308, 11.869588)
 
 [node name="FiringRange_Floor_A" parent="Details" unique_id=501277973 instance=ExtResource("16_ubtit")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -51.64866, 224.16699, 74.23478)
-
-[node name="FiringRange_Floor_A2" parent="Details" unique_id=1751861109 instance=ExtResource("16_ubtit")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -51.64866, 227.68924, 74.23478)
+transform = Transform3D(10, 0, 0, 0, -4.371139e-07, 10, 0, -10, -4.371139e-07, -51.64866, 238.26712, 74.23478)
 
 [node name="BarrierHesco_01_128x120" parent="Details" unique_id=1979827148 instance=ExtResource("17_strui")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 90.09823, 214.4192, 14.21866)

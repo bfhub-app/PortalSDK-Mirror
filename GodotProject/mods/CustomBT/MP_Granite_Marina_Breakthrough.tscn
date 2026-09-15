@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" path="res://static/MP_Granite_Marina_Portal_Terrain.tscn" id="6_wunus"]
 [ext_resource type="PackedScene" path="res://static/MP_Granite_Marina_Portal_Assets.tscn" id="7_6ml5c"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/AreaTrigger.tscn" id="7_hf453"]
-[ext_resource type="PackedScene" path="res://objects/Gameplay/Common/VehicleSpawner.tscn" id="8_xjykx"]
+[ext_resource type="PackedScene" path="res://objects/gameplay/common/VehicleSpawner.tscn" id="8_xjykx"]
 [ext_resource type="PackedScene" path="res://objects/architecture/FiringRange_Floor_01.tscn" id="9_ss2hv"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Conquest/CapturePoint.tscn" id="11_50klc"]
 [ext_resource type="PackedScene" path="res://objects/gameplay/common/AreaTrigger.tscn" id="13_l8e5o"]
@@ -832,11 +832,11 @@ ObjId = 605
 Area = NodePath("../PolygonVolume5")
 
 [node name="AI_Spawner1" parent="." unique_id=1833648949 instance=ExtResource("20_hc154")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1523.7, 99.2778, -764.935)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1522.4812, 101.38733, -764.935)
 ObjId = 901
 
 [node name="AI_Spawner2" parent="." unique_id=411789580 instance=ExtResource("20_hc154")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1523.68, 99.2778, -766.588)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1522.4613, 101.38733, -766.588)
 ObjId = 902
 
 [node name="FiringRange_Floor_01" parent="." unique_id=1980846179 instance=ExtResource("9_ss2hv")]

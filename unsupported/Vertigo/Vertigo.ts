@@ -145,7 +145,6 @@ const vfxtest = [
     mod.RuntimeSpawn_Common.FX_BASE_Fire_Oil_Medium,
     mod.RuntimeSpawn_Common.FX_BASE_Fire_S,
     mod.RuntimeSpawn_Common.FX_BASE_Fire_S_NoSmoke,
-    mod.RuntimeSpawn_Common.FX_BASE_Fire_XL,
 ]
 
 export function OngoingGlobal() {

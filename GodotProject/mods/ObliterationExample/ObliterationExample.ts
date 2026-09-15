@@ -1,13 +1,45 @@
+//Consts
+const TEAM1 = mod.GetTeam(1);
+const TEAM2 = mod.GetTeam(2);
+
 //References
 let bombReference: mod.Bomb;
 let gruntReference: mod.Player;
 let playerReference: mod.Player;
 let MCOMReference: mod.MCOM;
+let MCOMOwner: mod.Team;
 
 //States
 let AIHasBomb = false;
 let isMCOMArmTypeBomb = false;
 let isBombSpawnedIn = false;
+
+const worldIconDetails = [
+    {
+        id: 41,
+        msg: mod.Message('SPAWN BOMB'),
+    },
+    {
+        id: 42,
+        msg: mod.Message('(TOGGLE) GIVE BOMB TO PLAYER'),
+    },
+    {
+        id: 43,
+        msg: mod.Message('FORCE BOMB DROP'),
+    },
+    {
+        id: 44,
+        msg: mod.Message('BOMB RESET'),
+    },
+    {
+        id: 45,
+        msg: mod.Message('CHANGE MCOM ARM TYPE'),
+    },
+    {
+        id: 46,
+        msg: mod.Message('SWITCH MCOM OWNER'),
+    },
+];
 
 ////////////////////
 ///// SETUP
@@ -16,29 +48,19 @@ let isBombSpawnedIn = false;
 export async function OnGameModeStarted() {
     //MCOM REFERENCE
     MCOMReference = mod.GetMCOM(30);
+    MCOMOwner = TEAM2;
+    mod.SetMCOMOwner(MCOMReference, MCOMOwner);
 
     //SPAWN TEST GRUNT
     const AISpawnerReference = mod.GetSpawner(10);
     mod.SpawnAIFromAISpawner(AISpawnerReference, mod.GetTeam(2));
 
     //ICON SETUP
-    const worldIcon1 = mod.GetWorldIcon(41);
-    const worldIcon2 = mod.GetWorldIcon(42);
-    const worldIcon3 = mod.GetWorldIcon(43);
-    const worldIcon4 = mod.GetWorldIcon(44);
-    const worldIcon5 = mod.GetWorldIcon(45);
-
-    mod.EnableWorldIconText(worldIcon1, true);
-    mod.EnableWorldIconText(worldIcon2, true);
-    mod.EnableWorldIconText(worldIcon3, true);
-    mod.EnableWorldIconText(worldIcon4, true);
-    mod.EnableWorldIconText(worldIcon5, true);
-
-    mod.SetWorldIconText(worldIcon1, mod.Message('SPAWN BOMB'));
-    mod.SetWorldIconText(worldIcon2, mod.Message('(TOGGLE) GIVE BOMB TO PLAYER'));
-    mod.SetWorldIconText(worldIcon3, mod.Message('FORCE BOMB DROP'));
-    mod.SetWorldIconText(worldIcon4, mod.Message('BOMB RESET'));
-    mod.SetWorldIconText(worldIcon5, mod.Message('CHANGE MCOM ARM TYPE'));
+    for (const iconDetail of worldIconDetails) {
+        const worldIcon = mod.GetWorldIcon(iconDetail.id);
+        mod.EnableWorldIconText(worldIcon, true);
+        mod.SetWorldIconText(worldIcon, iconDetail.msg);
+    }
 }
 
 export async function OnPlayerDeployed(eventPlayer: mod.Player) {
@@ -95,6 +117,12 @@ export async function OnPlayerInteract(player: mod.Player, interactPoint: mod.In
         } else {
             mod.SetMCOMArmType(MCOMReference, mod.MCOMArmType.Bomb);
         }
+    }
+
+    //Toggles owning team of MCOM
+    if (mod.GetObjId(interactPoint) == 6) {
+        MCOMOwner = MCOMOwner == TEAM1 ? TEAM2 : TEAM1;
+        mod.SetMCOMOwner(MCOMReference, MCOMOwner);
     }
 }
 

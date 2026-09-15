@@ -1,4 +1,4 @@
-Custom Conquest by andy6170 Version 12
+Custom Conquest by andy6170 Version 14
 ================================================================================================================
 Just want to play?
 Conquest Template: J51W
@@ -75,6 +75,35 @@ Custom bots may show more than once on the scoreboard. This is due to the pool o
 
 Changes in this update:
 
+V14.0
+- Now uses the official capture UI
+- Now uses official capture point sounds
+- Added AI difficulty (1 Easy | 2 Default | 3 Hard | 4 Impossible)
+- Added option to control how likely AI will use vehicles
+- AI names will now be assigned to teams
+- AI behaviour improved
+- Fixed Cairo Bazaar Combat Area
+- Performance improvements
+
+New Maps:
+- Tsuru Reef
+
+
+Note About Golmud Railway:
+For the train objective to move, go into the Gameplay Modifiers and set the "Golmud Train Variant" to "Moving Train"
+
+Note About Tsuru Reef:
+To enable the carriers, go into the Gameplay Modifiers and set the "Aircraft Carrier Variation" to "Conquest"
+
+Special thanks to these map contributors to the template:
+Martstok, Mancour, ty_ger007, stellaxnova, kurtinthegrind, bellum1988
+
+
+================================================================================================================
+================================================================================================================
+
+Previous Update Changes:
+
 V12.0
 - Now uses the official ticket UI
 - New toggle to enable/disable timer UI
@@ -98,17 +127,7 @@ New Maps:
 - Mirak Valley Winter Version
 
 
-Note About Golmud Railway:
-For the train objective to move, go into the Gameplay Modifiers and set the "Golmud Train Variant" to "Moving Train"
 
-Special thanks to these map contributors to the template:
-Martstok, Mancour, ty_ger007, stellaxnova, kurtinthegrind, bellum1988
-
-
-================================================================================================================
-================================================================================================================
-
-Previous Update Changes:
 
 V11.0
 - New "NightMode" toggle to make all maps have night

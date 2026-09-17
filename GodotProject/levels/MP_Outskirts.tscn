@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://833orvdxqpyd"]
+[gd_scene format=3 uid="uid://833orvdxqpyd"]
 
 [ext_resource type="PackedScene" uid="uid://jv31so3xcr7p" path="res://addons/bf_portal/portal_tools/types/PolygonVolume/PolygonVolume.tscn" id="2_cjtf1"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/HQ_PlayerSpawner.tscn" id="3_0un4h"]

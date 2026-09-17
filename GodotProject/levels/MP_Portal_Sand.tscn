@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://h7ccxfs6nt0b"]
+[gd_scene format=3 uid="uid://h7ccxfs6nt0b"]
 
 [ext_resource type="PackedScene" path="res://static/MP_Portal_Sand_Terrain.tscn" id="0"]
 [ext_resource type="PackedScene" path="res://static/MP_Portal_Sand_Assets.tscn" id="1"]

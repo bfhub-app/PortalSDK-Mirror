@@ -1,15 +1,18 @@
 {
     "manifest_version": "1",
     "name": "Custom Conquest",
-    "mod_version": "11",
+    "mod_version": "14.0",
     "author": "Viper Studios Andy",
     "description": "CONQUEST: Capture the sectors to control the field. Deplete the enemy's reinforcements to win. Recommended for 64 players.\nListed below are levels that have been pre-configured to immediately work with this Conquest Template once imported into the Battlefield 6 Web Builder.\nTo use your custom levels, you will need to export them and upload them to the web-builder separately.",
     "base_skel": "custom_conquest_skel.json",
-    "workspace": "conquest_template_12.0.json",
-    "strings": "CustomCQ.strings.json",
+    "workspace": "conquest_template_14.0.json",
     "icon": "conquest.svg",
     "game_mode": "ModBuilderCustom0",
     "maps": [
+        {
+            "map_name": "MP_Granite_MainStreet_Portal",
+            "file_stem": "GulfofLyndon_Conquest_Large"
+        },
         {
             "map_name": "MP_Abbasid",
             "file_stem": "MP_Abbasid_CustomConquest"
@@ -100,8 +103,8 @@
             "file_stem": "MP_Granite_Underground_Portal_Conquest"
         },
         {
-            "map_name": "MP_Granite_MainStreet_Portal",
-            "file_stem": "GulfofLyndon_Conquest_Large"
+            "map_name": "MP_Isolated",
+            "file_stem": "MP_Isolated_Conquest"
         },
         {
             "map_name": "MP_Outskirts",

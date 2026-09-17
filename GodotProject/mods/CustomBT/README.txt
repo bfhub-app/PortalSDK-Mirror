@@ -1,9 +1,9 @@
-Custom Breakthrough by andy6170 Version 3.0
+Custom Breakthrough by andy6170 Version 5.0
 ================================================================================================================
 
 Ready to play:
-Breakthrough Template: zfxyv
-Night Ops Breakthrough: 1ytr3
+Breakthrough Template: ZFXYV
+Night Ops Breakthrough: 1YTR3
 
 
 Included is the full package to get you started.
@@ -24,22 +24,24 @@ When some people open the experience link they are unable to see the blocks.
 If this happens you can import the included JSON of the template onto the Portal website within the block editor.
 
 
-IbjID Assignment:
-+-------------+----------+----------+----------+----------+--------------+
-| Item        | Sector 0 | Sector 1 | Sector 2 | Sector 3 | Final Sector |
-+-------------+----------+----------+----------+----------+--------------+
-| Sector      | 100      | 101      | 102      | 103      | 104          |
-| Area Trigger| 600      | 601      | 602      | 603      | 604          |
-| Objective A | N/A      | 1100     | 1200     | 1300     | N/A          |
-| Objective B | N/A      | 1101     | 1201     | 1301     | N/A          |
-| Team1 HQ    | N/A      | 301      | 302      | 303      | N/A          |
-| Team2 HQ    | N/A      | 401      | 402      | 403      | N/A          |
-| Vehicles    | N/A      | 1150-1199| 1250-1299| 1350-1399| N/A          |
-| TeamSwitcher| 998      | N/A      | 999      | N/A      | N/A          |
-| VFX         | 2000-2999| N/A      | N/A      | N/A      | N/A          |
-| Push Back   | 700      | N/A      | N/A      | N/A      | N/A          |
-| End Game Cam| 950      | N/A      | N/A      | N/A      | N/A          |
-+-------------+----------+----------+----------+----------+--------------+
+ObjID Assignment:
+
+Example for 3 sectors:
++--------------+----------+----------+----------+----------+--------------+
+| Item         | Sector 0 | Sector 1 | Sector 2 | Sector 3 | Final Sector |
++--------------+----------+----------+----------+----------+--------------+
+| Sector       | 100      | 101      | 102      | 103      | 104          |
+| Area Trigger | 600      | 601      | 602      | 603      | 604          |
+| Objective A  | N/A      | 1100     | 1200     | 1300     | N/A          |
+| Objective B  | N/A      | 1101     | 1201     | 1301     | N/A          |
+| Team1 HQ     | N/A      | 301      | 302      | 303      | N/A          |
+| Team2 HQ     | N/A      | 401      | 402      | 403      | N/A          |
+| Vehicles     | N/A      | 1150-1199| 1250-1299| 1350-1399| N/A          |
+| VFX          | 2000-2999| N/A      | N/A      | N/A      | N/A          |
+| Push Back    | 700      | N/A      | N/A      | N/A      | N/A          |
+| End Game Cam | 950      | N/A      | N/A      | N/A      | N/A          |
+| Team Switcher| 990-999  | N/A      | N/A      | N/A      | N/A          |
++--------------+----------+----------+----------+----------+--------------+
 
 
 Notes about AI:
@@ -49,20 +51,19 @@ As backfill are limited to 12 bots, custom bots to bypass this.
 
 To use custom bots:
 Turn off backfill and static AI.
-Unable Custom blocks in the Block Editor at the top of the MOD.
+Enable Custom Bots in the Block Editor at the top of the MOD.
 These will fill in the spare player count up to 100. 
 So if you have 64 player slots, then 36 bots will join.
 The less player slots, the more bots.
-When hosting locally, adding too many bots will slow down the game so I recommend setting to 60 if you plan to host locally.
 
 
 Known Issues:
-Some areas of maps have no hit detection. You must add a Combat Area around the play area to prevent the hit registration failing.
-The F16 is not detected correctly (this is a game bug) and will trigger the out of bounds.
-When hosting locally the scoreboard will break when changing team. If hosted on a server it will work correctly.
-Vehicles spawn on the map and cannot be selected from the spawn menu.
-Default bots do not work on RedSec maps if you have more than 1 Objective per sector. Custom AI has been added to address this.
-VFX will only render for players at the start of a game. This is being investigated
+- Some areas of maps have no hit detection. You must add a either a Surrounding Combat Area or Combat Area around the play area to prevent the hit registration failing.
+- The F16 is not detected correctly (this is a game bug) and will trigger the out of bounds.
+- When hosting locally the scoreboard will break when changing team. If hosted on a server it will work correctly.
+- Vehicles spawn on the map and cannot be selected from the spawn menu.
+- Default bots do not work on RedSec maps if you have more than 1 Objective per sector. Custom AI has been added to address this.
+- VFX will only render for players at the start of a game. This is being investigated
 
 
 ================================================================================================================
@@ -74,7 +75,44 @@ Update Changes:
 INFO REGARING BOTS:
 If playing Premium maps, the default (backfill/static) bots are recommended.
 If playing RedSec maps, use the custom bots as they will play all objectives where the default are bugged.
-As backfill are limited to 12 bots, you can use custom bots to bypass this for a PvE experience.
+This supports the mixing of Backfill/Static with custom bots.
+
+
+V5.0
+- Official MCOM HUD added (location is fixed so sector UI is now underneath for now)
+- Add toggle for UI timer
+- Added AI difficulty (1 Easy | 2 Default | 3 Hard | 4 Impossible)
+- Added option to control how likely AI will use vehicles
+- AI logic improved for Tsuru Reef
+- Team switcher range increased ObjID(990-999)
+- Fixed FX when joining mid game
+- Added support for FA-81F-Super-Spectre and F-74A-Seacat
+- Performance improvements
+
+New Map:
+Tsuru Reef
+
+
+IMPORTANT NOTES:
+- You must add a Surrounding Combat Area or Combat Area around the play area to prevent the hit registration failing.
+
+
+================================================================================================================
+================================================================================================================
+
+Previous Changes:
+
+V4.0
+
+- Updated Spatial files for SDK 1.4.2.0
+- Adjusted UI for timer
+- Added score tracking for custom bots
+- Fixed issue where custom bots may not spawn on objectives
+- Defending custom bots will now spawn on capture points for the first 20s of each sector to improve defending behaviour
+- Reduced vehicle spawn distance for custom bots when spawning on objectives (reduced from 90m to 70m)
+- Improved custom bot reactions when shot
+
+
 
 V3.0
 
@@ -109,14 +147,6 @@ New Maps:
 - Contaminated
 - Mirak Valley
 
-IMPORTANT NOTES:
-- You must add a Combat Area around the play area to prevent the hit registration failing.
-
-
-================================================================================================================
-================================================================================================================
-
-Previous Changes:
 
 V2.0
 

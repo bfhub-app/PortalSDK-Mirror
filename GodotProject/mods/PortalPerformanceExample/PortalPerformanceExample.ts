@@ -8,54 +8,50 @@ let runningAILogic = false;
 export function OnGameModeStarted(): void {
     console.log('Log> OnGameModeStarted');
 
-    // Performance UI Widget setup
-    portalFrameUI = TrackerSetup(
-        'PortalFrameTime',
-        mod.CreateVector(200, 40, 0),
-        mod.stringkeys.PortalFrameTime
-    );
-    serverFrameUI = TrackerSetup(
-        'ServerFrameTime',
-        mod.CreateVector(200, 77, 0),
-        mod.stringkeys.ServerFrameTime
-    );
-
     // Icon indicating the trigger area (for the experiment)
     IconSetup(mod.CreateVector(0.5, 35, 7), mod.WorldIconImages.Alert, mod.stringkeys.SpawnAIs);
     IconSetup(mod.CreateVector(0.5, 35, 4), mod.WorldIconImages.Flag, mod.stringkeys.UnspawnAIs);
-    IconSetup(
-        mod.CreateVector(0.5, 35, -2.6),
-        mod.WorldIconImages.Alert,
-        mod.stringkeys.RunAILogic
-    );
-    IconSetup(
-        mod.CreateVector(0.5, 35, -5.6),
-        mod.WorldIconImages.Flag,
-        mod.stringkeys.StopAILogic
-    );
+    IconSetup(mod.CreateVector(0.5, 35, -2.6), mod.WorldIconImages.Alert, mod.stringkeys.RunAILogic);
+    IconSetup(mod.CreateVector(0.5, 35, -5.6), mod.WorldIconImages.Flag, mod.stringkeys.StopAILogic);
 
-    void UpdateFrameTime();
+    // Performance UI Widgets
+    StartPerformanceTracker();
 }
 
-async function UpdateFrameTime(): Promise<void> {
-    while (true) {
-        // update the performance UI widget every 0.5s
-        mod.SetUITextLabel(
-            portalFrameUI,
-            mod.Message(mod.stringkeys.PortalFrameTime, +mod.GetPortalAverageFrameTime().toFixed(2))
-        );
-        mod.SetUITextLabel(
-            serverFrameUI,
-            mod.Message(mod.stringkeys.ServerFrameTime, +mod.GetServerAverageFrameTime().toFixed(2))
-        );
-        await mod.Wait(1);
+// all-in-one perf tracker UI setup and update (can copy & paste to your script)
+async function StartPerformanceTracker(): Promise<void> {
+    mod.AddUIText(
+        'PortalFrameTime',
+        mod.CreateVector(200, 40, 0),
+        mod.CreateVector(320, 35, 0),
+        mod.UIAnchor.TopRight,
+        mod.Message(mod.stringkeys.PortalFrameTime, 0)
+    );
+    mod.AddUIText(
+        'ServerFrameTime',
+        mod.CreateVector(200, 77, 0),
+        mod.CreateVector(320, 35, 0),
+        mod.UIAnchor.TopRight,
+        mod.Message(mod.stringkeys.ServerFrameTime, 0)
+    );
+    const PortalFrameUI = mod.FindUIWidgetWithName('PortalFrameTime');
+    const ServerFrameUI = mod.FindUIWidgetWithName('ServerFrameTime');
+    const RedColor = mod.CreateVector(1, 0, 0);
+    const GreenColor = mod.CreateVector(0, 1, 0);
+    if (PortalFrameUI && ServerFrameUI) {
+        while (true) {
+            const PortalAFT = mod.GetPortalAverageFrameTime();
+            const ServerAFT = mod.GetServerAverageFrameTime();
+            mod.SetUITextColor(PortalFrameUI, PortalAFT > 3.0 ? RedColor : GreenColor);
+            mod.SetUITextColor(ServerFrameUI, ServerAFT > 20.0 ? RedColor : GreenColor);
+            mod.SetUITextLabel(PortalFrameUI, mod.Message(mod.stringkeys.PortalFrameTime, +PortalAFT.toFixed(2)));
+            mod.SetUITextLabel(ServerFrameUI, mod.Message(mod.stringkeys.ServerFrameTime, +ServerAFT.toFixed(2)));
+            await mod.Wait(0.5); // update the performance UI widget every 0.5s
+        }
     }
 }
 
-export async function OnPlayerEnterAreaTrigger(
-    eventPlayer: mod.Player,
-    eventAreaTrigger: mod.AreaTrigger
-): Promise<void> {
+export async function OnPlayerEnterAreaTrigger(eventPlayer: mod.Player, eventAreaTrigger: mod.AreaTrigger): Promise<void> {
     if (mod.GetSoldierState(eventPlayer, mod.SoldierStateBool.IsAISoldier))
         // Human player trigger only
         return;
@@ -83,28 +79,8 @@ export async function OnPlayerEnterAreaTrigger(
     }
 }
 
-function TrackerSetup(name: string, pos: mod.Vector, message: string): mod.UIWidget {
-    mod.AddUIText(
-        name,
-        pos,
-        mod.CreateVector(320, 35, 0),
-        mod.UIAnchor.TopRight,
-        mod.Message(message, 0)
-    );
-    const widget = mod.FindUIWidgetWithName(name);
-    mod.SetUITextSize(widget, 30);
-    mod.SetUITextAnchor(widget, mod.UIAnchor.CenterLeft);
-    mod.SetUIWidgetVisible(widget, true);
-    return widget;
-}
-
 function IconSetup(pos: mod.Vector, image: mod.WorldIconImages, message: string): void {
-    const icon = mod.SpawnObject(
-        mod.RuntimeSpawn_Common.WorldIcon,
-        pos,
-        mod.CreateVector(0, 0, 0),
-        mod.CreateVector(1, 1, 1)
-    );
+    const icon = mod.SpawnObject(mod.RuntimeSpawn_Common.WorldIcon, pos, mod.CreateVector(0, 0, 0), mod.CreateVector(1, 1, 1));
     mod.SetWorldIconImage(icon, image);
     mod.EnableWorldIconImage(icon, true);
     mod.SetWorldIconColor(icon, mod.CreateVector(1, 1, 1));
@@ -116,11 +92,7 @@ async function RunAILogic(): Promise<void> {
     if (runningAILogic) return;
 
     runningAILogic = true;
-    const points = [
-        mod.CreateVector(35, 33, 30),
-        mod.CreateVector(35, 33, -30),
-        mod.CreateVector(5, 33, 0),
-    ];
+    const points = [mod.CreateVector(35, 33, 30), mod.CreateVector(35, 33, -30), mod.CreateVector(5, 33, 0)];
     const players = mod.AllPlayers();
     const n = mod.CountOf(players);
     const playersTarget = new Array(n).fill(0);
@@ -140,32 +112,18 @@ async function RunAILogic(): Promise<void> {
             }
 
             // just making it more expensive ...
-            const playerFacing = mod.GetSoldierState(
-                player,
-                mod.SoldierStateVector.GetFacingDirection
-            );
+            const playerFacing = mod.GetSoldierState(player, mod.SoldierStateVector.GetFacingDirection);
             let marked = 0;
             for (let j = 0; j < n; j++) {
                 const other = mod.ValueInArray(players, j);
-                const otherLocation = mod.GetSoldierState(
-                    other,
-                    mod.SoldierStateVector.GetPosition
-                );
+                const otherLocation = mod.GetSoldierState(other, mod.SoldierStateVector.GetPosition);
                 if (mod.DistanceBetween(playerLocation, otherLocation) < 10) {
-                    const otherFacing = mod.GetSoldierState(
-                        other,
-                        mod.SoldierStateVector.GetFacingDirection
-                    );
+                    const otherFacing = mod.GetSoldierState(other, mod.SoldierStateVector.GetFacingDirection);
                     const dotOther = mod.DotProduct(playerFacing, otherFacing);
                     const crossOther = mod.CrossProduct(playerFacing, otherFacing);
                     const dirToward = mod.DirectionTowards(playerLocation, otherLocation);
                     const dotDirToward = mod.DotProduct(playerFacing, dirToward);
-                    if (
-                        dotOther < -0.3 &&
-                        dotDirToward > 0 &&
-                        mod.DistanceBetween(crossOther, mod.CreateVector(0, 0, 0)) > 0.5
-                    )
-                        marked = mod.Add(marked, 1);
+                    if (dotOther < -0.3 && dotDirToward > 0 && mod.DistanceBetween(crossOther, mod.CreateVector(0, 0, 0)) > 0.5) marked = mod.Add(marked, 1);
                 }
             }
 

@@ -119,7 +119,17 @@
             "physicsCostMax": 0
         }
     },
+    "MP_Portal_Ocean": {
+        "budget": {
+            "physicsCostMax": 0
+        }
+    },
     "MP_Isolated": {
+        "budget": {
+            "physicsCostMax": 0
+        }
+    },
+    "MP_Atoll": {
         "budget": {
             "physicsCostMax": 0
         }

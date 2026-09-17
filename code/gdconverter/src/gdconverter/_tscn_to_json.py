@@ -29,20 +29,18 @@ class CustomEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-def process_scene_file(src_file: Path, dst_file: Path, assets: jstype.Assets) -> bool:
+def process_scene_file(src_file: Path, assets: jstype.Assets) -> tuple[bool, dict[str, Any] | None]:
     """Given a tscn, create a json from it"""
-    _logging.log_debug(f"process_scene_file {src_file} -> {dst_file}")
+    _logging.log_debug(f"process_scene_file {src_file}")
     tscn_instances = tparser.parse_scene(src_file)
     if not tscn_instances:
         _logging.log_error("Failed to parse scene")
-        return False
+        return False, None
 
     scene = _create_scene(tscn_instances, assets, src_file)
     if scene is None:
-        return False
-    with open(dst_file, "w", encoding="utf-8") as json_data:
-        json.dump(scene.layer_list, json_data, indent=4, cls=CustomEncoder)
-    return True
+        return False, None
+    return True, scene.layer_list
 
 
 def _create_scene(tscn_instances: dict[str, list[ttype.Instance]], assets: jstype.Assets, filepath: Path) -> ttype.Scene | None:

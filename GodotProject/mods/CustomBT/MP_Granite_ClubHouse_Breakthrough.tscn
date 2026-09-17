@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://jv31so3xcr7p" path="res://addons/bf_portal/portal_tools/types/PolygonVolume/PolygonVolume.tscn" id="9_6117s"]
 [ext_resource type="PackedScene" path="res://objects/entities/SpawnPoint.tscn" id="10_kysvo"]
 [ext_resource type="PackedScene" path="res://objects/props/CommandPost_01_Drone_Props.tscn" id="12_egvh5"]
-[ext_resource type="PackedScene" path="res://objects/Gameplay/Common/VehicleSpawner.tscn" id="12_en2gs"]
+[ext_resource type="PackedScene" path="res://objects/gameplay/common/VehicleSpawner.tscn" id="12_en2gs"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Conquest/CapturePoint.tscn" id="12_hhs3u"]
 [ext_resource type="PackedScene" path="res://objects/props/CommandPost_01_A.tscn" id="13_55hgj"]
 [ext_resource type="PackedScene" path="res://objects/props/CrateAmmo_01_StackB.tscn" id="14_dil84"]
@@ -36,7 +36,6 @@
 [ext_resource type="PackedScene" path="res://objects/uncategorized/GCarSUV_01_PoliceUS.tscn" id="32_rls7e"]
 [ext_resource type="PackedScene" path="res://objects/props/BarrierPlastic_01.tscn" id="33_j6a4m"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/AI/AI_Spawner.tscn" id="33_xsexs"]
-[ext_resource type="PackedScene" path="res://objects/gameplay/common/AreaTrigger.tscn" id="37_yw16r"]
 [ext_resource type="PackedScene" path="res://objects/gameplay/common/FixedCamera.tscn" id="38_rls7e"]
 
 [node name="MP_Granite_ClubHouse_Portal" type="Node3D" unique_id=2069312821]
@@ -623,6 +622,7 @@ transform = Transform3D(0.960992, 0, -0.276577, 0, 1, 0, 0.276577, 0, 0.960992, 
 [node name="CapturePointB" parent="Sectors/Sector4" unique_id=2125850867 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_hhs3u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2448, -8.02722, -37.8676)
 InitialOwner = 2
+FlagPoleSize = 4
 ObjId = 1401
 CaptureArea = NodePath("PolygonVolumeB")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsB/Team1/SpawnPoint"), NodePath("SpawnsB/Team1/SpawnPoint2"), NodePath("SpawnsB/Team1/SpawnPoint3")]
@@ -1102,9 +1102,6 @@ ObjId = 901
 [node name="AI_SpawnerTeam2" parent="." unique_id=501220436 instance=ExtResource("33_xsexs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -677.524, 160.957, -862.326)
 ObjId = 902
-
-[node name="AreaTrigger" parent="." unique_id=1149768238 instance=ExtResource("37_yw16r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -687.125, 274.255, -798.161)
 
 [node name="EndGameCamera" type="Camera3D" parent="." unique_id=1662284633]
 transform = Transform3D(0.9361577, 0.08204497, -0.3418733, 0, 0.9723903, 0.23336051, 0.35158032, -0.21846224, 0.9103106, -385.37033, 213.94356, -530.0201)

@@ -48,7 +48,7 @@ points = PackedVector2Array(83.91491, 534.71655, 53.42911, 558.98425, 17.557076,
 
 [node name="Airscpace" parent="CombatArea" unique_id=1073048501 instance=ExtResource("2_1mpud")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
-points = PackedVector2Array(-229.6913, -192.7992, -249.8957, -41.266083, -282.76636, 22.697632, -297.49878, 84.9946, -268.5348, 195.72348, -217.47417, 260.0402, -205.18901, 347.70798, -165.4207, 435.5911, -151.33792, 554.0679, -112.551544, 590.8904, -18.285828, 599.2368, 76.15111, 571.4088, 120.65796, 501.53433, 130.04413, 358.23428, 173.74023, 254.1492, 240.5118, 176.57639, 268.92914, 88.213776, 269.4201, -6.542938, 226.43845, -75.29065, 183.91626, -258.39087, 97.12987, -432.70084, 11.697662, -444.37225, -38.488388, -416.56366, -61.565994, -360.5102, -146.99428, -312.8864, -204.43523, -255.52646)
+points = PackedVector2Array(-326.5993, 66.69888, -279.43958, 320.3334, -180.32619, 559.70166, -31.937012, 663.17773, 118.184555, 594.02783, 223.60777, 346.5143, 295.8407, 117.161285, 290.2306, -66.10507, 190.67921, -359.04303, 88.76076, -453.48135, -7.547592, -460.02655, -149.67247, -382.41882, -276.10748, -199.7854)
 
 [node name="Sectors" type="Node3D" parent="." unique_id=1640362111]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -101.598526, 715.2785, 458.45602)
@@ -141,7 +141,6 @@ transform = Transform3D(-4.3711402e-08, 0, -1, 0, 1, 0, 1, 0, -4.3711402e-08, 4.
 [node name="CapturePointA" parent="Sectors/Sector1" unique_id=1075439855 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_oaw4a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.00316, -30.63507, 13.678452)
 InitialOwner = 2
-FlagPoleSize = 4
 ObjId = 1100
 CaptureArea = NodePath("PolygonVolumeA")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsA/Team1/SpawnPoint"), NodePath("SpawnsA/Team1/SpawnPoint2"), NodePath("SpawnsA/Team1/SpawnPoint3"), NodePath("SpawnsA/Team1/SpawnPoint4")]
@@ -195,7 +194,6 @@ metadata/_edit_group_ = true
 [node name="CapturePointB" parent="Sectors/Sector1" unique_id=240282334 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_oaw4a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.889816, -29.373657, 37.517715)
 InitialOwner = 2
-FlagPoleSize = 4
 ObjId = 1101
 CaptureArea = NodePath("PolygonVolumeB")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsB/Team1/SpawnPoint"), NodePath("SpawnsB/Team1/SpawnPoint2"), NodePath("SpawnsB/Team1/SpawnPoint3"), NodePath("SpawnsB/Team1/SpawnPoint4")]
@@ -357,7 +355,6 @@ metadata/_edit_group_ = true
 [node name="CapturePointA" parent="Sectors/Sector2" unique_id=70720621 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_oaw4a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.322548, -14.248108, -9.3685)
 InitialOwner = 2
-FlagPoleSize = 4
 ObjId = 1200
 CaptureArea = NodePath("PolygonVolumeA")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsA/Team1/SpawnPoint"), NodePath("SpawnsA/Team1/SpawnPoint2"), NodePath("SpawnsA/Team1/SpawnPoint3"), NodePath("SpawnsA/Team1/SpawnPoint4")]
@@ -412,7 +409,6 @@ metadata/_edit_group_ = true
 [node name="CapturePointB" parent="Sectors/Sector2" unique_id=1796419383 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_oaw4a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.293655, -9.811462, 103.47009)
 InitialOwner = 2
-FlagPoleSize = 4
 ObjId = 1201
 CaptureArea = NodePath("PolygonVolumeB")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsB/Team1/SpawnPoint"), NodePath("SpawnsB/Team1/SpawnPoint2"), NodePath("SpawnsB/Team1/SpawnPoint3"), NodePath("SpawnsB/Team1/SpawnPoint4")]
@@ -562,7 +558,6 @@ metadata/_edit_group_ = true
 [node name="CapturePointA" parent="Sectors/Sector3" unique_id=1636391063 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_oaw4a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.720123, 13.999329, -4.960327)
 InitialOwner = 2
-FlagPoleSize = 4
 ObjId = 1300
 CaptureArea = NodePath("PolygonVolumeA")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsA/Team1/SpawnPoint"), NodePath("SpawnsA/Team1/SpawnPoint2"), NodePath("SpawnsA/Team1/SpawnPoint3"), NodePath("SpawnsA/Team1/SpawnPoint4")]
@@ -694,7 +689,6 @@ metadata/_edit_group_ = true
 [node name="CapturePointA" parent="Sectors/Sector4" unique_id=908568466 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_oaw4a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.72902, 22.362915, 50.24475)
 InitialOwner = 2
-FlagPoleSize = 4
 ObjId = 1400
 CaptureArea = NodePath("PolygonVolumeA")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsA/Team1/SpawnPoint"), NodePath("SpawnsA/Team1/SpawnPoint2"), NodePath("SpawnsA/Team1/SpawnPoint3"), NodePath("SpawnsA/Team1/SpawnPoint4")]
@@ -749,7 +743,6 @@ metadata/_edit_group_ = true
 [node name="CapturePointB" parent="Sectors/Sector4" unique_id=1306623678 node_paths=PackedStringArray("CaptureArea", "InfantrySpawnPoints_Team1", "InfantrySpawnPoints_Team2") instance=ExtResource("12_oaw4a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.794739, 27.549927, 102.70923)
 InitialOwner = 2
-FlagPoleSize = 4
 ObjId = 1401
 CaptureArea = NodePath("PolygonVolumeB")
 InfantrySpawnPoints_Team1 = [NodePath("SpawnsB/Team1/SpawnPoint"), NodePath("SpawnsB/Team1/SpawnPoint2"), NodePath("SpawnsB/Team1/SpawnPoint3"), NodePath("SpawnsB/Team1/SpawnPoint4")]

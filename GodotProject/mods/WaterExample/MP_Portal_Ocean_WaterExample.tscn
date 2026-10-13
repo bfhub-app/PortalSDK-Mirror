@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dy4c886puw8l0"]
+[gd_scene format=3 uid="uid://dvs2nk8mqx8hx"]
 
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/HQ_PlayerSpawner.tscn" id="1_vc1v3"]
 [ext_resource type="PackedScene" uid="uid://jv31so3xcr7p" path="res://addons/bf_portal/portal_tools/types/PolygonVolume/PolygonVolume.tscn" id="2_7id7p"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://objects/uncategorized/Loot_TableFoldable_01_B.tscn" id="10_6qtr7"]
 [ext_resource type="PackedScene" path="res://objects/gameplay/common/InteractPoint.tscn" id="11_5vhr6"]
 [ext_resource type="PackedScene" path="res://objects/gameplay/common/WorldIcon.tscn" id="12_c5ylw"]
+[ext_resource type="PackedScene" path="res://objects/gameplay/vehicles/VEH_RHIB.tscn" id="12_uprh3"]
 [ext_resource type="PackedScene" uid="uid://b75wlya1kk2rs" path="res://addons/bf_portal/portal_tools/types/WaterPlane/WaterPlane.tscn" id="13_x85md"]
 
 [node name="MP_Portal_Ocean" type="Node3D" unique_id=932931116]
@@ -136,58 +137,75 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.0435553, 11.964951, 4.8231
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2952695, 16.921906, 14.075863)
 
 [node name="Loot_TableFoldable_01_B2" parent="TestingPlatform" unique_id=1523215129 instance=ExtResource("10_6qtr7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3716707, 11.878967, 14.075863)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.561344, 11.878967, 14.075863)
 
 [node name="Loot_TableFoldable_01_B3" parent="TestingPlatform" unique_id=845188479 instance=ExtResource("10_6qtr7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7134743, 11.878967, 14.075863)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.320914, 11.878967, 14.075863)
 
 [node name="Loot_TableFoldable_01_B4" parent="TestingPlatform" unique_id=78714975 instance=ExtResource("10_6qtr7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7134743, 7.3317184, 14.075863)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.320747, 7.096115, 14.075863)
 
 [node name="Loot_TableFoldable_01_B5" parent="TestingPlatform" unique_id=1984237829 instance=ExtResource("10_6qtr7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.350762, 7.3317184, 14.075863)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5704184, 7.096115, 14.075863)
+
+[node name="VEH_RHIB" parent="TestingPlatform" unique_id=1874911999 instance=ExtResource("12_uprh3")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.4265947, 1.7132416, -8.289576)
 
 [node name="Portal_Dynamic" type="Node3D" parent="." unique_id=643098918]
 
+[node name="WorldIcon_BeaufortScaleTUTORIAL" parent="." unique_id=1679932453 instance=ExtResource("12_c5ylw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.226913, 80.73356, 22.150366)
+ObjId = 47
+IconStringKey = "BEAUFORTSCALETUTORIAL"
+iconTextVisible = true
+iconImagePicker = 15
+
 [node name="InteractPoint_BeaufortScaleRaise" parent="." unique_id=741614073 instance=ExtResource("11_5vhr6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4192033, 78.58617, 22.150366)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6388597, 78.35056, 22.150366)
 ObjId = 1
 
 [node name="WorldIcon_BeauforScaleRaise" parent="." unique_id=1232769140 instance=ExtResource("12_c5ylw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4192033, 79.67434, 22.150366)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.639, 79.674, 22.15)
 ObjId = 41
 IconStringKey = "BEAUFORTSCALERAISE"
 iconTextVisible = true
 iconImagePicker = 15
 
 [node name="InteractPoint_BeaufortScaleLower" parent="." unique_id=1670456669 instance=ExtResource("11_5vhr6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7958922, 78.59306, 22.150366)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.403166, 78.35746, 22.150366)
 ObjId = 2
 
 [node name="WorldIcon_BeauforScaleLower" parent="." unique_id=1642583577 instance=ExtResource("12_c5ylw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.796, 79.681366, 22.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.403, 79.681, 22.15)
 ObjId = 42
 IconStringKey = "BEAUFORTSCALELOWER"
 iconTextVisible = true
 iconImagePicker = 15
 
+[node name="WorldIcon_WaveAmplitudeTUTORIAL" parent="." unique_id=1447053951 instance=ExtResource("12_c5ylw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.226913, 84.965385, 22.150366)
+ObjId = 48
+IconStringKey = "WAVEAMPLITUDETUTORIAL"
+iconTextVisible = true
+iconImagePicker = 15
+
 [node name="InteractPoint_RaiseAmplitude" parent="." unique_id=1172330272 instance=ExtResource("11_5vhr6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4192033, 83.29765, 22.150366)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.686999, 83.298, 22.15)
 ObjId = 3
 
 [node name="WorldIcon_RaiseAmplitude" parent="." unique_id=1592531787 instance=ExtResource("12_c5ylw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4192033, 84.13209, 22.150366)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.687202, 84.13209, 22.150366)
 ObjId = 43
 IconStringKey = "RAISEAMPLITUDE"
 iconTextVisible = true
 iconImagePicker = 15
 
 [node name="InteractPoint_LowerAmplitude" parent="." unique_id=31204430 instance=ExtResource("11_5vhr6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7958922, 83.29765, 22.150366)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.403332, 83.29765, 22.150366)
 ObjId = 4
 
 [node name="WorldIcon_LowerAmplitude" parent="." unique_id=1319706730 instance=ExtResource("12_c5ylw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.796, 84.132, 22.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.403, 84.132, 22.15)
 ObjId = 44
 IconStringKey = "LOWERAMPLITUDE"
 iconTextVisible = true
@@ -196,6 +214,13 @@ iconImagePicker = 15
 [node name="InteractPoint_WaterPowerUp" parent="." unique_id=2115985832 instance=ExtResource("11_5vhr6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3518147, 88.53484, 22.150366)
 ObjId = 5
+
+[node name="WorldIcon_PowerUpTUTORIAL" parent="." unique_id=1355224280 instance=ExtResource("12_c5ylw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.226913, 89.48346, 22.150366)
+ObjId = 49
+IconStringKey = "POWERUPTUTORIAL"
+iconTextVisible = true
+iconImagePicker = 15
 
 [node name="WorldIcon_PowerUp" parent="." unique_id=1928858300 instance=ExtResource("12_c5ylw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3518147, 89.68275, 22.150366)

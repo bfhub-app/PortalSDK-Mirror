@@ -109,6 +109,11 @@
             "physicsCostMax": 0
         }
     },
+    "MP_Portal_CommunityMap_1": {
+        "budget": {
+            "physicsCostMax": 100000
+        }
+    },
     "MP_Aftermath_Portal": {
         "budget": {
             "physicsCostMax": 100000
@@ -130,6 +135,11 @@
         }
     },
     "MP_Atoll": {
+        "budget": {
+            "physicsCostMax": 0
+        }
+    },
+    "MP_Granite_Carrier_Portal": {
         "budget": {
             "physicsCostMax": 0
         }

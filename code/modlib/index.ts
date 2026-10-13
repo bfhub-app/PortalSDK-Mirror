@@ -41,21 +41,19 @@ export function ConvertArray(array: mod.Array): any[] {
 }
 
 export function FilteredArray(array: mod.Array, cond: (currentElement: any) => boolean): mod.Array {
-    const arr = ConvertArray(array);
     let v = mod.EmptyArray();
-    let n = arr.length;
+    let n = mod.CountOf(array);
     for (let i = 0; i < n; i++) {
-        let currentElement = arr[i];
+        let currentElement = mod.ValueInArray(array, i);
         if (cond(currentElement)) v = mod.AppendToArray(v, currentElement);
     }
     return v;
 }
 
 export function IndexOfFirstTrue(array: mod.Array, cond: (element: any, arg: any) => boolean, arg: any = null): number {
-    const arr = ConvertArray(array);
-    let n = arr.length;
+    let n = mod.CountOf(array);
     for (let i = 0; i < n; i++) {
-        let currentArrayElement = arr[i];
+        let currentArrayElement = mod.ValueInArray(array, i);
         if (cond(currentArrayElement, arg)) return i;
     }
     return -1;
@@ -67,20 +65,18 @@ export function IfThenElse<T>(condition: boolean, ifTrue: () => T, ifFalse: () =
 }
 
 export function IsTrueForAll(array: mod.Array, condition: (element: any, arg: any) => boolean, arg: any = null) {
-    const arr = ConvertArray(array);
-    let n = arr.length;
+    let n = mod.CountOf(array);
     for (let i = 0; i < n; i++) {
-        let currentArrayElement = arr[i];
+        let currentArrayElement = mod.ValueInArray(array, i);
         if (!condition(currentArrayElement, arg)) return false;
     }
     return true;
 }
 
 export function IsTrueForAny(array: mod.Array, condition: (element: any, arg: any) => boolean, arg: any = null) {
-    const arr = ConvertArray(array);
-    let n = arr.length;
+    let n = mod.CountOf(array);
     for (let i = 0; i < n; i++) {
-        let currentArrayElement = arr[i];
+        let currentArrayElement = mod.ValueInArray(array, i);
         if (condition(currentArrayElement, arg)) return true;
     }
     return false;

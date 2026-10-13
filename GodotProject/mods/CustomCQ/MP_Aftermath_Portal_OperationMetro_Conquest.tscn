@@ -71,7 +71,6 @@ HQArea = NodePath("HQ_Team1")
 InfantrySpawns = [NodePath("SpawnPoint_1_1"), NodePath("SpawnPoint_1_2"), NodePath("SpawnPoint_1_3"), NodePath("SpawnPoint_1_4")]
 
 [node name="HQ_Team1" parent="Conquest/TEAM_1_HQ" unique_id=1747708596 instance=ExtResource("3_g38ow")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 points = PackedVector2Array(-38.57112, -2.9980922, -36.69316, 49.081505, 9.480392, 83.511765, 23.868057, 83.62927, 23.455704, 4.564319, 28.941101, -7.5752096, 30.260147, -29.329098, 22.756638, -39.85906, 24.948822, -74.70566, 15.391251, -74.72998, -24.68309, -46.00725)
 height = 50.0
 color = Color(0.0621983, 0.524847, 1, 0.42)

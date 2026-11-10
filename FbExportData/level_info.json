@@ -143,5 +143,15 @@
         "budget": {
             "physicsCostMax": 0
         }
+    },
+    "MP_DryLake": {
+        "budget": {
+            "physicsCostMax": 0
+        }
+    },
+    "MP_Paradise": {
+        "budget": {
+            "physicsCostMax": 0
+        }
     }
 }
